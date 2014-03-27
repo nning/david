@@ -9,9 +9,9 @@ class UDPExample
     puts "Starting on [#{host}]:#{port}."
 
     # Actually Celluloid::IO::UDPServer.
-    # (0.15.0 does not support AF_INET6).
+    # (Use celluloid-io from git, 0.15.0 does not support AF_INET6).
     @socket = UDPSocket.new(::Socket::AF_INET6)
-    @socket.bind(host, port)
+    @socket.bind(host, port.to_i)
 
     async.run
   end
@@ -28,7 +28,7 @@ class UDPExample
 
   def handle_input(data, sender)
     _, port, host = sender
-    puts "Received data from [#{host}]:#{port}:"
+    $stderr << "Received data from [#{host}]:#{port}:\n"
     puts data
   end
 end
