@@ -1,0 +1,29 @@
+GIT
+  remote: git://github.com/celluloid/celluloid-io.git
+  revision: 39e7dc8e7a340ccaa0fa09f8dbfdb7fb7fc074c5
+  specs:
+    celluloid-io (0.16.0.pre)
+      celluloid (>= 0.16.0.pre)
+      nio4r (>= 1.0.0)
+
+GIT
+  remote: git://github.com/celluloid/celluloid.git
+  revision: c71cc18af4e60b668e61ad2b854226306fb18e46
+  specs:
+    celluloid (0.16.0.pre)
+      timers (~> 2.0.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    hitimes (1.2.1)
+    nio4r (1.0.0)
+    timers (2.0.0)
+      hitimes
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  celluloid!
+  celluloid-io!
