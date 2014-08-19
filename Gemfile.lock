@@ -1,3 +1,9 @@
+PATH
+  remote: ../../ext/coap
+  specs:
+    coap (0.0.16)
+      resolv-ipv6favor (~> 0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -8,6 +14,8 @@ GEM
       nio4r (>= 1.0.0)
     hitimes (1.2.2)
     nio4r (1.0.0)
+    rack (1.5.2)
+    resolv-ipv6favor (0.0.0)
     timers (4.0.0)
       hitimes
 
@@ -17,3 +25,5 @@ PLATFORMS
 DEPENDENCIES
   celluloid
   celluloid-io (~> 0.16.0.pre2)
+  coap!
+  rack
