@@ -7,21 +7,27 @@ include CoRE
 
 class Rack::HelloWorld
   def call(env)
+    dup._call(env)
+  end
+
+  def _call(env)
     if env['REQUEST_METHOD'] != 'GET'
-      return [405, {}, '']
+      return [405, {}, ['']]
     end
 
     return case env['PATH_INFO']
     when '/.well-known/core'
       [200,
         {'Content-Type' => 'application/link-format'},
-        '</hello>;rt="hello";ct=0']
+        ['</hello>;rt="hello";ct=0']
+      ]
     when '/hello'
       [200,
         {'Content-Type' => 'text/plain'},
-        'Hello World!']
+        ['Hello World!']
+      ]
     else
-      [404, {}, '']
+      [404, {}, ['']]
     end
   end
 end
@@ -35,8 +41,7 @@ class CoRE::CoAP::ExampleServer
   finalizer :shutdown
 
   def initialize(host, port, app, options)
-    @debug  = options.delete(:debug)
-    @logger = options.delete(:logger) || ::Logger.new($stderr)
+    @logger = setup_logger(options[:Debug])
 
     logger.info "Starting on [#{host}]:#{port}."
 
@@ -48,6 +53,7 @@ class CoRE::CoAP::ExampleServer
     @socket = UDPSocket.new(af)
     @socket.bind(host, port.to_i)
 
+    app = app.new if app.respond_to? :new
     @host, @port, @app = host, port, app
 
     async.run
@@ -67,21 +73,22 @@ class CoRE::CoAP::ExampleServer
     @socket.send(message.to_wire, 0, host, port)
   end
 
-  def app_response(request, response)
+  def app_response(request)
     env = basic_env(request)
-    logger.debug env if @debug
+    logger.debug env
 
     code, options, body = @app.call(env)
 
-    h = {
-      'text/plain' => 0,
-      'application/link-format' => 40
-    }
-    format = h[options['Content-Type']]
+    new_body = ''
+    body.each do |line|
+      new_body += line + "\n"
+    end
 
+    response = initialize_response(request)
     response.mcode = http_to_coap_code(code)
-    response.payload = body
-    response.options[:content_format] = format
+    response.payload = new_body.chomp
+    response.options[:content_format] = 
+      http_to_coap_content_format(options['Content-Type'])
 
     response
   end
@@ -103,6 +110,7 @@ class CoRE::CoAP::ExampleServer
       'rack.multithread'  => true,
       'rack.multiprocess' => true,
       'rack.run_once'     => false,
+      'rack.logger'       => @logger,
     }
   end
 
@@ -115,17 +123,18 @@ class CoRE::CoAP::ExampleServer
     request = CoAP::Message.parse(data)
 
     logger.info "[#{host}]:#{port}: #{request}"
-    logger.debug request.inspect if @debug
+    logger.debug request.inspect
 
-    response = initialize_response(request)
-    response = app_response(request, response)
+    response = app_response(request)
 
-    logger.debug response.inspect if @debug
+    logger.debug response.inspect
 
     answer(host, port, response)
   end
 
   def http_to_coap_code(code)
+    code = code.to_i
+
     h = {200 => 205}
     code = h[code] if h[code]
 
@@ -135,12 +144,31 @@ class CoRE::CoAP::ExampleServer
     [a, b]
   end
 
+  def http_to_coap_content_format(format)
+    h = {
+      'text/plain' => 0,
+      'application/link-format' => 40
+    }
+
+    h[format]
+  end
+
   def initialize_response(request)
     CoAP::Message.new \
       tt: :ack,
       mcode: 2.00,
       mid: request.mid,
       token: request.options[:token]
+  end
+
+  def setup_logger(debug)
+    logger = ::Logger.new($stderr)
+    logger.level = debug ? ::Logger::DEBUG : ::Logger::INFO
+    logger.formatter = proc do |sev, time, prog, msg|
+      "#{time.to_i}(#{sev.downcase}) #{msg}\n"
+    end
+
+    logger
   end
 end
 
@@ -151,8 +179,8 @@ module Rack
         environment = ENV['RACK_ENV'] || 'development'
         default_host = environment == 'development' ? '::1' : '::'
 
-        host = options.delete(:host) || default_host
-        port = options.delete(:port) || CoAP::PORT
+        host = options.delete(:Host) || default_host
+        port = options.delete(:Port) || CoAP::PORT
 
         args = [host, port, app, options]
 
@@ -164,23 +192,22 @@ module Rack
         default_host = environment == 'development' ? '::1' : '::'
 
         {
-          'host=HOST'   => "Hostname to listen on (default: #{default_host})",
-          'port=PORT'   => "Port to listen on (default: #{CoAP::PORT})",
-          'debug=DEBUG' => "Debug output.",
+          'Host=HOST'   => "Hostname to listen on (default: #{default_host})",
+          'Port=PORT'   => "Port to listen on (default: #{CoAP::PORT})",
+          'Debug=DEBUG' => 'Debug output.',
         }
       end
     end
   end
 end
 
-debug = true if ARGV.include?('-d')
+Rack::Handler.register 'coapexample', 'Rack::Handler::CoAPExample'
 
-klass = Rack::HelloWorld.new
-klass = Rack::Lint.new(klass) if ARGV.include?('-l')
+if __FILE__ == $0
+  debug = true if ARGV.include?('-d')
 
-logger = ::Logger.new($stderr)
-logger.formatter = proc do |sev, time, prog, msg|
-  "#{time.to_i}(#{sev.downcase}) #{msg}\n"
+  klass = Rack::HelloWorld.new
+  klass = Rack::Lint.new(klass) if ARGV.include?('-l')
+
+  Rack::Handler::CoAPExample.run(klass, :Debug => debug)
 end
-
-Rack::Handler::CoAPExample.run(klass, debug: debug, logger: logger)
