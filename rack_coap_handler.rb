@@ -2,13 +2,27 @@ require 'bundler/setup'
 Bundler.require
 
 require 'ipaddr'
-require 'pp'
 
 include CoRE
 
 class Rack::HelloWorld
   def call(env)
-    [200, {'Content-Type' => 'text/plain'}, 'Hello World!']
+    if env['REQUEST_METHOD'] != 'GET'
+      return [405, {}, '']
+    end
+
+    return case env['PATH_INFO']
+    when '/.well-known/core'
+      [200,
+        {'Content-Type' => 'application/link-format'},
+        '</hello>;rt="hello";ct=0']
+    when '/hello'
+      [200,
+        {'Content-Type' => 'text/plain'},
+        'Hello World!']
+    else
+      [404, {}, '']
+    end
   end
 end
 
@@ -16,10 +30,15 @@ class CoRE::CoAP::ExampleServer
   include Celluloid::IO
   include CoAP::Codification
 
+  attr_reader :logger
+
   finalizer :shutdown
 
   def initialize(host, port, app, options)
-    puts "Starting on [#{host}]:#{port}."
+    @debug  = options.delete(:debug)
+    @logger = options.delete(:logger) || ::Logger.new($stderr)
+
+    logger.info "Starting on [#{host}]:#{port}."
 
     ipv6 = IPAddr.new(host).ipv6?
     af = ipv6 ? ::Socket::AF_INET6 : ::Socket::AF_INET
@@ -49,12 +68,20 @@ class CoRE::CoAP::ExampleServer
   end
 
   def app_response(request, response)
-pp  env = basic_env(request)
+    env = basic_env(request)
+    logger.debug env if @debug
 
     code, options, body = @app.call(env)
 
+    h = {
+      'text/plain' => 0,
+      'application/link-format' => 40
+    }
+    format = h[options['Content-Type']]
+
     response.mcode = http_to_coap_code(code)
     response.payload = body
+    response.options[:content_format] = format
 
     response
   end
@@ -85,17 +112,23 @@ pp  env = basic_env(request)
 
   def handle_input(data, sender)
     _, port, host = sender
-    puts "Received data from [#{host}]:#{port}:"
+    request = CoAP::Message.parse(data)
 
-pp  request = CoAP::Message.parse(data)
+    logger.info "[#{host}]:#{port}: #{request}"
+    logger.debug request.inspect if @debug
 
     response = initialize_response(request)
     response = app_response(request, response)
+
+    logger.debug response.inspect if @debug
 
     answer(host, port, response)
   end
 
   def http_to_coap_code(code)
+    h = {200 => 205}
+    code = h[code] if h[code]
+
     a = code / 100
     b = code - (a * 100)
 
@@ -106,7 +139,7 @@ pp  request = CoAP::Message.parse(data)
     CoAP::Message.new \
       tt: :ack,
       mcode: 2.00,
-      mid: SecureRandom.random_number(999),
+      mid: request.mid,
       token: request.options[:token]
   end
 end
@@ -131,15 +164,23 @@ module Rack
         default_host = environment == 'development' ? '::1' : '::'
 
         {
-          'host=HOST' => "Hostname to listen on (default: #{default_host})",
-          'port=PORT' => "Port to listen on (default: #{CoAP::PORT})",
+          'host=HOST'   => "Hostname to listen on (default: #{default_host})",
+          'port=PORT'   => "Port to listen on (default: #{CoAP::PORT})",
+          'debug=DEBUG' => "Debug output.",
         }
       end
     end
   end
 end
 
-klass = Rack::HelloWorld.new
-klass = Rack::Lint.new(klass) if ARGV.first == '-d'
+debug = true if ARGV.include?('-d')
 
-Rack::Handler::CoAPExample.run(klass)
+klass = Rack::HelloWorld.new
+klass = Rack::Lint.new(klass) if ARGV.include?('-l')
+
+logger = ::Logger.new($stderr)
+logger.formatter = proc do |sev, time, prog, msg|
+  "#{time.to_i}(#{sev.downcase}) #{msg}\n"
+end
+
+Rack::Handler::CoAPExample.run(klass, debug: debug, logger: logger)
