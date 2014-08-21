@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+require 'rack'
+
+require_relative '../lib/david'
+require_relative '../lib/rack/hello_world.rb'
+
+debug = true if ARGV.include?('-d')
+
+klass = Rack::HelloWorld.new
+klass = Rack::Lint.new(klass) if ARGV.include?('-l')
+
+Rack::Handler::David.run(klass, :Debug => debug)
