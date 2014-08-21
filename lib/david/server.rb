@@ -40,8 +40,8 @@ module David
       @socket.send(message.to_wire, 0, host, port)
     end
 
-    def app_response(request)
-      env = basic_env(request)
+    def app_response(host, port, request)
+      env = basic_env(host, port, request)
       logger.debug env
 
       code, options, body = @app.call(env)
@@ -60,8 +60,10 @@ module David
       response
     end
 
-    def basic_env(request)
+    def basic_env(host, port, request)
       {
+        'REMOTE_ADDR'       => host,
+        'REMOTE_PORT'       => port,
         'REQUEST_METHOD'    => coap_to_http_method(request.mcode),
         'SCRIPT_NAME'       => '',
         'PATH_INFO'         => path_encode(request.options[:uri_path]),
@@ -92,7 +94,7 @@ module David
       logger.info "[#{host}]:#{port}: #{request}"
       logger.debug request.inspect
 
-      response = app_response(request)
+      response = app_response(host, port, request)
 
       logger.debug response.inspect
 
