@@ -20,6 +20,12 @@ module Rack
           {'Content-Type' => 'text/plain'},
           ['Hello World!']
         ]
+      when '/wait'
+        sleep 10
+        [200,
+          {'Content-Type' => 'text/plain'},
+          ['You waited!']
+        ]
       else
         [404, {}, ['']]
       end

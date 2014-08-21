@@ -1,16 +1,21 @@
 module Rack
   module Handler
     class David
+      DEFAULT_OPTIONS = {
+        :Host => ENV['RACK_ENV'] == 'development' ? '::1' : '::',
+        :Port => ::CoAP::PORT
+      }
+
       def self.run(app, options={})
-        environment = ENV['RACK_ENV'] || 'development'
-        default_host = environment == 'development' ? '::1' : '::'
+        options = DEFAULT_OPTIONS.merge(options)
 
-        host = options.delete(:Host) || default_host
-        port = options.delete(:Port) || ::CoAP::PORT
+        supervisor = ::David::Server.supervise_as(:david, app, options)
 
-        args = [host, port, app, options]
-
-        ::David::Server.run(*args)
+        begin
+          sleep
+        rescue Interrupt
+          supervisor.terminate
+        end
       end
 
       def self.valid_options

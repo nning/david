@@ -7,21 +7,23 @@ module David
 
     finalizer :shutdown
 
-    def initialize(host, port, app, options)
+    def initialize(app, options)
+      @host   = options[:Host]
+      @port   = options[:Port].to_i
+
       @logger = setup_logger(options[:Debug])
 
-      logger.info "Starting on [#{host}]:#{port}."
+      @app    = app.respond_to?(:new) ? app.new : app
 
-      ipv6 = IPAddr.new(host).ipv6?
+      logger.info "Starting on [#{@host}]:#{@port}."
+
+      ipv6 = IPAddr.new(@host).ipv6?
       af = ipv6 ? ::Socket::AF_INET6 : ::Socket::AF_INET
 
       # Actually Celluloid::IO::UDPServer.
       # (Use celluloid-io from git, 0.15.0 does not support AF_INET6).
       @socket = UDPSocket.new(af)
-      @socket.bind(host, port.to_i)
-
-      app = app.new if app.respond_to? :new
-      @host, @port, @app = host, port, app
+      @socket.bind(@host, @port)
 
       async.run
     end
@@ -63,7 +65,7 @@ module David
     def basic_env(host, port, request)
       {
         'REMOTE_ADDR'       => host,
-        'REMOTE_PORT'       => port,
+        'REMOTE_PORT'       => port.to_s,
         'REQUEST_METHOD'    => coap_to_http_method(request.mcode),
         'SCRIPT_NAME'       => '',
         'PATH_INFO'         => path_encode(request.options[:uri_path]),
