@@ -55,7 +55,7 @@ module David
       response.mcode = http_to_coap_code(code)
       response.payload = new_body.chomp
       response.options[:content_format] = 
-        http_to_coap_content_format(options['Content-Type'])
+        CoAP::Registry.convert_content_format(options['Content-Type'])
 
       response
     end
@@ -109,15 +109,6 @@ module David
       b = code - (a * 100)
 
       [a, b]
-    end
-
-    def http_to_coap_content_format(format)
-      h = {
-        'text/plain' => 0,
-        'application/link-format' => 40
-      }
-
-      h[format]
     end
 
     def initialize_response(request)
