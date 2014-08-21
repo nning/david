@@ -6,7 +6,7 @@ module Rack
         default_host = environment == 'development' ? '::1' : '::'
 
         host = options.delete(:Host) || default_host
-        port = options.delete(:Port) || CoAP::PORT
+        port = options.delete(:Port) || ::CoAP::PORT
 
         args = [host, port, app, options]
 
@@ -19,7 +19,7 @@ module Rack
 
         {
           'Host=HOST'   => "Hostname to listen on (default: #{default_host})",
-          'Port=PORT'   => "Port to listen on (default: #{CoAP::PORT})",
+          'Port=PORT'   => "Port to listen on (default: #{::CoAP::PORT})",
           'Debug=DEBUG' => 'Debug output.',
         }
       end

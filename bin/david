@@ -1,9 +1,7 @@
 #!/usr/bin/env ruby
 
-require 'rack'
-
 require_relative '../lib/david'
-require_relative '../lib/rack/hello_world.rb'
+require_relative '../lib/rack/hello_world'
 
 debug = true if ARGV.include?('-d')
 
