@@ -1,6 +1,7 @@
 module David
 end
 
+require 'cbor'
 require 'celluloid'
 require 'celluloid/io'
 require 'coap'

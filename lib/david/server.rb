@@ -15,7 +15,8 @@ module David
 
       @app    = app.respond_to?(:new) ? app.new : app
 
-      logger.info "Starting on [#{@host}]:#{@port}."
+      logger.info "David #{David::VERSION} on #{RUBY_DESCRIPTION}"
+      logger.info "Starting on [#{@host}]:#{@port}"
 
       ipv6 = IPAddr.new(@host).ipv6?
       af = ipv6 ? ::Socket::AF_INET6 : ::Socket::AF_INET
@@ -48,16 +49,24 @@ module David
 
       code, options, body = @app.call(env)
 
+      ct = options['Content-Type'].split(';').first
+
       new_body = ''
       body.each do |line|
         new_body += line + "\n"
       end
+      new_body.chomp!
+
+      if ct == 'application/json'
+        new_body = JSON.parse(new_body).to_cbor
+        ct = 'application/cbor'
+      end
 
       response = initialize_response(request)
       response.mcode = http_to_coap_code(code)
-      response.payload = new_body.chomp
+      response.payload = new_body
       response.options[:content_format] = 
-        CoAP::Registry.convert_content_format(options['Content-Type'])
+        CoAP::Registry.convert_content_format(ct)
 
       response
     end
@@ -74,6 +83,7 @@ module David
         'SERVER_NAME'       => @host,
         'SERVER_PORT'       => @port.to_s,
         'CONTENT_LENGTH'    => request.payload.size.to_s,
+        'HTTP_ACCEPT'       => 'application/json',
         'rack.version'      => [1, 2],
         'rack.url_scheme'   => 'http',
         'rack.input'        => StringIO.new(request.payload),
@@ -127,7 +137,7 @@ module David
       logger = ::Logger.new($stderr)
       logger.level = debug ? ::Logger::DEBUG : ::Logger::INFO
       logger.formatter = proc do |sev, time, prog, msg|
-        "#{time.to_i}(#{sev.downcase}) #{msg}\n"
+        "#{time.strftime('[%Y-%m-%d %H:%M:%S]')} #{sev}  #{msg}\n"
       end
 
       logger

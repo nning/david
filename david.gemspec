@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ['lib']
 
+  s.add_dependency 'cbor',         '~> 0.5'
   s.add_dependency 'celluloid',    '~> 0.16.0.pre3'
   s.add_dependency 'celluloid-io', '~> 0.16.0.pre2'
   s.add_dependency 'coap',         '~> 0'
