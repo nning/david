@@ -1,6 +1,9 @@
 module David
 end
 
+require 'bundler/setup'
+Bundler.require
+
 require 'cbor'
 require 'celluloid'
 require 'celluloid/io'
