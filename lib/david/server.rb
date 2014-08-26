@@ -49,7 +49,8 @@ module David
 
       code, options, body = @app.call(env)
 
-      ct = options['Content-Type'].split(';').first
+      ct = options['Content-Type']
+      ct = ct.split(';').first unless ct.nil?
 
       new_body = ''
       body.each do |line|

@@ -21,3 +21,7 @@ require_relative 'rack/guerilla/handler'
 
 require_relative 'david/version'
 require_relative 'david/server'
+
+if defined? Rails
+  require_relative 'david/railtie'
+end
