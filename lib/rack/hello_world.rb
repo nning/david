@@ -1,5 +1,7 @@
 module Rack
   class HelloWorld
+#   include Celluloid
+
     def call(env)
       dup._call(env)
     end
@@ -25,6 +27,14 @@ module Rack
         [200,
           {'Content-Type' => 'text/plain'},
           ['You waited!']
+        ]
+      when '/value'
+        @@value ||= 0
+        @@value  += 1
+
+        [200,
+          {'Content-Type' => 'text/plain'},
+          ["#{@@value}"]
         ]
       else
         [404, {}, ['']]
