@@ -1,5 +1,5 @@
 PATH
-  remote: ../../ext/coap
+  remote: ../coap
   specs:
     coap (0.0.16)
       resolv-ipv6favor (~> 0)
