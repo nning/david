@@ -9,6 +9,7 @@ module David
       ActionDispatch::Session::CookieStore,
       ActionDispatch::ShowExceptions,
       Rack::ETag,
+      Rack::Lock,
     ]
 
     initializer 'david.clear_out_middleware', after: true do |app|
