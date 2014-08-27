@@ -10,8 +10,9 @@ module David
     def initialize(app, options)
       @host   = options[:Host]
       @port   = options[:Port].to_i
+      @cbor   = !!options[:CBOR]
 
-      @logger = setup_logger(options[:Debug])
+      @logger = setup_logger(!!options[:Debug])
 
       @app    = app.respond_to?(:new) ? app.new : app
 
@@ -29,6 +30,8 @@ module David
       async.run
     end
 
+    private
+
     def shutdown
       @socket.close unless @socket.nil?
     end
@@ -36,8 +39,6 @@ module David
     def run
       loop { async.handle_input(*@socket.recvfrom(1024)) }
     end
-
-    private
 
     def answer(host, port, message)
       @socket.send(message.to_wire, 0, host, port)
@@ -54,11 +55,11 @@ module David
 
       new_body = ''
       body.each do |line|
-        new_body += line + "\n"
+        new_body += line + "\r\n"
       end
       new_body.chomp!
 
-      if ct == 'application/json'
+      if @cbor && ct == 'application/json'
         new_body = JSON.parse(new_body).to_cbor
         ct = 'application/cbor'
       end
@@ -84,6 +85,7 @@ module David
         'SERVER_NAME'       => @host,
         'SERVER_PORT'       => @port.to_s,
         'CONTENT_LENGTH'    => request.payload.size.to_s,
+        'CONTENT_TYPE'      => 'application/json',
         'HTTP_ACCEPT'       => 'application/json',
         'rack.version'      => [1, 2],
         'rack.url_scheme'   => 'http',
@@ -140,6 +142,8 @@ module David
       logger.formatter = proc do |sev, time, prog, msg|
         "#{time.strftime('[%Y-%m-%d %H:%M:%S]')} #{sev}  #{msg}\n"
       end
+
+      Celluloid.logger = logger
 
       logger
     end

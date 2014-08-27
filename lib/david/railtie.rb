@@ -7,7 +7,7 @@ module David
       ActionDispatch::RemoteIp,
       ActionDispatch::RequestId,
       ActionDispatch::Session::CookieStore,
-      ActionDispatch::ShowExceptions,
+#     ActionDispatch::ShowExceptions,
       Rack::ETag,
       Rack::Lock,
     ]

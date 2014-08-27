@@ -1,8 +1,6 @@
 module Rack
   module Handler
-    class CoAP < David
-    end
-
+    CoAP = David
     register :coap, CoAP
   end
 end

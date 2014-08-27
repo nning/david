@@ -19,13 +19,13 @@ module Rack
       end
 
       def self.valid_options
-        environment = ENV['RACK_ENV'] || 'development'
-        default_host = environment == 'development' ? '::1' : '::'
+        host, port = DEFAULT_OPTIONS.values_at(:Host, :Port)
 
         {
-          'Host=HOST'   => "Hostname to listen on (default: #{default_host})",
-          'Port=PORT'   => "Port to listen on (default: #{::CoAP::PORT})",
-          'Debug=DEBUG' => 'Debug output.',
+          'Host=HOST'     => "Hostname to listen on (default: #{host})",
+          'Port=PORT'     => "Port to listen on (default: #{port})",
+          'CBOR=BOOLEAN'  => 'Transparent JSON/CBOR conversion.',
+          'Debug=BOOLEAN' => 'Debug output.',
         }
       end
     end
