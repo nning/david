@@ -13,16 +13,18 @@ require 'rack'
 
 include CoRE
 
-require_relative 'rack/hello_world'
-require_relative 'rack/handler/david'
-require_relative 'rack/handler/coap'
+$: << File.dirname(__FILE__)
 
-require_relative 'david/guerilla/rack/handler'
+require 'rack/hello_world'
+require 'rack/handler/david'
+require 'rack/handler/coap'
 
-require_relative 'david/version'
-require_relative 'david/server'
+require 'david/guerilla/rack/handler'
+
+require 'david/version'
+require 'david/server'
 
 if defined? Rails
-  require_relative 'david/railties/config'
-  require_relative 'david/railties/middleware'
+  require 'david/railties/config'
+  require 'david/railties/middleware'
 end
