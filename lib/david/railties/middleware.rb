@@ -8,15 +8,21 @@ module David
         ActionDispatch::RemoteIp,
         ActionDispatch::RequestId,
         ActionDispatch::Session::CookieStore,
-#     ActionDispatch::ShowExceptions,
+#       ActionDispatch::ShowExceptions,
+        Rack::ConditionalGet,
         Rack::ETag,
+        Rack::Head,
         Rack::Lock,
+        Rack::MethodOverride,
+        Rack::Runtime,
       ]
 
       initializer 'david.clear_out_middleware' do |app|
         if config.coap.only
           UNWANTED.each { |klass| app.middleware.delete klass }
         end
+
+        app.middleware.insert_after(Rails::Rack::Logger, David::WellKnown)
       end
     end
   end
