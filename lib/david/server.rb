@@ -16,6 +16,10 @@ module David
 
       @app    = app.respond_to?(:new) ? app.new : app
 
+      if options[:CBOR].nil? && defined? Rails
+        @cbor = Rails.application.config.coap.cbor
+      end
+
       logger.info "David #{David::VERSION} on #{RUBY_DESCRIPTION}"
       logger.info "Starting on [#{@host}]:#{@port}"
 
