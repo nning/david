@@ -1,3 +1,5 @@
+require 'david/well_known'
+
 module David
   module Railties
     class Middleware < Rails::Railtie

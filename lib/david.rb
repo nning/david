@@ -22,8 +22,6 @@ require 'rack/handler/coap'
 require 'david/guerilla/rack/handler'
 
 require 'david/version'
-require 'david/well_known'
-
 require 'david/server'
 
 if defined? Rails
