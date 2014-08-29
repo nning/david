@@ -12,6 +12,8 @@ module David
       @env = env
 
       if env['PATH_INFO'] == '/.well-known/core'
+        return [405, {}, []] if env['REQUEST_METHOD'] != 'GET'
+
         links = filtered_paths.map { |path| CoRE::Link.new(path) }
         
         [200,
