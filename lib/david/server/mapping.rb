@@ -16,6 +16,11 @@ module David
         method.to_s.upcase
       end
 
+      def etag(options, bytes = 8)
+        etag = options['ETag']
+        etag.delete('"').bytes.first(bytes * 2).pack('C*').hex if etag
+      end
+
       def http_to_coap_code(code)
         code = code.to_i
 

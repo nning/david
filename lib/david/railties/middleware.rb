@@ -12,7 +12,7 @@ module David
         ActionDispatch::Session::CookieStore,
 #       ActionDispatch::ShowExceptions,
         Rack::ConditionalGet,
-        Rack::ETag,
+#       Rack::ETag,
         Rack::Head,
         Rack::Lock,
         Rack::MethodOverride,

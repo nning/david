@@ -15,13 +15,16 @@ module David
 
         code, options, body = @app.call(env)
 
-        ct = split_content_type(options['Content-Type'])
+        ct = content_type(options)
         body = body_to_string(body)
         body, ct = body_to_cbor(@cbor, body, ct)
 
         response = initialize_response(request)
+
         response.mcode = http_to_coap_code(code)
         response.payload = body
+
+        response.options[:etag] = etag(options, 4)
         response.options[:content_format] = 
           CoAP::Registry.convert_content_format(ct)
 

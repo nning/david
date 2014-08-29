@@ -10,7 +10,8 @@ module David
         s.chomp
       end
 
-      def split_content_type(ct)
+      def content_type(options)
+        ct = options['Content-Type']
         ct.split(';').first unless ct.nil?
       end
     end
