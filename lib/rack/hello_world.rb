@@ -19,7 +19,8 @@ module Rack
         ]
       when '/hello'
         [200,
-          {'Content-Type' => 'text/plain'},
+          # If Content-Length is not given, Rack assumes chunked transfer.
+          {'Content-Type' => 'text/plain', 'Content-Length' => '12'},
           ['Hello World!']
         ]
       when '/wait'
