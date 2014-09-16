@@ -3,13 +3,8 @@ module David
     module Mapping
       protected
 
-      def body_to_cbor(cbor, body, ct)
-        if cbor && ct == 'application/json'
-          body = JSON.parse(body).to_cbor
-          ct = 'application/cbor'
-        end
-
-        [body, ct]
+      def body_to_cbor(body)
+        JSON.parse(body).to_cbor
       end
 
       def coap_to_http_method(method)

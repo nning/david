@@ -17,7 +17,13 @@ module David
 
         ct = content_type(options)
         body = body_to_string(body)
-        body, ct = body_to_cbor(@cbor, body, ct)
+
+        body.close if body.respond_to?(:close)
+
+        if @cbor
+          body = body_to_cbor(body)
+          ct = 'application/cbor'
+        end
 
         response = initialize_response(request)
 
