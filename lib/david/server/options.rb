@@ -21,9 +21,19 @@ module David
         Socket::getaddrinfo(value, nil, nil, Socket::SOCK_STREAM)[0][3]
       end
 
-      def choose_logger(debug)
-        logger = ::Logger.new($stderr)
-        logger.level = debug ? ::Logger::DEBUG : ::Logger::INFO
+      def choose_logger(log)
+        fd = $stderr
+        level = ::Logger::INFO
+
+        case log
+        when 'debug'
+          level = ::Logger::DEBUG
+        when 'none'
+          fd = File.open('/dev/null', 'w')
+        end
+
+        logger = ::Logger.new(fd)
+        logger.level = level
         logger.formatter = proc do |sev, time, prog, msg|
           "#{time.strftime('[%Y-%m-%d %H:%M:%S]')} #{sev}  #{msg}\n"
         end

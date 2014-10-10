@@ -25,7 +25,7 @@ module Rack
           'Host=HOST'     => "Hostname to listen on (default: #{host})",
           'Port=PORT'     => "Port to listen on (default: #{port})",
           'CBOR=BOOLEAN'  => 'Transparent JSON/CBOR conversion.',
-          'Debug=BOOLEAN' => 'Debug output.',
+          'Log=LOG'       => 'Change logging (debug|none).'
         }
       end
     end

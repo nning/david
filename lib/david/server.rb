@@ -16,7 +16,7 @@ module David
     def initialize(app, options)
       @cbor   = choose(:cbor,   options[:CBOR])
       @host   = choose(:host,   options[:Host])
-      @logger = choose(:logger, options[:Debug])
+      @logger = choose(:logger, options[:Log])
       @port   = options[:Port].to_i
 
       @app    = app.respond_to?(:new) ? app.new : app
