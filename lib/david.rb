@@ -4,7 +4,10 @@ end
 require 'bundler/setup'
 Bundler.require
 
-require 'cbor'
+unless defined? JRuby
+  require 'cbor'
+end
+
 require 'celluloid'
 require 'celluloid/io'
 require 'coap'

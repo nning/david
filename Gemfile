@@ -1,9 +1,9 @@
 source 'https://rubygems.org'
 
-gem 'cbor'
+gem 'cbor', platform: :ruby
 gem 'celluloid'
 gem 'celluloid-io'
-gem 'coap', path: '../coap'
+gem 'coap', '~> 0.0.16.dev', path: '../coap'
 gem 'rack'
 
 group :test do

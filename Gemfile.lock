@@ -1,7 +1,8 @@
 PATH
   remote: ../coap
   specs:
-    coap (0.0.16)
+    coap (0.0.16.dev)
+      celluloid-io (~> 0.16)
       resolv-ipv6favor (~> 0)
 
 GEM
@@ -15,7 +16,9 @@ GEM
       nio4r (>= 1.0.0)
     diff-lcs (1.2.5)
     hitimes (1.2.2)
+    hitimes (1.2.2-java)
     nio4r (1.0.1)
+    nio4r (1.0.1-java)
     rack (1.5.2)
     rake (10.3.2)
     resolv-ipv6favor (0.0.0)
@@ -35,13 +38,14 @@ GEM
       hitimes
 
 PLATFORMS
+  java
   ruby
 
 DEPENDENCIES
   cbor
   celluloid
   celluloid-io
-  coap!
+  coap (~> 0.0.16.dev)!
   rack
   rake
   rspec
