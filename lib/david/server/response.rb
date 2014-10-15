@@ -92,8 +92,10 @@ module David
       end
 
       def initialize_response(request)
+        type = request.tt == :con ? :ack : :non
+
         CoAP::Message.new \
-          tt: :ack,
+          tt: type,
           mcode: 2.00,
           mid: request.mid,
           token: request.options[:token]
