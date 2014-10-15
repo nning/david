@@ -45,10 +45,6 @@ module David
       loop { async.handle_input(*@socket.recvfrom(1024)) }
     end
 
-    def answer(host, port, message)
-      @socket.send(message.to_wire, 0, host, port)
-    end
-
     def handle_input(data, sender)
       _, port, host = sender
       request = CoAP::Message.parse(data)
@@ -60,7 +56,7 @@ module David
 
       logger.debug response.inspect
 
-      answer(host, port, response)
+      CoAP::Ether.send(response, host, port, socket: @socket)
     end
   end
 end
