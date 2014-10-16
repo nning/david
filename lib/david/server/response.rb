@@ -39,6 +39,16 @@ module David
       protected
 
       def respond(host, port, request)
+        block = CoAP::Block.new(request.options[:block2]).decode
+        block.size = 1024 if request.options[:block2] == 0
+
+        # Fail if m set.
+        if block.more
+          response = initialize_response(request)
+          response.mcode = 4.05
+          return response
+        end
+
         env = basic_env(host, port, request)
         logger.debug env
 
@@ -54,14 +64,23 @@ module David
           ct = CONTENT_TYPE_CBOR
         end
 
+        mcode = http_to_coap_code(code)
+        etag  = etag(options, 4)
+        cf    = CoAP::Registry.convert_content_format(ct)
+
         response = initialize_response(request)
 
-        response.mcode = http_to_coap_code(code)
-        response.payload = body
+        response.mcode = mcode
+        response.payload = block.chunk(body)
 
-        response.options[:etag] = etag(options, 4)
-        response.options[:content_format] = 
-          CoAP::Registry.convert_content_format(ct)
+        response.options[:etag] = etag
+        response.options[:content_format] = cf
+
+        block.more = !block.last?(body)
+
+        response.options[:block2] = block.encode
+
+        logger.debug block.inspect
 
         response
       end
