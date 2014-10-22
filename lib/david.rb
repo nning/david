@@ -16,7 +16,7 @@ require 'rack'
 
 include CoRE
 
-$: << File.dirname(__FILE__)
+$:.unshift(File.expand_path(File.dirname(__FILE__)))
 
 require 'rack/hello_world'
 require 'rack/handler/david'

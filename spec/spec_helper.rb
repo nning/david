@@ -1,2 +1,3 @@
-require_relative '../lib/david'
+$:.unshift(File.expand_path('../lib', File.dirname(__FILE__)))
+require 'david'
 include David

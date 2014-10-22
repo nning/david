@@ -28,7 +28,6 @@ module David
       af = ipv6 ? ::Socket::AF_INET6 : ::Socket::AF_INET
 
       # Actually Celluloid::IO::UDPServer.
-      # (Use celluloid-io from git, 0.15.0 does not support AF_INET6).
       @socket = UDPSocket.new(af)
       @socket.bind(@host, @port)
 
@@ -52,11 +51,11 @@ module David
       logger.info "[#{host}]:#{port}: #{request}"
       logger.debug request.inspect
 
-      response = respond(host, port, request)
+      response, options = respond(host, port, request)
 
       logger.debug response.inspect
 
-      CoAP::Ether.send(response, host, port, socket: @socket)
+      CoAP::Ether.send(response, host, port, options.merge(socket: @socket))
     end
   end
 end

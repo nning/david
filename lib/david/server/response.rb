@@ -45,8 +45,8 @@ module David
         # Fail if m set.
         if block.more
           response = initialize_response(request)
-          response.mcode = 4.05
-          return response
+          response.mcode = [4, 5]
+          return [response, retransmit: false]
         end
 
         env = basic_env(host, port, request)
@@ -82,7 +82,7 @@ module David
 
         logger.debug block.inspect
 
-        response
+        [response, {}]
       end
 
       def basic_env(host, port, request)
