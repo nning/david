@@ -5,57 +5,88 @@ describe Server do
   let(:port) { random_port }
   let(:client) { CoAP::Client.new(port: port) }
 
-  subject! { supervised_server(:Port => port) }
+  let!(:server) { supervised_server(:Port => port) }
 
-  context 'response to ordinary request' do
-    let(:response) { client.get('/hello', '::1') }
+  context 'ordinary request' do
+    subject { client.get('/hello', '::1') }
 
     it 'should be plausible' do
-      expect(response).to be_a(CoAP::Message)
-      expect(response.ver).to eq(1)
-      expect(response.tt).to eq(:ack)
-      expect(response.mcode).to eq([2, 5])
-      expect(response.payload).to eq('Hello World!')
+      expect(subject).to be_a(CoAP::Message)
+      expect(subject.ver).to eq(1)
+      expect(subject.tt).to eq(:ack)
+      expect(subject.mcode).to eq([2, 5])
+      expect(subject.payload).to eq('Hello World!')
     end
   end
 
-  context 'response to request for missing resource' do
-    let(:response) { client.get('/404', '::1') }
+  context 'missing resource' do
+    subject { client.get('/404', '::1') }
 
-    it 'should be 404' do
-      expect(response).to be_a(CoAP::Message)
-      expect(response.ver).to eq(1)
-      expect(response.tt).to eq(:ack)
-      expect(response.mcode).to eq([4, 4])
-      expect(response.payload).to eq('')
+    it 'should be 4.04' do
+      expect(subject).to be_a(CoAP::Message)
+      expect(subject.ver).to eq(1)
+      expect(subject.tt).to eq(:ack)
+      expect(subject.mcode).to eq([4, 4])
+      expect(subject.payload).to eq('')
     end
   end
 
-  context 'response to request with unsupported method' do
-    let(:response) { client.delete('/hello', '::1') }
+  context 'unsupported method' do
+    subject { client.delete('/hello', '::1') }
 
-    it 'should be 405' do
-      expect(response).to be_a(CoAP::Message)
-      expect(response.ver).to eq(1)
-      expect(response.tt).to eq(:ack)
-      expect(response.mcode).to eq([4, 5])
-      expect(response.payload).to eq('')
+    it 'should be 4.05' do
+      expect(subject).to be_a(CoAP::Message)
+      expect(subject.ver).to eq(1)
+      expect(subject.tt).to eq(:ack)
+      expect(subject.mcode).to eq([4, 5])
+      expect(subject.payload).to eq('')
     end
   end
 
-  context 'response to request with block2.more set' do
-    let(:response) { client.get('/', '::1', nil, nil, block2: 14) }
+  context 'block' do
+    context 'block2.more set' do
+      subject { client.get('/', '::1', nil, nil, block2: 14) }
 
-    it 'should be an error' do
-      expect(response).to be_a(CoAP::Message)
-      expect(response.ver).to eq(1)
-      expect(response.tt).to eq(:ack)
-      expect(response.mcode).to eq([4, 5])
-      expect(response.payload).to eq('')
+      it 'should be an error' do
+        expect(subject).to be_a(CoAP::Message)
+        expect(subject.ver).to eq(1)
+        expect(subject.tt).to eq(:ack)
+        expect(subject.mcode).to eq([4, 5])
+        expect(subject.payload).to eq('')
+      end
+    end
+
+    context 'non existent' do
+      let(:client) do
+        CoAP::Client.new \
+          port: port,
+          retransmit: false,
+          recv_timeout: 0.1
+      end
+
+      subject { client.get('/hello', '::1', nil, nil, block2: 16) }
+
+      it 'should be an error' do
+        expect { subject }.to raise_error(Timeout::Error)
+      end
+    end
+
+    context 'transfer' do
+      subject do
+        [0, 16].map do |x|
+          client.get('/block', '::1', nil, nil, block2: x)
+        end
+      end
+
+      it { expect(subject[0].mcode).to eq([2, 5]) }
+      it { expect(subject[0].payload.bytesize).to eq(16) }
+
+      it { expect(subject[1].mcode).to eq([2, 5]) }
+      it { expect(subject[1].payload.bytesize).to eq(1) }
     end
   end
 
   after do
-    subject.terminate
+    server.terminate
   end
 end

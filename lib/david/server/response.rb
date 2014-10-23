@@ -39,9 +39,14 @@ module David
       protected
 
       def respond(host, port, request)
-        if @block
-          block = CoAP::Block.new(request.options[:block2]).decode
-          block.size = 1024 if request.options[:block2] == 0
+        block_enabled = request.mcode == :get ? @block : false
+
+        if block_enabled
+          block = if request.options[:block2].nil?
+            CoAP::Block.new(0, false, 1024)
+          else
+            CoAP::Block.new(request.options[:block2]).decode
+          end
 
           # Fail if m set.
           if block.more
@@ -66,7 +71,7 @@ module David
           ct = CONTENT_TYPE_CBOR
         end
 
-        return if @block && !block.included_by?(body)
+        return if block_enabled && !block.included_by?(body)
 
         mcode = http_to_coap_code(code)
         etag  = etag(options, 4)
@@ -74,7 +79,7 @@ module David
 
         response = initialize_response(request, mcode)
 
-        if @block
+        if block_enabled
           block.more = block.more?(body)
 
           response.payload = block.chunk(body)

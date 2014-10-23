@@ -37,6 +37,12 @@ module Rack
           {'Content-Type' => 'text/plain'},
           ["#{@@value}"]
         ]
+      when '/block'
+        n = 17
+        [200,
+          {'Content-Type' => 'text/plain', 'Content-Length' => n},
+          ['+'*n]
+        ]
       else
         [404, {}, ['']]
       end
