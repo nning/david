@@ -66,18 +66,20 @@ module David
           ct = CONTENT_TYPE_CBOR
         end
 
+        return if @block && !block.included_by?(body)
+
         mcode = http_to_coap_code(code)
         etag  = etag(options, 4)
         cf    = CoAP::Registry.convert_content_format(ct)
 
-        response = initialize_response(request)
-
-        response.mcode = mcode
+        response = initialize_response(request, mcode)
 
         if @block
+          block.more = block.more?(body)
+
           response.payload = block.chunk(body)
-          block.more = !block.last?(body)
           response.options[:block2] = block.encode
+
           logger.debug block.inspect
         else
           response.payload = body
@@ -114,12 +116,12 @@ module David
         }
       end
 
-      def initialize_response(request)
+      def initialize_response(request, mcode = 2.00)
         type = request.tt == :con ? :ack : :non
 
         CoAP::Message.new \
           tt: type,
-          mcode: 2.00,
+          mcode: mcode,
           mid: request.mid,
           token: request.options[:token]
       end

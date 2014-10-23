@@ -56,9 +56,10 @@ module David
 
       response, options = respond(host, port, request)
 
-      logger.debug response.inspect
-
-      CoAP::Ether.send(response, host, port, options.merge(socket: @socket))
+      unless response.nil?
+        logger.debug response.inspect
+        CoAP::Ether.send(response, host, port, options.merge(socket: @socket))
+      end
     end
   end
 end
