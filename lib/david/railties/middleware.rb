@@ -1,4 +1,5 @@
 require 'david/well_known'
+require 'david/show_exceptions'
 
 module David
   module Railties
@@ -10,9 +11,7 @@ module David
         ActionDispatch::RemoteIp,
         ActionDispatch::RequestId,
         ActionDispatch::Session::CookieStore,
-#       ActionDispatch::ShowExceptions,
         Rack::ConditionalGet,
-#       Rack::ETag,
         Rack::Head,
         Rack::Lock,
         Rack::MethodOverride,
@@ -25,6 +24,7 @@ module David
         end
 
         app.middleware.insert_after(Rails::Rack::Logger, David::WellKnown)
+        app.middleware.swap(ActionDispatch::ShowExceptions, David::ShowExceptions)
       end
     end
   end
