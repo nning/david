@@ -48,6 +48,8 @@ module David
             CoAP::Block.new(request.options[:block2]).decode
           end
 
+          logger.debug block.inspect
+
           # Fail if m set.
           if block.more
             response = initialize_response(request)
