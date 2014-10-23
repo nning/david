@@ -2,8 +2,8 @@ module Rack
   module Handler
     class David
       DEFAULT_OPTIONS = {
-        :Host => ENV['RACK_ENV'] == 'development' ? '::1' : '::',
-        :Port => ::CoAP::PORT
+        :Host  => ENV['RACK_ENV'] == 'development' ? '::1' : '::',
+        :Port  => ::CoAP::PORT
       }
 
       def self.run(app, options={})
@@ -24,6 +24,7 @@ module Rack
         {
           'Host=HOST'     => "Hostname to listen on (default: #{host})",
           'Port=PORT'     => "Port to listen on (default: #{port})",
+          'Block=BOOLEAN' => 'Support for blockwise transfer.',
           'CBOR=BOOLEAN'  => 'Transparent JSON/CBOR conversion.',
           'Log=LOG'       => 'Change logging (debug|none).'
         }

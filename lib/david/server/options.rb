@@ -7,6 +7,14 @@ module David
         send(('choose_' + name.to_s).to_sym, value)
       end
 
+      def choose_block(value)
+        if value.nil? && defined? Rails
+          value = Rails.application.config.coap.block
+        end
+
+        value.nil? ? true : !!value
+      end
+
       def choose_cbor(value)
         if value.nil? && defined? Rails
           value = Rails.application.config.coap.cbor

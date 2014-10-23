@@ -39,14 +39,16 @@ module David
       protected
 
       def respond(host, port, request)
-        block = CoAP::Block.new(request.options[:block2]).decode
-        block.size = 1024 if request.options[:block2] == 0
+        if @block
+          block = CoAP::Block.new(request.options[:block2]).decode
+          block.size = 1024 if request.options[:block2] == 0
 
-        # Fail if m set.
-        if block.more
-          response = initialize_response(request)
-          response.mcode = [4, 5]
-          return [response, retransmit: false]
+          # Fail if m set.
+          if block.more
+            response = initialize_response(request)
+            response.mcode = [4, 5]
+            return [response, retransmit: false]
+          end
         end
 
         env = basic_env(host, port, request)
@@ -71,16 +73,18 @@ module David
         response = initialize_response(request)
 
         response.mcode = mcode
-        response.payload = block.chunk(body)
+
+        if @block
+          response.payload = block.chunk(body)
+          block.more = !block.last?(body)
+          response.options[:block2] = block.encode
+          logger.debug block.inspect
+        else
+          response.payload = body
+        end
 
         response.options[:etag] = etag
         response.options[:content_format] = cf
-
-        block.more = !block.last?(body)
-
-        response.options[:block2] = block.encode
-
-        logger.debug block.inspect
 
         [response, {}]
       end

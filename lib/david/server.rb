@@ -14,6 +14,7 @@ module David
     finalizer :shutdown
 
     def initialize(app, options)
+      @block  = choose(:block,  options[:Block])
       @cbor   = choose(:cbor,   options[:CBOR])
       @host   = choose(:host,   options[:Host])
       @logger = choose(:logger, options[:Log])
