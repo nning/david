@@ -9,16 +9,21 @@ module David
     end
 
     def _call(env)
-      @env = env
-
       if env['PATH_INFO'] == '/.well-known/core'
         return [405, {}, []] if env['REQUEST_METHOD'] != 'GET'
 
+        @env = env
+
         links = filtered_paths.map { |path| CoRE::Link.new(path) }
+        body  = links.map(&:to_s).join(',')
         
-        [200,
-          {'Content-Type' => 'application/link-format'},
-          [links.map(&:to_s).join(',')]
+        [
+          200,
+          {
+            'Content-Type'   => 'application/link-format',
+            'Content-Length' => body.bytesize
+          },
+          [body]
         ]
       else
         @app.call(env)
