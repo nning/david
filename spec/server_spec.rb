@@ -3,9 +3,11 @@ require 'benchmark'
 
 describe Server do
   let(:port) { random_port }
-  let(:client) { CoAP::Client.new(port: port) }
+  let(:client) do
+    CoAP::Client.new(port: port, retransmit: false, recv_timeout: 0.1)
+  end
 
-  let!(:server) { supervised_server(:Port => port) }
+  let!(:server) { supervised_server(:Port => port, :Log => 'debug') }
 
   context 'ordinary request' do
     subject { client.get('/hello', '::1') }
@@ -40,6 +42,26 @@ describe Server do
       expect(subject.tt).to eq(:ack)
       expect(subject.mcode).to eq([4, 5])
       expect(subject.payload).to eq('')
+    end
+  end
+
+  # ff02::1 works funnily. So we're sending without interface specification and
+  # the server is receiving via link-local on ethernet interface despite only
+  # listening on ::1.
+  context 'multicast' do
+#   ['ff02::1', '224.0.1.187', 'ff02::fd', 'ff05::fd'].each do |address|
+    ['ff02::1'].each do |address|
+      context address do
+        subject { client.get('/hello', address) }
+
+        it 'should be 2.05' do
+          expect(subject).to be_a(CoAP::Message)
+          expect(subject.ver).to eq(1)
+          expect(subject.tt).to eq(:ack)
+          expect(subject.mcode).to eq([2, 5])
+          expect(subject.payload).to eq('Hello World!')
+        end
+      end
     end
   end
 
