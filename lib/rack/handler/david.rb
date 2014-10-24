@@ -22,11 +22,12 @@ module Rack
         host, port = DEFAULT_OPTIONS.values_at(:Host, :Port)
 
         {
-          'Host=HOST'     => "Hostname to listen on (default: #{host})",
-          'Port=PORT'     => "Port to listen on (default: #{port})",
-          'Block=BOOLEAN' => 'Support for blockwise transfer.',
-          'CBOR=BOOLEAN'  => 'Transparent JSON/CBOR conversion.',
-          'Log=LOG'       => 'Change logging (debug|none).'
+          'Block=BOOLEAN'     => 'Support for blockwise transfer.',
+          'CBOR=BOOLEAN'      => 'Transparent JSON/CBOR conversion.',
+          'Host=HOST'         => "Hostname to listen on (default: #{host})",
+          'Log=LOG'           => 'Change logging (debug|none).',
+          'Multicast=BOOLEAN' => 'Multicast support.',
+          'Port=PORT'         => "Port to listen on (default: #{port})"
         }
       end
     end

@@ -50,6 +50,14 @@ module David
 
         logger
       end
+
+      def choose_mcast(value)
+        if value.nil? && defined? Rails
+          value = Rails.application.config.coap.multicast
+        end
+
+        value.nil? ? true : !!value
+      end
     end
   end
 end

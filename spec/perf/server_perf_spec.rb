@@ -6,12 +6,12 @@ describe Server, 'performance' do
 
   subject! do
     supervised_server \
-      :Port => port, :Block => false,
+      :Port => port, :Block => false, :Multicast => false,
       :app => ->(e) { [200, { 'Content-Length' => 0 }, ['']] }
   end
 
   let(:client) do
-    CoAP::Client.new(port: port, retransmit: false, recv_timeout: 0.01)
+    CoAP::Client.new(port: port, retransmit: false, recv_timeout: 0.05)
   end
 
   # Stolen from thin.
