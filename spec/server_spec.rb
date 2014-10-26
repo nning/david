@@ -7,7 +7,7 @@ describe Server do
     CoAP::Client.new(port: port, retransmit: false, recv_timeout: 0.1)
   end
 
-  let!(:server) { supervised_server(:Port => port) }
+  let!(:server) { supervised_server(:Port => port, :Log => debug) }
 
   context 'ordinary request' do
     subject { client.get('/hello', '::1') }

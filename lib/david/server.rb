@@ -1,3 +1,4 @@
+require 'david/server/multicast'
 require 'david/server/options'
 require 'david/server/response'
 
@@ -6,6 +7,7 @@ module David
     include Celluloid::IO
     include CoAP::Codification
 
+    include Multicast
     include Options
     include Response
 
@@ -32,7 +34,7 @@ module David
       # Actually Celluloid::IO::UDPSocket.
       @socket = UDPSocket.new(af)
 
-      multicast_listen(@socket, ipv6) if @mcast
+      multicast_initialize(@socket, ipv6) if @mcast
 
       @socket.bind(@host, @port)
 
@@ -56,23 +58,6 @@ module David
         logger.debug response.inspect
         CoAP::Ether.send(response, host, port, options.merge(socket: @socket))
       end
-    end
-
-    # See https://tools.ietf.org/html/rfc7252#section-12.8
-    def multicast_listen(socket, ipv6)
-      if ipv6
-        ['ff02::fd', 'ff05::fd'].each do |maddr|
-          mreq = IPAddr.new(maddr).hton + [0].pack('i_')
-          @socket.to_io.setsockopt(Socket::IPPROTO_IPV6,
-            Socket::IPV6_JOIN_GROUP, mreq)
-        end
-      else
-        mreq = IPAddr.new('224.0.1.187').hton + IPAddr.new('0.0.0.0').hton
-        @socket.to_io.setsockopt(Socket::IPPROTO_IP, Socket::IP_ADD_MEMBERSHIP,
-          mreq)
-      end
-
-      @socket
     end
 
     def run

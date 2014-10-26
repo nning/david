@@ -6,7 +6,7 @@ describe Server, 'performance' do
 
   subject! do
     supervised_server \
-      :Port => port, :Block => false, :Multicast => false,
+      :Port => port, :Block => false, :Multicast => false, :Log => debug,
       :app => ->(e) { [200, { 'Content-Length' => 0 }, ['']] }
   end
 
