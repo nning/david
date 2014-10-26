@@ -1,11 +1,16 @@
 language: ruby
 
+os:
+  - linux
+  - osx
+
 rvm:
   - 2.1
   - jruby
 
 matrix:
   allow_failures:
+    - os: osx
     - rvm: jruby
 
 notifications:
