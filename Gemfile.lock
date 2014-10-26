@@ -1,5 +1,6 @@
-PATH
-  remote: ../coap
+GIT
+  remote: git://github.com/nning/coap.git
+  revision: 159d4d3b9a51938da02b579594e77a55910a628b
   specs:
     coap (0.0.17.dev)
       celluloid-io (~> 0.16, >= 0.16.1)
@@ -67,7 +68,7 @@ DEPENDENCIES
   cbor
   celluloid
   celluloid-io
-  coap (~> 0.0.16.dev)!
+  coap (~> 0.0.17.dev)!
   coveralls
   rack
   rake
