@@ -1,0 +1,16 @@
+language: ruby
+
+rvm:
+  - 2.1
+  - jruby
+
+matrix:
+  allow_failures:
+    - rvm: jruby
+
+notifications:
+  email: false
+
+script:
+  - bundle exec rake build
+  - bundle exec rake

@@ -6,7 +6,11 @@ gem 'celluloid-io'
 gem 'coap', '~> 0.0.16.dev', path: '../coap'
 gem 'rack'
 
-group :test do
+group :development, :test do
   gem 'rake'
   gem 'rspec'
+end
+
+group :test do
+  gem 'coveralls', require: false
 end
