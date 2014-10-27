@@ -67,7 +67,9 @@ describe Server do
     end
 
     context 'ipv4' do
-      let!(:server) { supervised_server(:Host => '0.0.0.0', :Port => port) }
+      let!(:server) do
+        supervised_server(:Host => '0.0.0.0', :Port => port, :Log => debug)
+      end
 
       ['224.0.0.1', '224.0.1.187'].each do |address|
         context address do
