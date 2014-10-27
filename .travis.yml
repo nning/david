@@ -16,6 +16,9 @@ matrix:
 notifications:
   email: false
 
+before_script:
+  - ifconfig -a
+
 script:
   - bundle exec rake build
   - DEBUG=1 bundle exec rake
