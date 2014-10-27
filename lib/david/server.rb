@@ -34,7 +34,11 @@ module David
       # Actually Celluloid::IO::UDPSocket.
       @socket = UDPSocket.new(af)
 
-      multicast_initialize(@socket, ipv6) if @mcast
+      begin
+        multicast_initialize(@socket, ipv6) if @mcast
+      rescue Errno::ENODEV
+        logger.warn 'Multicast initialization failure: Device not found.'
+      end
 
       @socket.bind(@host, @port)
 
