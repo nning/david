@@ -18,4 +18,4 @@
 		VMs
 			Debian (7.7)					IPv6 fail (timeout)
 			Ubuntu (12.04 on Travis CI)		IPv6 fail (timeout)
-			OSX (10.9.5)					IPv6 ok, IPv4 kills networking.
+			OSX (10.9.5)					ok
