@@ -36,7 +36,7 @@ module David
 
       begin
         multicast_initialize if @mcast
-      rescue Errno::ENODEV
+      rescue Errno::ENODEV, Errno::EADDRNOTAVAIL
         logger.warn 'Multicast initialization failure: Device not found.'
       end
 
