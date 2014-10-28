@@ -50,7 +50,7 @@ describe Server do
     # ff02::1 worked funnily without extra multicast support in server. So
     # we're sending without interface specification and the server is receiving
     # via link-local on ethernet interface despite only listening on ::1.
-    context 'ipv6' do
+    context 'ipv6', multicast: :ipv6 do
       ['ff02::1', 'ff02::fd', 'ff05::fd'].each do |address|
         context address do
           subject { client.get('/hello', address) }
@@ -66,7 +66,7 @@ describe Server do
       end
     end
 
-    context 'ipv4' do
+    context 'ipv4', multicast: :ipv4 do
       let!(:server) do
         supervised_server(:Host => '0.0.0.0', :Port => port, :Log => debug)
       end
