@@ -28,14 +28,14 @@ module David
       logger.info "David #{David::VERSION} on #{RUBY_DESCRIPTION}"
       logger.info "Starting on [#{@host}]:#{@port}"
 
-      ipv6 = IPAddr.new(@host).ipv6?
-      af = ipv6 ? ::Socket::AF_INET6 : ::Socket::AF_INET
+      @ipv6 = IPAddr.new(@host).ipv6?
+      af = @ipv6 ? ::Socket::AF_INET6 : ::Socket::AF_INET
 
       # Actually Celluloid::IO::UDPSocket.
       @socket = UDPSocket.new(af)
 
       begin
-        multicast_initialize(@socket, ipv6) if @mcast
+        multicast_initialize if @mcast
       rescue Errno::ENODEV
         logger.warn 'Multicast initialization failure: Device not found.'
       end
