@@ -38,6 +38,7 @@ module David
         multicast_initialize if @mcast
       rescue Errno::ENODEV, Errno::EADDRNOTAVAIL
         logger.warn 'Multicast initialization failure: Device not found.'
+        @mcast = false
       end
 
       @socket.bind(@host, @port)

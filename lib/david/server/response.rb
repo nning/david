@@ -30,6 +30,10 @@ module David
       RACK_RUN_ONCE     = 'rack.run_once'.freeze
       RACK_LOGGER       = 'rack.logger'.freeze
 
+      # Freeze CoAP specific env keys.
+      COAP_VERSION   = 'coap.version'.freeze
+#     COAP_MULTICAST = 'coap.multicast'.freeze
+
       # Freeze some Rack env values.
       EMPTY_STRING          = ''.freeze
       CONTENT_TYPE_JSON     = 'application/json'.freeze
@@ -120,6 +124,8 @@ module David
           RACK_MULTIPROCESS => true,
           RACK_RUN_ONCE     => false,
           RACK_LOGGER       => @logger,
+          COAP_VERSION      => 1,
+#         COAP_MULTICAST    => false,
         }
       end
 
