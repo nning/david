@@ -13,18 +13,22 @@ module David
     rescue Exception => exception
       if env['action_dispatch.show_exceptions'] == false
         raise exception
-      else
-        render_exception(env, exception)
       end
+
+      @env = env
+
+      render_exception(exception)
     end
 
     private
 
-    def render_exception(env, exception)
+    def render_exception(exception)
       body = {
         error: exception.class.to_s,
         message: exception.message
       }
+
+      log(:info, [body[:error], body[:message]].join("\n"))
       
       body = body.to_json
 
@@ -35,6 +39,11 @@ module David
         },
         [body]
       ]
+    end
+
+    def log(level, message)
+      @logger ||= @env['rack.logger']
+      @logger.send(level, message) if @logger
     end
   end
 end
