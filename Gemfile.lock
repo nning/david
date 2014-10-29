@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/nning/coap.git
-  revision: 77eb50650be2dbd72281ce8369e692771c38e81a
+  revision: 4d5d8c6fb0e7e218f8f66ab0310372fbd9221e03
   specs:
     coap (0.0.17.dev)
       celluloid-io (~> 0.16, >= 0.16.1)
@@ -25,7 +25,7 @@ GEM
     docile (1.1.5)
     hitimes (1.2.2)
     hitimes (1.2.2-java)
-    mime-types (2.4.2)
+    mime-types (2.4.3)
     multi_json (1.10.1)
     netrc (0.8.0)
     nio4r (1.0.1)
