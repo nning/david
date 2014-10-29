@@ -47,9 +47,7 @@ describe Server do
 
   # See https://tools.ietf.org/html/rfc7252#section-12.8
   context 'multicast' do
-    # ff02::1 worked funnily without extra multicast support in server. So
-    # we're sending without interface specification and the server is receiving
-    # via link-local on ethernet interface despite only listening on ::1.
+    # -A INPUT -m pkttype --pkt-type multicast -d ff02::fd -j ACCEPT
     context 'ipv6', multicast: :ipv6 do
       ['ff02::1', 'ff02::fd', 'ff05::fd'].each do |address|
         context address do
@@ -66,6 +64,7 @@ describe Server do
       end
     end
 
+    # -A INPUT -m pkttype --pkt-type multicast -d 224.0.1.187 -j ACCEPT
     context 'ipv4', multicast: :ipv4 do
       let!(:server) do
         supervised_server(:Host => '0.0.0.0', :Port => port, :Log => debug)
