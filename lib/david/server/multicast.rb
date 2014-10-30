@@ -14,7 +14,7 @@ module David
           multicast_listen_ipv4(maddrs.first)
         end
 
-        logger.debug "Joined multicast groups: #{maddrs.join(', ')}."
+        logger.debug "Joined multicast groups: #{maddrs.join(', ')}"
       end
 
       def multicast_listen_ipv4(address)

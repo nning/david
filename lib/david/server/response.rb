@@ -40,7 +40,7 @@ module David
       CONTENT_TYPE_CBOR     = 'application/cbor'.freeze
       RACK_URL_SCHEME_HTTP  = 'http'.freeze
 
-      protected
+      private
 
       def respond(host, port, request)
         block_enabled = request.mcode == :get ? @block : false
@@ -84,6 +84,17 @@ module David
         cf    = CoAP::Registry.convert_content_format(ct)
 
         response = initialize_response(request, mcode)
+
+        if @observe && !request.options[:observe].nil?
+          token = request.options[:token]
+
+          if request.options[:observe] == 0
+            observe.add(host, token, env, etag)
+            response.options[:observe] = 0
+          else
+            observe.delete(host, token)
+          end
+        end
 
         if block_enabled
           block.more = block.more?(body)
@@ -137,6 +148,10 @@ module David
           mcode: mcode,
           mid: request.mid,
           token: request.options[:token]
+      end
+
+      def observe
+        Celluloid::Actor[:observe]
       end
     end
   end

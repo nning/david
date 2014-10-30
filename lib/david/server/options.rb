@@ -8,11 +8,7 @@ module David
       end
 
       def choose_block(value)
-        if value.nil? && defined? Rails
-          value = Rails.application.config.coap.block
-        end
-
-        value.nil? ? true : !!value
+        default_to_true(:block, value)
       end
 
       def choose_cbor(value)
@@ -52,8 +48,16 @@ module David
       end
 
       def choose_mcast(value)
+        default_to_true(:multicast, value)
+      end
+
+      def choose_observe(value)
+        default_to_true(:observe, value)
+      end
+
+      def default_to_true(key, value)
         if value.nil? && defined? Rails
-          value = Rails.application.config.coap.multicast
+          value = Rails.application.config.coap.send(key)
         end
 
         value.nil? ? true : !!value

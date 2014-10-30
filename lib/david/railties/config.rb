@@ -6,6 +6,7 @@ module David
       config.coap.block     = true
       config.coap.cbor      = true
       config.coap.multicast = true
+      config.coap.observe   = true
       config.coap.only      = true
     end
   end

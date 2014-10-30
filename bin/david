@@ -3,9 +3,10 @@
 require_relative '../lib/david'
 require_relative '../lib/rack/hello_world'
 
-debug = true if ARGV.include?('-d')
+debug = 'none'
+debug = 'debug' if ARGV.include?('-d')
 
 klass = Rack::HelloWorld.new
 klass = Rack::Lint.new(klass) if ARGV.include?('-l')
 
-Rack::Handler::David.run(klass, :Debug => debug)
+Rack::Handler::David.run(klass, :Log => debug)

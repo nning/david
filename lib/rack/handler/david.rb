@@ -2,19 +2,24 @@ module Rack
   module Handler
     class David
       DEFAULT_OPTIONS = {
-        :Host  => ENV['RACK_ENV'] == 'development' ? '::1' : '::',
-        :Port  => ::CoAP::PORT
+        :Host => ENV['RACK_ENV'] == 'development' ? '::1' : '::',
+        :Port => ::CoAP::PORT
       }
 
       def self.run(app, options={})
         options = DEFAULT_OPTIONS.merge(options)
 
-        supervisor = ::David::Server.supervise_as(:david, app, options)
+        g = Celluloid::SupervisionGroup.run!
+
+        g.supervise_as(:server, ::David::Server, app, options)
+        g.supervise_as(:observe, ::David::Observe) if options[:Observe] != false
 
         begin
           sleep
         rescue Interrupt
-          supervisor.terminate
+          Celluloid.logger.info 'Terminated'
+          Celluloid.logger = nil
+          g.terminate
         end
       end
 
@@ -22,11 +27,12 @@ module Rack
         host, port = DEFAULT_OPTIONS.values_at(:Host, :Port)
 
         {
-          'Block=BOOLEAN'     => 'Support for blockwise transfer.',
+          'Block=BOOLEAN'     => 'Support for blockwise transfer (default: true).',
           'CBOR=BOOLEAN'      => 'Transparent JSON/CBOR conversion.',
           'Host=HOST'         => "Hostname to listen on (default: #{host})",
           'Log=LOG'           => 'Change logging (debug|none).',
-          'Multicast=BOOLEAN' => 'Multicast support.',
+          'Multicast=BOOLEAN' => 'Multicast support (default: true).',
+          'Observe=BOOLEAN'   => 'Observe support (default: true).',
           'Port=PORT'         => "Port to listen on (default: #{port})"
         }
       end

@@ -16,14 +16,15 @@ module David
     finalizer :shutdown
 
     def initialize(app, options)
-      @block  = choose(:block,  options[:Block])
-      @cbor   = choose(:cbor,   options[:CBOR])
-      @host   = choose(:host,   options[:Host])
-      @logger = choose(:logger, options[:Log])
-      @mcast  = choose(:mcast,  options[:Multicast])
-      @port   = options[:Port].to_i
+      @block   = choose(:block,   options[:Block])
+      @cbor    = choose(:cbor,    options[:CBOR])
+      @host    = choose(:host,    options[:Host])
+      @logger  = choose(:logger,  options[:Log])
+      @mcast   = choose(:mcast,   options[:Multicast])
+      @observe = choose(:observe, options[:Observe])
+      @port    = options[:Port].to_i
 
-      @app    = app.respond_to?(:new) ? app.new : app
+      @app     = app.respond_to?(:new) ? app.new : app
 
       logger.info "David #{David::VERSION} on #{RUBY_DESCRIPTION}"
       logger.info "Starting on [#{@host}]:#{@port}"
