@@ -9,7 +9,7 @@ module David
       @tick_interval = tick_interval
       async.run
 
-      logger.debug 'Observe initialized'
+      log.debug 'Observe initialized'
     end
 
     def add(host, token, env, etag)
@@ -30,8 +30,9 @@ module David
 
     private
 
-    def logger
-      Celluloid.logger
+    def log
+      @log ||= Celluloid.logger 
+      @log ||= ::Logger.new(nil)
     end
 
     def run
@@ -39,8 +40,8 @@ module David
     end
 
     def tick
-      logger.debug 'Observe tick'
-      logger.debug self unless self.empty?
+      log.debug 'Observe tick'
+      log.debug self unless self.empty?
     end
   end
 end
