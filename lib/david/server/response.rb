@@ -40,9 +40,7 @@ module David
       CONTENT_TYPE_CBOR     = 'application/cbor'.freeze
       RACK_URL_SCHEME_HTTP  = 'http'.freeze
 
-      private
-
-      def respond(host, port, request)
+      def respond(host, port, request, env = nil)
         block_enabled = request.mcode == :get ? @block : false
 
         if block_enabled
@@ -56,13 +54,12 @@ module David
 
           # Fail if m set.
           if block.more
-            response = initialize_response(request)
-            response.mcode = [4, 5]
+            response = initialize_response(request, 4.05)
             return [response, retransmit: false]
           end
         end
 
-        env = basic_env(host, port, request)
+        env ||= basic_env(host, port, request)
         logger.debug env
 
         code, options, body = @app.call(env)
@@ -79,9 +76,9 @@ module David
 
         return if block_enabled && !block.included_by?(body)
 
-        mcode = http_to_coap_code(code)
-        etag  = etag(options, 4)
         cf    = CoAP::Registry.convert_content_format(ct)
+        etag  = etag(options, 4)
+        mcode = http_to_coap_code(code)
 
         response = initialize_response(request, mcode)
 
@@ -89,10 +86,10 @@ module David
           token = request.options[:token]
 
           if request.options[:observe] == 0
-            observe.add(host, token, env, etag)
+            observe.add(host, request, env, etag)
             response.options[:observe] = 0
           else
-            observe.delete(host, token)
+            observe.delete(host, request)
           end
         end
 
@@ -107,11 +104,13 @@ module David
           response.payload = body
         end
 
-        response.options[:etag] = etag
         response.options[:content_format] = cf
+        response.options[:etag] = etag
 
         [response, {}]
       end
+
+      private
 
       def basic_env(host, port, request)
         {
@@ -146,7 +145,7 @@ module David
         CoAP::Message.new \
           tt: type,
           mcode: mcode,
-          mid: request.mid,
+          mid: request.mid || SecureRandom.random_number(0xffff),
           token: request.options[:token]
       end
 
