@@ -1,4 +1,5 @@
-require_relative 'lib/david/version'
+$:.unshift File.expand_path('lib', File.dirname(__FILE__))
+require 'david/version'
 
 Gem::Specification.new do |s|
   s.name = 'david'

@@ -12,14 +12,14 @@ module David
       log.debug 'Observe initialized'
     end
 
-    def add(host, request, env, etag)
+    def add(host, port, socket, request, env, etag)
       request = request.dup
 
       request.mid = nil
       request.options.delete(:observe)
 
       self[[host, request.options[:token]]] ||=
-        [0, request, env, etag, Time.now.to_i]
+        [0, port, socket, request, env, etag, Time.now.to_i]
     end
 
     def delete(host, request)
@@ -31,7 +31,7 @@ module David
     end
 
     def to_s
-      self.map { |k, v| [*k, v[2]['PATH_INFO'], v[0]].inspect }.join(', ')
+      self.map { |k, v| [*k, v[4]['PATH_INFO'], v[0]].inspect }.join(', ')
     end
 
     private
@@ -56,16 +56,32 @@ module David
       self.each do |key, value|
         host    = key[0]
         n       = value[0] += 1
-        request = value[1]
-        env     = value[2]
+        port    = value[1]
+        socket  = value[2]
+        request = value[3]
+        env     = value[4]
 
-        response, options = server.respond(host, CoAP::PORT, request, env)
+        response, options = server.respond(host, port, request, env)
 
         unless response.nil?
           response.options[:observe] = n
 
           log.debug response.inspect
-          CoAP::Ether.send(response, host)
+
+          if response.mcode != [2, 5] && response.mcode != [2, 3]
+            self.delete(host, request)
+            response.options[:observe] = nil
+          end
+
+          begin
+            answer = CoAP::Ether.request(response, host, port,
+              options.merge(retransmit: false, socket: socket)).last
+
+            log.debug answer.inspect
+          rescue Timeout::Error
+          else
+            self.delete(host, request) if answer.tt == :rst
+          end
         end
       end
     end

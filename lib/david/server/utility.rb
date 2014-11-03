@@ -9,11 +9,6 @@ module David
         body.each { |line| s += line + "\r\n" }
         s.chomp
       end
-
-      def content_type(options)
-        ct = options['Content-Type']
-        ct.split(';').first unless ct.nil?
-      end
     end
   end
 end

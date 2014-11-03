@@ -53,7 +53,7 @@ module David
       _, port, host = sender
       request = CoAP::Message.parse(data)
 
-      return unless [:con, :non].include?(request.tt)
+      return unless request.tt == :con || request.tt == :non
 
       logger.info "[#{host}]:#{port}: #{request}"
       logger.debug request.inspect

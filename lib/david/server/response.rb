@@ -41,7 +41,12 @@ module David
       RACK_URL_SCHEME_HTTP  = 'http'.freeze
 
       def respond(host, port, request, env = nil)
-        block_enabled = request.mcode == :get ? @block : false
+        block_enabled = @block && request.mcode == :get
+
+        observe_request =
+          @observe &&
+          !request.options[:observe].nil? &&
+          request.mcode == :get
 
         if block_enabled
           block = if request.options[:block2].nil?
@@ -64,7 +69,7 @@ module David
 
         code, options, body = @app.call(env)
 
-        ct = content_type(options)
+        ct = options['Content-Type']
         body = body_to_string(body)
 
         body.close if body.respond_to?(:close)
@@ -82,11 +87,11 @@ module David
 
         response = initialize_response(request, mcode)
 
-        if @observe && !request.options[:observe].nil?
+        if observe_request
           token = request.options[:token]
 
           if request.options[:observe] == 0
-            observe.add(host, request, env, etag)
+            observe.add(host, port, @socket, request, env, etag)
             response.options[:observe] = 0
           else
             observe.delete(host, request)
