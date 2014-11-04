@@ -48,9 +48,6 @@ module David
 
       response, options = server.respond(host, port, request, env)
 
-      log.debug etag
-      log.debug response.options[:etag]
-
       return if response.nil?
 
       message.options[:observe] = n
@@ -105,8 +102,10 @@ module David
     end
 
     def tick
-      log.debug 'Observe tick'
-      log.debug self unless self.empty?
+      unless self.empty?
+        log.debug 'Observe tick'
+        log.debug self
+      end
 
       self.each_key { |key| async.handle_update(key) }
     end
