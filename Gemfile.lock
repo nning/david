@@ -1,3 +1,11 @@
+GIT
+  remote: git://github.com/nning/coap.git
+  revision: e20260ba7759c2ac61b721d1e64c685d3aceee26
+  specs:
+    coap (0.0.17.dev)
+      celluloid-io (~> 0.16, >= 0.16.1)
+      resolv-ipv6favor (~> 0)
+
 PATH
   remote: .
   specs:
@@ -6,13 +14,6 @@ PATH
       celluloid-io (~> 0.16, >= 0.16.1)
       coap (~> 0, >= 0.0.17.dev)
       rack (~> 1.5)
-
-PATH
-  remote: ../coap
-  specs:
-    coap (0.0.17.dev)
-      celluloid-io (~> 0.16, >= 0.16.1)
-      resolv-ipv6favor (~> 0)
 
 GEM
   remote: https://rubygems.org/
