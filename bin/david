@@ -9,6 +9,7 @@ options = {}
 options[:Log] = 'debug' if ARGV.include?('-d')
 
 klass = Rack::HelloWorld.new
+klass = Rack::ETag.new(klass)
 klass = Rack::Lint.new(klass) if ARGV.include?('-l')
 
 Rack::Handler::David.run(klass, options)
