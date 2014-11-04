@@ -65,7 +65,7 @@ module David
         end
 
         env ||= basic_env(host, port, request)
-        logger.debug env
+        # logger.debug env
 
         code, options, body = @app.call(env)
 

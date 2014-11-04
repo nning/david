@@ -40,7 +40,7 @@ module David
       value   = self[key]
 
       host    = key[0]
-      n       = value[0] += 1
+      n       = value[0] + 1
       port    = value[1]
       request = value[2]
       env     = value[3]
@@ -50,7 +50,7 @@ module David
 
       return if response.nil?
 
-      message.options[:observe] = n
+      response.options[:observe] = n
       failure = false
 
       if response.mcode != [2, 5] && response.mcode != [2, 3]
@@ -60,14 +60,15 @@ module David
       end
 
       if etag != response.options[:etag] || failure
-        answer = request(response, host, port, n, options)
+        answer = request(response, host, port, options)
 
         if !answer.nil? && answer.tt == :rst
           self.delete(host, request)
         end
 
-        value[4] = response.options[:etag]
-        value[5] = Time.now.to_i
+        value[0] += 1
+        value[4]  = response.options[:etag]
+        value[5]  = Time.now.to_i
 
         self[key] = value
       end
