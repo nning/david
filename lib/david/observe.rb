@@ -36,9 +36,51 @@ module David
 
     private
 
+    def handle_update(key)
+      value   = self[key]
+
+      host    = key[0]
+      n       = value[0] += 1
+      port    = value[1]
+      request = value[2]
+      env     = value[3]
+
+      response, options = server.respond(host, port, request, env)
+
+      unless response.nil?
+        if response.mcode != [2, 5] && response.mcode != [2, 3]
+          self.delete(host, request)
+          response.options[:observe] = nil
+        end
+
+        answer = respond(response, host, port, n, options)
+
+        if !answer.nil? && answer.tt == :rst
+          self.delete(host, request)
+        end
+      end
+    end
+
     def log
       @log ||= Celluloid.logger 
       @log ||= ::Logger.new(nil)
+    end
+
+    def respond(message, host, port, n, options)
+      answer = nil
+
+      message.options[:observe] = n
+
+      log.debug message.inspect
+
+      begin
+        options.merge!(retransmit: false, socket: server.socket)
+        answer = CoAP::Ether.request(message, host, port, options).last
+        log.debug answer.inspect
+      rescue Timeout::Error
+      end
+
+      answer
     end
 
     def run
@@ -53,35 +95,7 @@ module David
       log.debug 'Observe tick'
       log.debug self unless self.empty?
 
-      self.each do |key, value|
-        host    = key[0]
-        n       = value[0] += 1
-        port    = value[1]
-        request = value[2]
-        env     = value[3]
-
-        response, options = server.respond(host, port, request, env)
-
-        unless response.nil?
-          response.options[:observe] = n
-
-          log.debug response.inspect
-
-          if response.mcode != [2, 5] && response.mcode != [2, 3]
-            self.delete(host, request)
-            response.options[:observe] = nil
-          end
-
-          begin
-            options.merge!(retransmit: false, socket: server.socket)
-            answer = CoAP::Ether.request(response, host, port, options).last
-            log.debug answer.inspect
-          rescue Timeout::Error
-          else
-            self.delete(host, request) if answer.tt == :rst
-          end
-        end
-      end
+      self.each_key { |key| async.handle_update(key) }
     end
   end
 end
