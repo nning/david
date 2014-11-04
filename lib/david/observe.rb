@@ -1,4 +1,7 @@
 module David
+# class ObserveValue < Struct.new(:n, :port, :request, :env, :etag, :time)
+# end
+
   class Observe < Hash
     include Celluloid
 
@@ -18,8 +21,10 @@ module David
       request.mid = nil
       request.options.delete(:observe)
 
+      # TODO Check if Array or Struct is more efficient.
       self[[host, request.options[:token]]] ||=
         [0, port, request, env, etag, Time.now.to_i]
+#       ObserveValue.new(0, port, request, env, etag, Time.now.to_i)
     end
 
     def delete(host, request)
@@ -50,25 +55,25 @@ module David
 
       return if response.nil?
 
-      response.options[:observe] = n
       failure = false
 
       if response.mcode != [2, 5] && response.mcode != [2, 3]
         self.delete(key)
-        response.options[:observe] = nil
         failure = true
       end
 
       if etag != response.options[:etag] || failure
+        response.options[:observe] = n unless failure
+
         answer = request(response, host, port, options)
 
         if !answer.nil? && answer.tt == :rst
           self.delete(host, request)
         end
 
-        value[0] += 1
-        value[4]  = response.options[:etag]
-        value[5]  = Time.now.to_i
+        value[0] = n
+        value[4] = response.options[:etag]
+        value[5] = Time.now.to_i
 
         self[key] = value
       end
