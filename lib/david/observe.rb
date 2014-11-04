@@ -44,20 +44,35 @@ module David
       port    = value[1]
       request = value[2]
       env     = value[3]
+      etag    = value[4]
 
       response, options = server.respond(host, port, request, env)
 
-      unless response.nil?
-        if response.mcode != [2, 5] && response.mcode != [2, 3]
-          self.delete(host, request)
-          response.options[:observe] = nil
-        end
+      log.debug etag
+      log.debug response.options[:etag]
 
-        answer = respond(response, host, port, n, options)
+      return if response.nil?
+
+      message.options[:observe] = n
+      failure = false
+
+      if response.mcode != [2, 5] && response.mcode != [2, 3]
+        self.delete(key)
+        response.options[:observe] = nil
+        failure = true
+      end
+
+      if etag != response.options[:etag] || failure
+        answer = request(response, host, port, n, options)
 
         if !answer.nil? && answer.tt == :rst
           self.delete(host, request)
         end
+
+        value[4] = response.options[:etag]
+        value[5] = Time.now.to_i
+
+        self[key] = value
       end
     end
 
@@ -66,10 +81,8 @@ module David
       @log ||= ::Logger.new(nil)
     end
 
-    def respond(message, host, port, n, options)
+    def request(message, host, port, options)
       answer = nil
-
-      message.options[:observe] = n
 
       log.debug message.inspect
 

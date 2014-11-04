@@ -110,13 +110,6 @@ describe Observe do
   end
 
   describe '#tick' do
-    let!(:add) { subject.add(*dummy1) }
-
-    it do
-      # Object.any_instance.should_receive(:foo).and_return(:return_value)
-      p subject
-      allow(CoAP::Ether).to receive(:request)
-      expect(CoAP::Ether).to receive(:request)
-    end
+    # Couldn't get mocking to work decently.
   end
 end
