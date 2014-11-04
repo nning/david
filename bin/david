@@ -1,12 +1,14 @@
 #!/usr/bin/env ruby
 
-require_relative '../lib/david'
-require_relative '../lib/rack/hello_world'
+$:.unshift(File.expand_path(File.join('..', '..', 'lib'), __FILE__))
 
-debug = 'none'
-debug = 'debug' if ARGV.include?('-d')
+require 'david'
+require 'rack/hello_world'
+
+options = {}
+options[:Log] = 'debug' if ARGV.include?('-d')
 
 klass = Rack::HelloWorld.new
 klass = Rack::Lint.new(klass) if ARGV.include?('-l')
 
-Rack::Handler::David.run(klass, :Log => debug)
+Rack::Handler::David.run(klass, options)
