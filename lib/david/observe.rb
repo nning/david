@@ -12,14 +12,14 @@ module David
       log.debug 'Observe initialized'
     end
 
-    def add(host, port, socket, request, env, etag)
+    def add(host, port, request, env, etag)
       request = request.dup
 
       request.mid = nil
       request.options.delete(:observe)
 
       self[[host, request.options[:token]]] ||=
-        [0, port, socket, request, env, etag, Time.now.to_i]
+        [0, port, request, env, etag, Time.now.to_i]
     end
 
     def delete(host, request)
@@ -31,7 +31,7 @@ module David
     end
 
     def to_s
-      self.map { |k, v| [*k, v[4]['PATH_INFO'], v[0]].inspect }.join(', ')
+      self.map { |k, v| [*k, v[3]['PATH_INFO'], v[0]].inspect }.join(', ')
     end
 
     private
@@ -57,9 +57,8 @@ module David
         host    = key[0]
         n       = value[0] += 1
         port    = value[1]
-        socket  = value[2]
-        request = value[3]
-        env     = value[4]
+        request = value[2]
+        env     = value[3]
 
         response, options = server.respond(host, port, request, env)
 
@@ -74,9 +73,8 @@ module David
           end
 
           begin
-            answer = CoAP::Ether.request(response, host, port,
-              options.merge(retransmit: false, socket: socket)).last
-
+            options.merge!(retransmit: false, socket: server.socket)
+            answer = CoAP::Ether.request(response, host, port, options).last
             log.debug answer.inspect
           rescue Timeout::Error
           else

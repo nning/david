@@ -1,5 +1,3 @@
-require 'digest'
-
 module David
   class Server
     module Mapping

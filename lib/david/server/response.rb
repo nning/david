@@ -91,7 +91,7 @@ module David
           token = request.options[:token]
 
           if request.options[:observe] == 0
-            observe.add(host, port, @socket, request, env, etag)
+            observe.add(host, port, request, env, etag)
             response.options[:observe] = 0
           else
             observe.delete(host, request)

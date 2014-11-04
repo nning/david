@@ -11,7 +11,7 @@ module David
     include Options
     include Response
 
-    attr_reader :logger
+    attr_reader :logger, :socket
 
     finalizer :shutdown
 
