@@ -24,9 +24,14 @@ require 'rack/handler/coap'
 
 require 'david/guerilla/rack/handler'
 
-require 'david/observe'
-require 'david/server'
 require 'david/version'
+
+require 'david/observe'
+
+require 'david/server/constants'
+require 'david/server/mapping'
+require 'david/server/utility'
+require 'david/server'
 
 if defined? Rails
   require 'david/railties/config'
