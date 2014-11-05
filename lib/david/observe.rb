@@ -1,5 +1,5 @@
 module David
-# class ObserveValue < Struct.new(:n, :port, :request, :env, :etag, :time)
+# class ObserveValue < Struct.new(:n, :request, :env, :etag, :time)
 # end
 
   class Observe < Hash
@@ -15,67 +15,58 @@ module David
       log.debug 'Observe initialized'
     end
 
-    def add(host, port, request, env, etag)
-      request = request.dup
-
-      request.mid = nil
-      request.options.delete(:observe)
+    def add(request, env, etag)
+      request.message.mid = nil
+      request.message.options.delete(:observe)
 
       # TODO Check if Array or Struct is more efficient.
-      self[[host, request.options[:token]]] ||=
-        [0, port, request, env, etag, Time.now.to_i]
-#       ObserveValue.new(0, port, request, env, etag, Time.now.to_i)
+      self[[request.host, request.token]] ||=
+        [0, request, env, etag, Time.now.to_i]
+#       ObserveValue.new(0, request, env, etag, Time.now.to_i)
     end
 
-    def delete(host, request)
-      _delete([host, request.options[:token]])
+    def delete(request)
+      _delete([request.host, request.token])
     end
 
-    def include?(host, request)
-      _include?([host, request.options[:token]])
+    def include?(request)
+      _include?([request.host, request.token])
     end
 
     def to_s
-      self.map { |k, v| [*k, v[3]['PATH_INFO'], v[0]].inspect }.join(', ')
+      self.map { |k, v| [*k, v[2]['PATH_INFO'], v[0]].inspect }.join(', ')
     end
 
     private
 
     def handle_update(key)
-      value   = self[key]
+      n, request, env, etag = self[key]
+      n += 1
 
-      host    = key[0]
-      n       = value[0] + 1
-      port    = value[1]
-      request = value[2]
-      env     = value[3]
-      etag    = value[4]
-
-      response, options = server.respond(host, port, request, env)
+      response, options = server.respond(request, env)
 
       return if response.nil?
 
       failure = false
 
       if response.mcode != [2, 5] && response.mcode != [2, 3]
-        self.delete(key)
+        self.delete(request)
         failure = true
       end
 
       if etag != response.options[:etag] || failure
         response.options[:observe] = n unless failure
 
-        answer = request(response, host, port, options)
+        answer = request(response, request.host, request.port, options)
 
         if !answer.nil? && answer.tt == :rst
-          self.delete(host, request)
+          self.delete(request)
+          return
         end
 
-        value[0] = n
-        value[4] = response.options[:etag]
-        value[5] = Time.now.to_i
-
-        self[key] = value
+        self[key][0] = n
+        self[key][3] = response.options[:etag]
+        self[key][4] = Time.now.to_i
       end
     end
 
@@ -93,7 +84,7 @@ module David
         options.merge!(retransmit: false, socket: server.socket)
         answer = CoAP::Ether.request(message, host, port, options).last
         log.debug answer.inspect
-      rescue Timeout::Error
+      rescue Timeout::Error, RuntimeError
       end
 
       answer

@@ -1,6 +1,6 @@
 require 'david/server/multicast'
 require 'david/server/options'
-require 'david/server/response'
+require 'david/server/respond'
 
 module David
   class Server
@@ -9,7 +9,7 @@ module David
 
     include Multicast
     include Options
-    include Response
+    include Respond
 
     attr_reader :logger, :socket
 
@@ -51,14 +51,17 @@ module David
 
     def handle_input(data, sender)
       _, port, host = sender
-      request = CoAP::Message.parse(data)
 
-      return unless request.tt == :con || request.tt == :non
+      message = CoAP::Message.parse(data)
+      request = Request.new(host, port, message)
 
-      logger.info "[#{host}]:#{port}: #{request}"
-      logger.debug request.inspect
+      return unless request.con? || request.non?
+      return unless request.valid_method?
 
-      response, options = respond(host, port, request)
+      logger.info "[#{host}]:#{port}: #{message}"
+      logger.debug message.inspect
+
+      response, options = respond(request)
 
       unless response.nil?
         logger.debug response.inspect

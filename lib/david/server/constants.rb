@@ -26,7 +26,6 @@ module David
 
       # Freeze CoAP specific env keys.
       COAP_VERSION   = 'coap.version'.freeze
-#     COAP_MULTICAST = 'coap.multicast'.freeze
 
       # Freeze some Rack env values.
       EMPTY_STRING          = ''.freeze
