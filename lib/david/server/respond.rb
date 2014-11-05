@@ -36,9 +36,12 @@ module David
 
         return if block_enabled && !request.block.included_by?(body)
 
-        cf    = CoAP::Registry.convert_content_format(ct)
-        etag  = etag(options, 4)
-        mcode = http_to_coap_code(code)
+        cf     = CoAP::Registry.convert_content_format(ct)
+        etag   = etag(options, 4)
+        mcode  = http_to_coap_code(code)
+
+        ma = max_age(options)
+        ma = ma.to_i unless ma.nil?
 
         response = initialize_response(request, mcode)
 
@@ -56,6 +59,7 @@ module David
 
         response.options[:content_format] = cf
         response.options[:etag] = etag
+        response.options[:max_age] = ma unless ma.nil?
 
         [response, {}]
       end

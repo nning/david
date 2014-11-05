@@ -27,6 +27,12 @@ module David
 
         [a, b]
       end
+
+      def max_age(options)
+        options['Cache-Control'][/max-age=([0-9]*)/, 1]
+      rescue NoMethodError
+        nil
+      end
     end
   end
 end
