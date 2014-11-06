@@ -24,7 +24,7 @@ module David
 
         code, options, body = @app.call(env)
 
-        ct = options['Content-Type']
+        ct = options[HTTP_CONTENT_TYPE]
         body = body_to_string(body)
 
         body.close if body.respond_to?(:close)

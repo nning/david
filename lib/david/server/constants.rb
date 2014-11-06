@@ -32,6 +32,11 @@ module David
       CONTENT_TYPE_JSON     = 'application/json'.freeze
       CONTENT_TYPE_CBOR     = 'application/cbor'.freeze
       RACK_URL_SCHEME_HTTP  = 'http'.freeze
+
+      # Freeze HTTP header strings.
+      HTTP_CACHE_CONTROL  = 'Cache-Control'.freeze
+      HTTP_CONTENT_TYPE   = 'Content-Type'.freeze
+      HTTP_ETAG           = 'ETag'.freeze
     end
   end
 end

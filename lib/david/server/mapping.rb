@@ -1,6 +1,8 @@
 module David
   class Server
     module Mapping
+      include Constants
+
       protected
 
       def body_to_cbor(body)
@@ -12,7 +14,7 @@ module David
       end
 
       def etag(options, bytes = 8)
-        etag = options['ETag']
+        etag = options[HTTP_ETAG]
         etag.delete('"').bytes.first(bytes * 2).pack('C*').hex if etag
       end
 
@@ -29,7 +31,7 @@ module David
       end
 
       def max_age(options)
-        options['Cache-Control'][/max-age=([0-9]*)/, 1]
+        options[HTTP_CACHE_CONTROL][/max-age=([0-9]*)/, 1]
       rescue NoMethodError
         nil
       end
