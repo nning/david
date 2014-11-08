@@ -27,4 +27,8 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'rake', '~> 0'
   s.add_development_dependency 'rspec', '~> 3.1'
+
+  s.add_development_dependency 'rspec-rails'
+  s.add_development_dependency 'rails', '~> 4.1.7'
+  s.add_development_dependency 'sqlite3'
 end
