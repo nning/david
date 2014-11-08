@@ -55,6 +55,9 @@ module David
       message = CoAP::Message.parse(data)
       request = Request.new(host, port, message)
 
+      # TODO If message is multicast, only NON and no error responses!
+      #      http://tools.ietf.org/html/rfc7252#section-8
+
       return unless request.con? || request.non?
       return unless request.valid_method?
 
