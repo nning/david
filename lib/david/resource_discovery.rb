@@ -1,5 +1,5 @@
 module David
-  class WellKnown
+  class ResourceDiscovery
     def initialize(app)
       @app = app
     end
@@ -16,6 +16,8 @@ module David
 
         links = filtered_paths.map { |path| CoRE::Link.new(path) }
         body  = links.map(&:to_s).join(',')
+
+        # TODO On multicast, do not respond if result set empty.
         
         [
           200,

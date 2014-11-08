@@ -1,4 +1,4 @@
-require 'david/well_known'
+require 'david/resource_discovery'
 require 'david/show_exceptions'
 
 module David
@@ -23,7 +23,7 @@ module David
           UNWANTED.each { |klass| app.middleware.delete klass }
         end
 
-        app.middleware.insert_after(Rails::Rack::Logger, David::WellKnown)
+        app.middleware.insert_after(Rails::Rack::Logger, David::ResourceDiscovery)
         app.middleware.swap(ActionDispatch::ShowExceptions, David::ShowExceptions)
       end
     end
