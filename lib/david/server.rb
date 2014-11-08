@@ -73,7 +73,7 @@ module David
     end
 
     def run
-      loop { async.handle_input(*@socket.recvfrom(1024)) }
+      loop { async.handle_input(*@socket.recvfrom(1152)) }
     end
 
     def shutdown
