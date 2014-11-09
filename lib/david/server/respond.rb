@@ -14,7 +14,7 @@ module David
 
         if block_enabled
           # Fail if m set.
-          if request.block.more
+          if request.block.more && !request.multicast?
             response = initialize_response(request, 4.05)
             return [response, retransmit: false]
           end
@@ -23,6 +23,9 @@ module David
         env ||= basic_env(request)
 
         code, options, body = @app.call(env)
+
+        # No error responses on multicast requests.
+        return if request.multicast? && !(200..299).include?(code)
 
         ct = options[HTTP_CONTENT_TYPE]
         body = body_to_string(body)
@@ -34,6 +37,7 @@ module David
           ct = CONTENT_TYPE_CBOR
         end
 
+        # No response on request for non-existent block.
         return if block_enabled && !request.block.included_by?(body)
 
         cf     = CoAP::Registry.convert_content_format(ct)

@@ -48,7 +48,8 @@ describe Server do
   # See https://tools.ietf.org/html/rfc7252#section-12.8
   context 'multicast' do
     let(:client) do
-      CoAP::Client.new(port: port, retransmit: false, recv_timeout: 0.1, tt: :non)
+      CoAP::Client.new(port: port, retransmit: false, recv_timeout: 0.1,
+        tt: :non)
     end
 
     # -A INPUT -m pkttype --pkt-type multicast -d ff02::fd -j ACCEPT
@@ -64,6 +65,27 @@ describe Server do
             expect(subject.mcode).to eq([2, 5])
             expect(subject.payload).to eq('Hello World!')
           end
+        end
+      end
+
+      context '4.04' do
+        subject { client.get('/404', 'ff02::fd') }
+
+        it 'should timeout' do
+          expect { subject }.to raise_error(Timeout::Error)
+        end
+      end
+
+      context 'con' do
+        let(:client) do
+          CoAP::Client.new(port: port, retransmit: false, recv_timeout: 0.1,
+            tt: :con)
+        end
+
+        subject { client.get('/hello', 'ff02::fd') }
+
+        it 'should timeout' do
+          expect { subject }.to raise_error(Timeout::Error)
         end
       end
     end
@@ -85,6 +107,27 @@ describe Server do
             expect(subject.mcode).to eq([2, 5])
             expect(subject.payload).to eq('Hello World!')
           end
+        end
+      end
+
+      context '4.04' do
+        subject { client.get('/404', '224.0.1.187') }
+
+        it 'should timeout' do
+          expect { subject }.to raise_error(Timeout::Error)
+        end
+      end
+
+      context 'con' do
+        let(:client) do
+          CoAP::Client.new(port: port, retransmit: false, recv_timeout: 0.1,
+            tt: :con)
+        end
+
+        subject { client.get('/hello', '224.0.1.187') }
+
+        it 'should timeout' do
+          expect { subject }.to raise_error(Timeout::Error)
         end
       end
     end
