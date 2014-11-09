@@ -72,8 +72,6 @@ module David
     end
 
     def run
-      # loop { async.handle_input(*@socket.recvfrom(1152)) }
-
       loop do
         begin
           async.handle_input(*@socket.to_io.recvmsg_nonblock)
