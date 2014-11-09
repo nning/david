@@ -47,6 +47,10 @@ describe Server do
 
   # See https://tools.ietf.org/html/rfc7252#section-12.8
   context 'multicast' do
+    let(:client) do
+      CoAP::Client.new(port: port, retransmit: false, recv_timeout: 0.1, tt: :non)
+    end
+
     # -A INPUT -m pkttype --pkt-type multicast -d ff02::fd -j ACCEPT
     context 'ipv6', multicast: :ipv6 do
       ['ff02::1', 'ff02::fd', 'ff05::fd'].each do |address|
@@ -56,7 +60,7 @@ describe Server do
           it 'should be 2.05' do
             expect(subject).to be_a(CoAP::Message)
             expect(subject.ver).to eq(1)
-            expect(subject.tt).to eq(:ack)
+            expect(subject.tt).to eq(:non)
             expect(subject.mcode).to eq([2, 5])
             expect(subject.payload).to eq('Hello World!')
           end
@@ -77,7 +81,7 @@ describe Server do
           it 'should be 2.05' do
             expect(subject).to be_a(CoAP::Message)
             expect(subject.ver).to eq(1)
-            expect(subject.tt).to eq(:ack)
+            expect(subject.tt).to eq(:non)
             expect(subject.mcode).to eq([2, 5])
             expect(subject.payload).to eq('Hello World!')
           end

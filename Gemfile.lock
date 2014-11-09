@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/nning/coap.git
-  revision: a112dc7b12eae4813285389d0535ef99f88c8e87
+  revision: 905ae65e08baaa672d317524f77a0463a8f9278a
   specs:
     coap (0.0.17.dev)
       celluloid-io (~> 0.16, >= 0.16.1)

@@ -49,17 +49,16 @@ module David
 
     private
 
-    def handle_input(data, sender)
-      _, port, host = sender
+    def handle_input(*args)
+      data, sender, _, anc = args
+      host, port = sender.ip_address, sender.ip_port
 
       message = CoAP::Message.parse(data)
-      request = Request.new(host, port, message)
-
-      # TODO If message is multicast, only NON and no error responses!
-      #      http://tools.ietf.org/html/rfc7252#section-8
+      request = Request.new(host, port, message, anc)
 
       return unless request.con? || request.non?
       return unless request.valid_method?
+      return if !request.non? && request.multicast?
 
       logger.info "[#{host}]:#{port}: #{message}"
       logger.debug message.inspect
@@ -73,7 +72,16 @@ module David
     end
 
     def run
-      loop { async.handle_input(*@socket.recvfrom(1152)) }
+      # loop { async.handle_input(*@socket.recvfrom(1152)) }
+
+      loop do
+        begin
+          async.handle_input(*@socket.to_io.recvmsg_nonblock)
+        rescue ::IO::WaitReadable
+          Celluloid::IO.wait_readable(@socket)
+          retry
+        end
+      end
     end
 
     def shutdown

@@ -9,9 +9,13 @@ module David
           maddrs = ['ff02::fd', 'ff05::fd']
           maddrs << 'ff02::1' if OS.osx? # OSX needs ff02::1 explicitly joined.
           maddrs.each { |maddr| multicast_listen_ipv6(maddr) }
+
+          setsockopts_ipv6
         else
           maddrs = ['224.0.1.187']
           multicast_listen_ipv4(maddrs.first)
+
+          setsockopts_ipv4
         end
 
         logger.debug "Joined multicast groups: #{maddrs.join(', ')}"
@@ -33,6 +37,14 @@ module David
 
         mreq = IPAddr.new(address).hton + [ifindex].pack('i_')
         @socket.to_io.setsockopt(:IPPROTO_IPV6, :IPV6_JOIN_GROUP, mreq)
+      end
+
+      def setsockopts_ipv4
+        @socket.to_io.setsockopt(:IPPROTO_IP, :IP_PKTINFO, 1)
+      end
+
+      def setsockopts_ipv6
+        @socket.to_io.setsockopt(:IPPROTO_IPV6, :IPV6_RECVPKTINFO, 1)
       end
     end
   end

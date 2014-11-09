@@ -91,6 +91,7 @@ module David
           RACK_RUN_ONCE     => false,
           RACK_LOGGER       => @logger,
           COAP_VERSION      => 1,
+          COAP_MULTICAST    => request.multicast?,
         }
       end
 

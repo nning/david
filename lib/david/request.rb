@@ -1,4 +1,4 @@
-class Request < Struct.new(:host, :port, :message)
+class Request < Struct.new(:host, :port, :message, :ancillary)
   def block
     @block ||= if message.options[:block2].nil?
       CoAP::Block.new(0, false, 1024)
@@ -21,6 +21,17 @@ class Request < Struct.new(:host, :port, :message)
 
   def get?
     message.mcode == :get
+  end
+
+  def multicast?
+    a = ancillary
+    return false if a.nil?
+
+    return @multicast unless @multicast.nil?
+
+    @multicast =
+      a.cmsg_is?(:IP, :PKTINFO) && a.ip_pktinfo[0].ipv4_multicast? ||
+      a.cmsg_is?(:IPV6, :PKTINFO) && a.ipv6_pktinfo[0].ipv6_multicast?
   end
 
   def non?
