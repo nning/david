@@ -32,7 +32,10 @@ module David
       
       body = body.to_json
 
-      [500,
+      code = 500
+      code = 404 if exception.is_a?(ActiveRecord::RecordNotFound)
+
+      [code,
         {
           'Content-Type' => 'application/json',
           'Content-Length' => body.bytesize.to_s
