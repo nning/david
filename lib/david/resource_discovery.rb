@@ -15,7 +15,7 @@ module David
         @env = env
 
         links = filtered_paths.map { |path| CoRE::Link.new(path) }
-        body  = links.map(&:to_s).join(',')
+        body  = links.map(&:to_s).uniq.join(',')
 
         # TODO On multicast, do not respond if result set empty.
         
