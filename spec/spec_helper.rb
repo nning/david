@@ -1,6 +1,7 @@
 # Coveralls
 require 'coveralls'
 Coveralls.wear!
+SimpleCov.start { add_filter 'spec/dummy' }
 
 # Rails
 ENV['RAILS_ENV'] ||= 'test'
