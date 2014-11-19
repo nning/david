@@ -1,7 +1,10 @@
 module David
   class ResourceDiscovery
+    include Celluloid
+
     def initialize(app)
       @app = app
+      Celluloid::Actor[:discovery] = Celluloid::Actor.current
     end
 
     def call(env)
@@ -18,12 +21,12 @@ module David
         body  = links.map(&:to_s).uniq.join(',')
 
         # TODO On multicast, do not respond if result set empty.
-        
+
         [
           200,
           {
             'Content-Type'   => 'application/link-format',
-            'Content-Length' => body.bytesize
+            'Content-Length' => body.bytesize.to_s
           },
           [body]
         ]
@@ -43,6 +46,9 @@ module David
 
       return true if href.blank?
 
+      # TODO If query end in '*', match on prefix.
+      #      Otherwise match on whole string.
+      #      https://tools.ietf.org/html/rfc6690#section-4.1
       spec =~ Regexp.new(href)
     end
 
