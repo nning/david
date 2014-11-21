@@ -30,7 +30,6 @@ describe David::ResourceDiscovery do
 
         links.each do |link|
           expect(link.uri).to match(/^\/things/)
-          expect(link.rel).to eq('hosts')
         end
       end
     end
@@ -46,7 +45,6 @@ describe David::ResourceDiscovery do
         it 'CoRE::Link' do
           expect(links.size).to eq(1)
           expect(links.first.uri).to eq('/things/new')
-          expect(links.first.rel).to eq('hosts')
         end
       end
     end
