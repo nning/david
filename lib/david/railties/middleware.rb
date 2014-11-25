@@ -23,8 +23,8 @@ module David
           UNWANTED.each { |klass| app.middleware.delete klass }
         end
 
-        app.middleware.insert_after(Rails::Rack::Logger, David::ResourceDiscovery)
         app.middleware.swap(ActionDispatch::ShowExceptions, David::ShowExceptions)
+        app.middleware.insert_after(David::ShowExceptions, David::ResourceDiscovery)
       end
     end
   end

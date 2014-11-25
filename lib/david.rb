@@ -30,6 +30,8 @@ require 'david/server'
 require 'david/version'
 
 if defined? Rails
+  require 'david/rails/action_controller/base'
+
   require 'david/railties/config'
   require 'david/railties/middleware'
 end
