@@ -4,7 +4,6 @@ module David
 
     def initialize(app)
       @app = app
-      Celluloid::Actor[:discovery] = Celluloid::Actor.current
     end
 
     def call(env)
@@ -12,27 +11,24 @@ module David
     end
 
     def _call(env)
-      if env['PATH_INFO'] == '/.well-known/core'
-        return [405, {}, []] if env['REQUEST_METHOD'] != 'GET'
+      return @app.call(env) if env['PATH_INFO']      != '/.well-known/core'
+      return [405, {}, []]  if env['REQUEST_METHOD'] != 'GET'
 
-        @env = env
+      @env = env
 
-        filtered = routes_hash.select { |link| filter(link) }
-        body     = filtered.keys.map(&:to_s).join(',')
+      filtered = routes_hash.select { |link| filter(link) }
+      body     = filtered.keys.map(&:to_s).join(',')
 
-        # TODO On multicast, do not respond if result set empty.
+      # TODO On multicast, do not respond if result set empty.
 
-        [
-          200,
-          {
-            'Content-Type'   => 'application/link-format',
-            'Content-Length' => body.bytesize.to_s
-          },
-          [body]
-        ]
-      else
-        @app.call(env)
-      end
+      [
+        200,
+        {
+          'Content-Type'   => 'application/link-format',
+          'Content-Length' => body.bytesize.to_s
+        },
+        [body]
+      ]
     end
 
     def register(controller, options)
@@ -53,9 +49,9 @@ module David
 
     def clean_routes
       @clean_routes ||= routes
-        .uniq     { |r| r[0] }
-        .select   { |r| r if include_route?(r) }
-        .each     { |r| delete_format!(r) }
+        .uniq   { |r| r[0] }
+        .select { |r| r if include_route?(r) }
+        .each   { |r| delete_format!(r) }
     end
 
     def delete_format!(route)

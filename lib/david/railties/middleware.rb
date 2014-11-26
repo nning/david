@@ -1,4 +1,4 @@
-require 'david/resource_discovery'
+require 'david/resource_discovery_proxy'
 require 'david/show_exceptions'
 
 module David
@@ -20,11 +20,11 @@ module David
 
       initializer 'david.clear_out_middleware' do |app|
         if config.coap.only
-          UNWANTED.each { |klass| app.middleware.delete klass }
+          UNWANTED.each { |klass| app.middleware.delete(klass) }
         end
 
         app.middleware.swap(ActionDispatch::ShowExceptions, David::ShowExceptions)
-        app.middleware.insert_after(David::ShowExceptions, David::ResourceDiscovery)
+        app.middleware.insert_after(David::ShowExceptions, David::ResourceDiscoveryProxy)
       end
     end
   end
