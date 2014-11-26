@@ -1,3 +1,5 @@
+require 'time'
+
 module David
 # class ObserveValue < Struct.new(:n, :request, :env, :etag, :time)
 # end
@@ -21,8 +23,8 @@ module David
 
       # TODO Check if Array or Struct is more efficient.
       self[[request.host, request.token]] ||=
-        [0, request, env, etag, Time.now.to_i]
-#       ObserveValue.new(0, request, env, etag, Time.now.to_i)
+        [0, request, env, etag, Time.now.rfc2822]
+#       ObserveValue.new(0, request, env, etag, Time.now.rfc2822)
     end
 
     def delete(request)
@@ -40,22 +42,25 @@ module David
     private
 
     def handle_update(key)
-      n, request, env, etag = self[key]
+      n, request, env, etag, time = self[key]
       n += 1
+
+      env['HTTP_IF_MODIFIED_SINCE'] = time
+      env['HTTP_IF_NONE_MATCH'] = etag
 
       response, options = server.respond(request, env)
 
-      return if response.nil?
+      log.debug([response.mcode, etag, options[:http_etag]])
 
-      failure = false
+      return if response.nil?
 
       if response.mcode != [2, 5] && response.mcode != [2, 3]
         self.delete(request)
-        failure = true
+        request(response, request.host, request.port, options)
       end
 
-      if etag != response.options[:etag] || failure
-        response.options[:observe] = n unless failure
+      if response.mcode == [2, 5] && etag != options[:http_etag]
+        response.options[:observe] = n
 
         answer = request(response, request.host, request.port, options)
 
@@ -65,8 +70,8 @@ module David
         end
 
         self[key][0] = n
-        self[key][3] = response.options[:etag]
-        self[key][4] = Time.now.to_i
+        self[key][3] = options[:http_etag]
+        self[key][4] = Time.now.rfc2822
       end
     end
 

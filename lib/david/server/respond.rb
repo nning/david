@@ -40,16 +40,18 @@ module David
         # No response on request for non-existent block.
         return if block_enabled && !request.block.included_by?(body)
 
-        cf     = CoAP::Registry.convert_content_format(ct)
-        etag   = etag(options, 4)
-        mcode  = http_to_coap_code(code)
+        cf    = CoAP::Registry.convert_content_format(ct)
+        etag  = etag_to_coap(options, 4)
+        mcode = http_to_coap_code(code)
 
         ma = max_age(options)
         ma = ma.to_i unless ma.nil?
 
         response = initialize_response(request, mcode)
 
-        handle_observe(request, response, env, etag) if @observe
+        if @observe
+          handle_observe(request, response, env, options[HTTP_ETAG])
+        end
 
         if block_enabled
           block = request.block.dup
@@ -65,7 +67,7 @@ module David
         response.options[:etag] = etag
         response.options[:max_age] = ma unless ma.nil?
 
-        [response, {}]
+        [response, { http_etag: options[HTTP_ETAG] }]
       end
 
       private
@@ -102,7 +104,7 @@ module David
       def handle_observe(request, response, env, etag)
         return unless request.get? && request.observe?
 
-        if request.message.options[:observe] == 0
+        if response.mcode == [2, 5] && request.message.options[:observe] == 0
           observe.add(request, env, etag)
           response.options[:observe] = 0
         else

@@ -11,7 +11,6 @@ module David
         ActionDispatch::RemoteIp,
         ActionDispatch::RequestId,
         ActionDispatch::Session::CookieStore,
-        Rack::ConditionalGet,
         Rack::Head,
         Rack::MethodOverride,
         Rack::Runtime,

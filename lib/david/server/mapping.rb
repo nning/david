@@ -13,7 +13,7 @@ module David
         method.to_s.upcase
       end
 
-      def etag(options, bytes = 8)
+      def etag_to_coap(options, bytes = 8)
         etag = options[HTTP_ETAG]
         etag.delete('"').bytes.first(bytes * 2).pack('C*').hex if etag
       end
@@ -21,7 +21,7 @@ module David
       def http_to_coap_code(code)
         code = code.to_i
 
-        h = {200 => 205}
+        h = {200 => 205, 304 => 203}
         code = h[code] if h[code]
 
         a = code / 100

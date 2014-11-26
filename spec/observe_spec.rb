@@ -38,7 +38,7 @@ describe Observe do
 
     # [n, request, env, etag, timestamp]
     context 'value' do
-      let!(:time) { Time.now.to_i }
+      let!(:time) { Time.now }
 
       it 'type' do
         expect(add).to be_a(Array)
@@ -56,9 +56,9 @@ describe Observe do
       end
 
       it 'timestamp' do
-        expect(value[4]).to be_a(Integer)
-        expect(value[4]).to be <= time
-        expect(value[4]).to be >  time - 2
+        expect(value[4]).to be_a(String)
+        expect(Time.rfc2822(value[4])).to be <= time
+        expect(Time.rfc2822(value[4])).to be >  time - 2
       end
     end
   end
@@ -84,7 +84,7 @@ describe Observe do
         expect(entry[1]).to eq(dummy2[0].token)
 
         expect(entry[3..5]).to eq(dummy2)
-        expect(entry[6]).to be_a(Integer)
+        expect(entry[6]).to be_a(String)
       end
     end
   end
