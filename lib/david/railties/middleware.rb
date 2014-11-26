@@ -13,7 +13,6 @@ module David
         ActionDispatch::Session::CookieStore,
         Rack::ConditionalGet,
         Rack::Head,
-        Rack::Lock,
         Rack::MethodOverride,
         Rack::Runtime,
       ]
@@ -22,6 +21,8 @@ module David
         if config.coap.only
           UNWANTED.each { |klass| app.middleware.delete(klass) }
         end
+
+        app.middleware.delete(Rack::Lock)
 
         app.middleware.swap(ActionDispatch::ShowExceptions, David::ShowExceptions)
         app.middleware.insert_after(David::ShowExceptions, David::ResourceDiscoveryProxy)
