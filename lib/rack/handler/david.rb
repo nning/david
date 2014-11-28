@@ -27,12 +27,12 @@ module Rack
         host, port = DEFAULT_OPTIONS.values_at(:Host, :Port)
 
         {
-          'Block=BOOLEAN'     => 'Support for blockwise transfer (default: true).',
-          'CBOR=BOOLEAN'      => 'Transparent JSON/CBOR conversion.',
+          'Block=BOOLEAN'     => 'Support for blockwise transfer (default: true)',
+          'CBOR=BOOLEAN'      => 'Transparent JSON/CBOR conversion (default: false)',
           'Host=HOST'         => "Hostname to listen on (default: #{host})",
-          'Log=LOG'           => 'Change logging (debug|none).',
-          'Multicast=BOOLEAN' => 'Multicast support (default: true).',
-          'Observe=BOOLEAN'   => 'Observe support (default: true).',
+          'Log=LOG'           => 'Change logging (debug|none)',
+          'Multicast=BOOLEAN' => 'Multicast support (default: true)',
+          'Observe=BOOLEAN'   => 'Observe support (default: true)',
           'Port=PORT'         => "Port to listen on (default: #{port})"
         }
       end
