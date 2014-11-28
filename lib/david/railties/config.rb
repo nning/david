@@ -4,19 +4,22 @@ module David
       config.coap = ActiveSupport::OrderedOptions.new
 
       # Blockwise transfer
-      config.coap.block     = true
+      config.coap.block = true
 
       # Transparent JSON<>CBOR conversion
-      config.coap.cbor      = false
+      config.coap.cbor = false
 
       # Multicast
       config.coap.multicast = true
 
       # Observe
-      config.coap.observe   = true
+      config.coap.observe = true
 
       # david as default Rack handler (`rails s` starts david)
-      config.coap.only      = true
+      config.coap.only = true
+
+      # Resource Discovery
+      config.coap.resource_discovery = true
     end
   end
 end
