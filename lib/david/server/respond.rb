@@ -22,29 +22,32 @@ module David
 
         env ||= basic_env(request)
 
-        code, options, body = @app.call(env)
+        code, headers, body = @app.call(env)
 
         # No error responses on multicast requests.
         return if request.multicast? && !(200..299).include?(code)
 
-        ct = options[HTTP_CONTENT_TYPE]
+        ct = headers[HTTP_CONTENT_TYPE]
         body = body_to_string(body)
 
         body.close if body.respond_to?(:close)
 
-        if @cbor
-          body = body_to_cbor(body)
-          ct = CONTENT_TYPE_CBOR
+        if @cbor && ct == 'application/json'
+          begin
+            body = body_to_cbor(body)
+            ct = CONTENT_TYPE_CBOR
+          rescue JSON::ParserError
+          end
         end
 
         # No response on request for non-existent block.
         return if block_enabled && !request.block.included_by?(body)
 
-        cf     = CoAP::Registry.convert_content_format(ct)
-        etag   = etag(options, 4)
-        mcode  = http_to_coap_code(code)
+        cf    = CoAP::Registry.convert_content_format(ct)
+        etag  = etag(headers, 4)
+        mcode = http_to_coap_code(code)
 
-        ma = max_age(options)
+        ma = max_age(headers)
         ma = ma.to_i unless ma.nil?
 
         response = initialize_response(request, mcode)
