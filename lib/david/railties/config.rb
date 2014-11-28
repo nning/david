@@ -7,7 +7,7 @@ module David
       config.coap.block     = true
 
       # Transparent JSON<>CBOR conversion
-      config.coap.cbor      = true
+      config.coap.cbor      = false
 
       # Multicast
       config.coap.multicast = true
