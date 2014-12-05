@@ -17,14 +17,25 @@ module David
       ]
 
       initializer 'david.clear_out_middleware' do |app|
+        # Remove middleware not applicable to CoAP
         if config.coap.only
           UNWANTED.each { |klass| app.middleware.delete(klass) }
         end
 
+        # Enable multithreading for Rails
         app.middleware.delete(Rack::Lock)
 
-        app.middleware.swap(ActionDispatch::ShowExceptions, David::ShowExceptions)
-        app.middleware.insert_after(David::ShowExceptions, David::ResourceDiscoveryProxy)
+        # Show exceptions as JSON
+        app.middleware.swap \
+          ActionDispatch::ShowExceptions,
+          David::ShowExceptions
+
+        # Include Resource Discovery middleware
+        if config.coap.resource_discovery
+          app.middleware.insert_after \
+            David::ShowExceptions,
+            David::ResourceDiscoveryProxy
+        end
       end
     end
   end
