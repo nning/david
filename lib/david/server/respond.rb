@@ -15,8 +15,7 @@ module David
         if block_enabled
           # Fail if m set.
           if request.block.more && !request.multicast?
-            response = initialize_response(request, 4.05)
-            return [response, retransmit: false]
+            return error(request, 4.05)
           end
         end
 
@@ -46,6 +45,9 @@ module David
         cf    = CoAP::Registry.convert_content_format(ct)
         etag  = etag(headers, 4)
         mcode = http_to_coap_code(code)
+
+        # App returned cf different from accept
+        return error(request, 4.06) if request.accept && request.accept != cf
 
         ma = max_age(headers)
         ma = ma.to_i unless ma.nil?
@@ -87,8 +89,8 @@ module David
           SERVER_NAME       => @host,
           SERVER_PORT       => @port.to_s,
           CONTENT_LENGTH    => m.payload.bytesize.to_s,
-          CONTENT_TYPE      => CONTENT_TYPE_JSON,
-          HTTP_ACCEPT       => CONTENT_TYPE_JSON,
+          CONTENT_TYPE      => EMPTY_STRING,
+          HTTP_ACCEPT       => http_accept(request),
           RACK_VERSION      => [1, 2],
           RACK_URL_SCHEME   => RACK_URL_SCHEME_HTTP,
           RACK_INPUT        => StringIO.new(m.payload),
@@ -102,6 +104,10 @@ module David
         }
       end
 
+      def error(request, mcode)
+        [initialize_response(request, mcode), retransmit: false]
+      end
+
       def handle_observe(request, response, env, etag)
         return unless request.get? && request.observe?
 
@@ -111,6 +117,11 @@ module David
         else
           observe.delete(request)
         end
+      end
+
+      def http_accept(request)
+        CoAP::Registry.convert_content_format(request.accept) ||
+          CONTENT_TYPE_JSON
       end
 
       def initialize_response(request, mcode = 2.00)

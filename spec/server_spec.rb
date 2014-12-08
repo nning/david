@@ -176,6 +176,59 @@ describe Server do
     end
   end
 
+  context 'accept' do
+    context 'unset' do
+      subject { client.get('/hello', '::1') }
+
+      it 'should return resource' do
+        expect(subject).to be_a(CoAP::Message)
+        expect(subject.ver).to eq(1)
+        expect(subject.tt).to eq(:ack)
+        expect(subject.mcode).to eq([2, 5])
+        expect(subject.payload).to eq('Hello World!')
+        expect(subject.options[:content_format]).to eq(0)
+      end
+    end
+
+    context 'default' do
+      subject { client.get('/echo/accept', '::1') }
+
+      it 'should return default' do
+        expect(subject).to be_a(CoAP::Message)
+        expect(subject.ver).to eq(1)
+        expect(subject.tt).to eq(:ack)
+        expect(subject.mcode).to eq([2, 5])
+        expect(subject.payload).to eq('')
+        expect(subject.options[:content_format]).to eq(50)
+      end
+    end
+
+    context 'right' do
+      subject { client.get('/echo/accept', '::1', nil, nil, accept: 40) }
+
+      it 'should echo' do
+        expect(subject).to be_a(CoAP::Message)
+        expect(subject.ver).to eq(1)
+        expect(subject.tt).to eq(:ack)
+        expect(subject.mcode).to eq([2, 5])
+        expect(subject.payload).to eq('')
+        expect(subject.options[:content_format]).to eq(40)
+      end
+    end
+
+    context 'wrong' do
+      subject { client.get('/hello', '::1', nil, nil, accept: 40) }
+
+      it 'should be an error' do
+        expect(subject).to be_a(CoAP::Message)
+        expect(subject.ver).to eq(1)
+        expect(subject.tt).to eq(:ack)
+        expect(subject.mcode).to eq([4, 6])
+        expect(subject.payload).to eq('')
+      end
+    end
+  end
+
   after do
     server.terminate
   end

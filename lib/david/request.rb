@@ -1,4 +1,8 @@
 class Request < Struct.new(:host, :port, :message, :ancillary)
+  def accept
+    message.options[:accept]
+  end
+
   def block
     @block ||= if message.options[:block2].nil?
       CoAP::Block.new(0, false, 1024)

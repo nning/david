@@ -17,6 +17,11 @@ module Rack
           {'Content-Type' => 'application/link-format'},
           ['</hello>;rt="hello";ct=0']
         ]
+      when '/echo/accept'
+        [200,
+          {'Content-Type' => env['HTTP_ACCEPT'], 'Content-Length' => 0},
+          []
+        ]
       when '/hello'
         [200,
           # If Content-Length is not given, Rack assumes chunked transfer.
