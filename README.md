@@ -1,8 +1,8 @@
-[![Gem Version](https://badge.fury.io/rb/david.png)](http://badge.fury.io/rb/david)
-[![Dependency Status](https://gemnasium.com/nning/david.png)](https://gemnasium.com/nning/coap)
-[![Build Status](https://travis-ci.org/nning/david.png?branch=master)](https://travis-ci.org/nning/david)
-[![Coverage Status](https://coveralls.io/repos/nning/david/badge.png?branch=master)](https://coveralls.io/r/nning/david)
-[![Code Climate](https://codeclimate.com/github/nning/david.png)](https://codeclimate.com/github/nning/david)
+[![Gem Version](https://img.shields.io/gem/v/david.svg)](http://badge.fury.io/rb/david)
+[![Dependency Status](https://img.shields.io/gemnasium/nning/david.svg)](https://gemnasium.com/nning/coap)
+[![Build Status](https://img.shields.io/travis/nning/david.svg)](https://travis-ci.org/nning/david)
+[![Coverage Status](https://img.shields.io/coveralls/nning/david.svg)](https://coveralls.io/r/nning/david)
+[![Code Climate](https://img.shields.io/codeclimate/nning/david.svg)](https://codeclimate.com/github/nning/david)
 
 # David
 
