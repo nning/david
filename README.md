@@ -2,7 +2,7 @@
 [![Dependency Status](https://img.shields.io/gemnasium/nning/david.svg)](https://gemnasium.com/nning/coap)
 [![Build Status](https://img.shields.io/travis/nning/david.svg)](https://travis-ci.org/nning/david)
 [![Coverage Status](https://img.shields.io/coveralls/nning/david.svg)](https://coveralls.io/r/nning/david)
-[![Code Climate](https://img.shields.io/codeclimate/nning/david.svg)](https://codeclimate.com/github/nning/david)
+[![Code Climate](https://img.shields.io/codeclimate/github/nning/david.svg)](https://codeclimate.com/github/nning/david)
 
 # David
 
