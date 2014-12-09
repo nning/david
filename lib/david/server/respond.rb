@@ -54,7 +54,7 @@ module David
 
         response = initialize_response(request, mcode)
 
-        handle_observe(request, response, env, etag) if @observe
+        async.handle_observe(request, response, env, etag) if @observe
 
         if block_enabled
           block = request.block.dup
