@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'benchmark'
 
-describe Server, 'performance' do
+describe Server, 'performance', performance: true do
   let(:port) { random_port }
 
   subject! do
