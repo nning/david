@@ -1,5 +1,5 @@
 [![Gem Version](https://img.shields.io/gem/v/david.svg)](http://badge.fury.io/rb/david)
-[![Dependency Status](https://img.shields.io/gemnasium/nning/david.svg)](https://gemnasium.com/nning/coap)
+[![Dependency Status](https://img.shields.io/gemnasium/nning/david.svg)](https://gemnasium.com/nning/david)
 [![Build Status](https://img.shields.io/travis/nning/david.svg)](https://travis-ci.org/nning/david)
 [![Coverage Status](https://img.shields.io/coveralls/nning/david.svg)](https://coveralls.io/r/nning/david)
 [![Code Climate](https://img.shields.io/codeclimate/github/nning/david.svg)](https://codeclimate.com/github/nning/david)
