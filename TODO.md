@@ -55,3 +55,18 @@ More detailed CoAP implementation
   (ACK_TIMEOUT * ACK_RANDOM_FACTOR) (see Section 4.8)"
 * Validation of ETag
 * Request validations and error responses
+
+
+Non-blocking I/O
+----------------
+
+* Check if I/O in Rack environment blocks or can block and what possibilities
+  exist to make it non-blocking.
+
+
+Observe
+-------
+
+* Garbage collection.
+* Observe on .well-known/core returns "Resource not observable" but Observe
+  actor still calls Rails in tick.
