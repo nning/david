@@ -1,4 +1,4 @@
-class Request < Struct.new(:host, :port, :message, :ancillary)
+class Request < Struct.new(:host, :port, :message, :ancillary, :options)
   def accept
     message.options[:accept]
   end
@@ -25,6 +25,10 @@ class Request < Struct.new(:host, :port, :message, :ancillary)
 
   def get?
     message.mcode == :get
+  end
+
+  def mid
+    message.mid
   end
 
   def multicast?

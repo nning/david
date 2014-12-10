@@ -26,6 +26,8 @@ module David
 
       @app     = app.respond_to?(:new) ? app.new : app
 
+      @cache   = {}
+
       logger.info "David #{David::VERSION} on #{RUBY_DESCRIPTION}"
       logger.info "Starting on [#{@host}]:#{@port}"
 
@@ -49,6 +51,21 @@ module David
 
     private
 
+    def cache_response(request, response)
+      unless duplicate?(request)
+        @cache[[request.host, request.port, request.mid]] =
+          [response, request.options]
+      end
+    end
+
+    def cached_response(request)
+      @cache[[request.host, request.port, request.mid]]
+    end
+
+    def duplicate?(request)
+      return !!cached_response(request)
+    end
+
     def handle_input(*args)
       data, sender, _, anc = args
       host, port = sender.ip_address, sender.ip_port
@@ -63,11 +80,20 @@ module David
       logger.info "[#{host}]:#{port}: #{message}"
       logger.debug message.inspect
 
-      response, options = respond(request)
+      if duplicate?(request) && request.non?
+        response, options = cached_response(request)
+        logger.debug "(duplicate #{request.mid})"
+      else
+        response, options = respond(request)
+      end
 
       unless response.nil?
         logger.debug response.inspect
+
         CoAP::Ether.send(response, host, port, options.merge(socket: @socket))
+
+        request.options = options
+        cache_response(request, response)
       end
     end
 
