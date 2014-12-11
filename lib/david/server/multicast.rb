@@ -19,6 +19,9 @@ module David
         end
 
         logger.debug "Joined multicast groups: #{maddrs.join(', ')}"
+      rescue Errno::ENODEV, Errno::EADDRNOTAVAIL
+        logger.warn 'Multicast initialization failure: Device not found.'
+        @mcast = false
       end
 
       def multicast_listen_ipv4(address)

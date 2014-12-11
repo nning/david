@@ -1,3 +1,4 @@
+require 'david/server/deduplication'
 require 'david/server/multicast'
 require 'david/server/options'
 require 'david/server/respond'
@@ -7,6 +8,7 @@ module David
     include Celluloid::IO
     include CoAP::Codification
 
+    include Deduplication
     include Multicast
     include Options
     include Respond
@@ -26,7 +28,7 @@ module David
 
       @app     = app.respond_to?(:new) ? app.new : app
 
-      @cache   = {}
+      @dedup_cache = {}
 
       logger.info "David #{David::VERSION} on #{RUBY_DESCRIPTION}"
       logger.info "Starting on [#{@host}]:#{@port}"
@@ -36,35 +38,13 @@ module David
 
       # Actually Celluloid::IO::UDPSocket.
       @socket = UDPSocket.new(af)
-
-      begin
-        multicast_initialize if @mcast
-      rescue Errno::ENODEV, Errno::EADDRNOTAVAIL
-        logger.warn 'Multicast initialization failure: Device not found.'
-        @mcast = false
-      end
-
+      multicast_initialize if @mcast
       @socket.bind(@host, @port)
 
       async.run
     end
 
     private
-
-    def cache_response(request, response)
-      unless duplicate?(request)
-        @cache[[request.host, request.port, request.mid]] =
-          [response, request.options]
-      end
-    end
-
-    def cached_response(request)
-      @cache[[request.host, request.port, request.mid]]
-    end
-
-    def duplicate?(request)
-      return !!cached_response(request)
-    end
 
     def handle_input(*args)
       data, sender, _, anc = args
@@ -80,9 +60,9 @@ module David
       logger.info "[#{host}]:#{port}: #{message}"
       logger.debug message.inspect
 
-      if duplicate?(request) && request.non?
+      if duplicate?(request) && request.con? #&& !request.idempotent?
         response, options = cached_response(request)
-        logger.debug "(duplicate #{request.mid})"
+        logger.debug "(mid:#{request.mid} duplicate, response cached)"
       else
         response, options = respond(request)
       end

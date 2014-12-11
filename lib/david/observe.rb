@@ -1,6 +1,5 @@
 module David
-# class ObserveValue < Struct.new(:n, :request, :env, :etag, :time)
-# end
+# ObserveValue = Struct.new(:n, :request, :env, :etag, :time)
 
   class Observe < Hash
     include Celluloid

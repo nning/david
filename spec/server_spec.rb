@@ -229,6 +229,50 @@ describe Server do
     end
   end
 
+  context 'deduplication' do
+    context 'duplicates' do
+      let(:a) do
+        ([0]*3).map { client.get('/value', '::1', nil, nil, mid: 1, token: 1) }
+      end
+
+      it 'matching mid' do
+        expect(a[0].mid).to eq(a[1].mid)
+        expect(a[1].mid).to eq(a[2].mid)
+      end
+
+      it 'matching token' do
+        expect(a[0].options[:token]).to eq(a[1].options[:token])
+        expect(a[1].options[:token]).to eq(a[2].options[:token])
+      end
+
+      it 'matching payload' do
+        expect(a[0].payload).to eq(a[1].payload)
+        expect(a[1].payload).to eq(a[2].payload)
+      end
+    end
+
+    context 'different' do
+      let(:a) do
+        ([0]*3).map { client.get('/value', '::1') }
+      end
+
+      it 'matching mid' do
+        expect(a[0].mid).not_to eq(a[1].mid)
+        expect(a[1].mid).not_to eq(a[2].mid)
+      end
+
+      it 'matching token' do
+        expect(a[0].options[:token]).not_to eq(a[1].options[:token])
+        expect(a[1].options[:token]).not_to eq(a[2].options[:token])
+      end
+
+      it 'matching payload' do
+        expect(a[0].payload).not_to eq(a[1].payload)
+        expect(a[1].payload).not_to eq(a[2].payload)
+      end
+    end
+  end
+
   after do
     server.terminate
   end

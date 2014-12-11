@@ -15,6 +15,10 @@ class Request < Struct.new(:host, :port, :message, :ancillary, :options)
     message.tt == :con
   end
 
+  def delete?
+    message.mcode == :delete
+  end
+
   def etag
     message.options[:etag]
   end
@@ -25,6 +29,10 @@ class Request < Struct.new(:host, :port, :message, :ancillary, :options)
 
   def get?
     message.mcode == :get
+  end
+
+  def idempotent?
+    get? || put? || delete?
   end
 
   def mid
@@ -48,6 +56,14 @@ class Request < Struct.new(:host, :port, :message, :ancillary, :options)
 
   def observe?
     !message.options[:observe].nil?
+  end
+
+  def post?
+    message.mcode == :post
+  end
+
+  def put?
+    message.mcode == :put
   end
 
   def token
