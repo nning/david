@@ -1,19 +1,12 @@
 module David
   module Deduplication
-    class Key < Struct.new(:host, :mid)
-      def initialize(request)
-        self.host = request.host
-        self.mid  = request.mid
-      end
-    end
-
     def cache_response(request, response)
       return if duplicate?(request)
-      @dedup_cache[Key.new(request)] = response
+      @dedup_cache[[request.host, request.mid]] = response
     end
 
     def cached_response(request)
-      response = @dedup_cache[Key.new(request)]
+      response = @dedup_cache[[request.host, request.mid]]
       [response, response.try(:options)]
     end
 

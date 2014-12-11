@@ -1,6 +1,4 @@
 module David
-# ObserveValue = Struct.new(:n, :request, :env, :etag, :time)
-
   class Observe < Hash
     include Celluloid
 
@@ -21,7 +19,6 @@ module David
       # TODO Check if Array or Struct is more efficient.
       self[[request.host, request.token]] ||=
         [0, request, env, etag, Time.now.to_i]
-#       ObserveValue.new(0, request, env, etag, Time.now.to_i)
     end
 
     def delete(request)
