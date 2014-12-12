@@ -20,7 +20,6 @@ Gem::Specification.new do |s|
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ['lib']
 
-  s.add_dependency 'cbor',         '~> 0.5'
   s.add_dependency 'celluloid-io', '~> 0.16', '>= 0.16.1'
   s.add_dependency 'coap',         '~> 0', '>= 0.0.17.dev'
   s.add_dependency 'rack',         '~> 1.5'
@@ -30,5 +29,4 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'rspec-rails'
   s.add_development_dependency 'rails', '~> 4.1.7'
-  s.add_development_dependency 'sqlite3'
 end

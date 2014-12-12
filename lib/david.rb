@@ -5,7 +5,12 @@ require 'bundler/setup'
 Bundler.require
 
 unless defined? JRuby
-  require 'cbor'
+  begin
+    require 'cbor'
+  rescue LoadError
+    $stderr << "`gem install cbor` for transparent JSON/CBOR conversion "
+    $stderr << "support.\n"
+  end
 end
 
 require 'celluloid'
