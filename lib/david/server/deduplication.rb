@@ -7,11 +7,11 @@ module David
 
     def cached_response(request)
       response = @dedup_cache[[request.host, request.mid]]
-      [response, response.try(:options)]
+      [response, response.options] if response
     end
 
     def duplicate?(request)
-      return !cached_response(request).first.nil?
+      return !!cached_response(request)
     end
   end
 end
