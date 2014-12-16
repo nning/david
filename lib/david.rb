@@ -2,7 +2,7 @@ module David
 end
 
 require 'bundler/setup'
-Bundler.require
+Bundler.require(:default, :cbor)
 
 unless defined? JRuby
   begin
