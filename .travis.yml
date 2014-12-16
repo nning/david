@@ -7,11 +7,14 @@ os:
 rvm:
   - 2.1
   - jruby
+  - rbx-head
 
 matrix:
+  fast_finish: true
   allow_failures:
     - os: osx
     - rvm: jruby
+    - rvm: rbx-head
 
 notifications:
   email: false
