@@ -17,6 +17,14 @@ module David
         etag = options[HTTP_ETAG]
         etag.delete('"').bytes.first(bytes * 2).pack('C*').hex if etag
       end
+    
+      def http_accept(request)
+        if request.accept.nil?
+          @default_format
+        else
+          CoAP::Registry.convert_content_format(request.accept)
+        end
+      end
 
       def http_to_coap_code(code)
         code = code.to_i

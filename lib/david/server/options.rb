@@ -19,6 +19,14 @@ module David
         !!value
       end
 
+      def choose_default_format(value)
+        if value.nil? && defined? Rails
+          value = Rails.application.config.coap.default_format
+        end
+
+        value.nil? ? 'application/json' : value
+      end
+
       # Rails starts on 'localhost' since 4.2.0.beta1
       # (Resolv class seems not to consider /etc/hosts)
       def choose_host(value)

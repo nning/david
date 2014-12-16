@@ -28,6 +28,8 @@ module David
 
       @app     = app.respond_to?(:new) ? app.new : app
 
+      @default_format = choose(:default_format, options[:DefaultFormat])
+
       @dedup_cache = {}
 
       logger.info "David #{David::VERSION} on #{RUBY_DESCRIPTION}"

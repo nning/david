@@ -9,6 +9,9 @@ module David
       # Transparent JSON<>CBOR conversion
       config.coap.cbor = false
 
+      # Default Content-Type if HTTP_ACCEPT is empty
+      config.coap.default_format = nil
+
       # Multicast
       config.coap.multicast = true
 

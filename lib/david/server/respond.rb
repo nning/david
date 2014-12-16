@@ -119,11 +119,6 @@ module David
         end
       end
 
-      def http_accept(request)
-        CoAP::Registry.convert_content_format(request.accept) ||
-          CONTENT_TYPE_JSON
-      end
-
       def initialize_response(request, mcode = 2.00)
         type = request.con? ? :ack : :non
 

@@ -29,6 +29,7 @@ module Rack
         {
           'Block=BOOLEAN'     => 'Support for blockwise transfer (default: true)',
           'CBOR=BOOLEAN'      => 'Transparent JSON/CBOR conversion (default: false)',
+          'DefaultFormat=F'   => 'Content-Type if CoAP accept option on request is undefined',
           'Host=HOST'         => "Hostname to listen on (default: #{host})",
           'Log=LOG'           => 'Change logging (debug|none)',
           'Multicast=BOOLEAN' => 'Multicast support (default: true)',
