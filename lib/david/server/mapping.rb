@@ -4,21 +4,8 @@ module David
       include Constants
 
       protected
-
-      def body_to_cbor(body)
-        JSON.parse(body).to_cbor
-      end
-
-      def coap_to_http_method(method)
-        method.to_s.upcase
-      end
-
-      def etag(options, bytes = 8)
-        etag = options[HTTP_ETAG]
-        etag.delete('"').bytes.first(bytes * 2).pack('C*').hex if etag
-      end
     
-      def http_accept(request)
+      def accept_to_http(request)
         if request.accept.nil?
           @default_format
         else
@@ -26,7 +13,11 @@ module David
         end
       end
 
-      def http_to_coap_code(code)
+      def body_to_cbor(body)
+        JSON.parse(body).to_cbor
+      end
+
+      def code_to_coap(code)
         code = code.to_i
 
         h = {200 => 205}
@@ -38,10 +29,26 @@ module David
         [a, b]
       end
 
-      def max_age(options)
-        options[HTTP_CACHE_CONTROL][/max-age=([0-9]*)/, 1]
+      def etag_to_coap(headers, bytes = 8)
+        etag = headers[HTTP_ETAG]
+        etag.delete('"').bytes.first(bytes * 2).pack('C*').hex if etag
+      end
+
+      def location_to_coap(headers)
+        l = headers[HTTP_LOCATION].split('/').reject(&:empty?)
+        return l.empty? ? nil : l
       rescue NoMethodError
         nil
+      end
+
+      def max_age_to_coap(headers)
+        headers[HTTP_CACHE_CONTROL][/max-age=([0-9]*)/, 1]
+      rescue NoMethodError
+        nil
+      end
+
+      def method_to_http(method)
+        method.to_s.upcase
       end
     end
   end

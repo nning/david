@@ -43,16 +43,20 @@ module David
         return if block_enabled && !request.block.included_by?(body)
 
         cf    = CoAP::Registry.convert_content_format(ct)
-        etag  = etag(headers, 4)
-        mcode = http_to_coap_code(code)
+        etag  = etag_to_coap(headers, 4)
+        loc   = location_to_coap(headers)
+        ma    = max_age_to_coap(headers)
+        mcode = code_to_coap(code)
 
         # App returned cf different from accept
         return error(request, 4.06) if request.accept && request.accept != cf
 
-        ma = max_age(headers)
-        ma = ma.to_i unless ma.nil?
-
         response = initialize_response(request, mcode)
+
+        response.options[:content_format] = cf
+        response.options[:etag] = etag
+        response.options[:location_path] = loc unless loc.nil?
+        response.options[:max_age] = ma.to_i unless ma.nil?
 
         async.handle_observe(request, response, env, etag) if @observe
 
@@ -66,10 +70,6 @@ module David
           response.payload = body
         end
 
-        response.options[:content_format] = cf
-        response.options[:etag] = etag
-        response.options[:max_age] = ma unless ma.nil?
-
         [response, {}]
       end
 
@@ -81,7 +81,7 @@ module David
         {
           REMOTE_ADDR       => request.host,
           REMOTE_PORT       => request.port.to_s,
-          REQUEST_METHOD    => coap_to_http_method(m.mcode),
+          REQUEST_METHOD    => method_to_http(m.mcode),
           SCRIPT_NAME       => EMPTY_STRING,
           PATH_INFO         => path_encode(m.options[:uri_path]),
           QUERY_STRING      => query_encode(m.options[:uri_query])
@@ -90,7 +90,7 @@ module David
           SERVER_PORT       => @port.to_s,
           CONTENT_LENGTH    => m.payload.bytesize.to_s,
           CONTENT_TYPE      => EMPTY_STRING,
-          HTTP_ACCEPT       => http_accept(request),
+          HTTP_ACCEPT       => accept_to_http(request),
           RACK_VERSION      => [1, 2],
           RACK_URL_SCHEME   => RACK_URL_SCHEME_HTTP,
           RACK_INPUT        => StringIO.new(m.payload),

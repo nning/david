@@ -38,6 +38,7 @@ module David
       HTTP_CACHE_CONTROL  = 'Cache-Control'.freeze
       HTTP_CONTENT_TYPE   = 'Content-Type'.freeze
       HTTP_ETAG           = 'ETag'.freeze
+      HTTP_LOCATION       = 'Location'.freeze
     end
   end
 end
