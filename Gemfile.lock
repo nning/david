@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/nning/coap.git
-  revision: a08b2b98228038ff89b8a03d18f4c9e33fd63f07
+  revision: d56fbf6aadc9d2400d8fd4fb9953ce12f5db49f7
   specs:
     coap (0.0.17.dev)
       celluloid-io (~> 0.16, >= 0.16.1)
@@ -50,7 +50,7 @@ GEM
       tzinfo (~> 1.1)
     arel (5.0.1.20140414130214)
     builder (3.2.2)
-    cbor (0.5.8.0)
+    cbor (0.5.9.0)
     celluloid (0.16.0)
       timers (~> 4.0.0)
     celluloid-io (0.16.1)
@@ -68,7 +68,7 @@ GEM
     hike (1.2.3)
     hitimes (1.2.2)
     hitimes (1.2.2-java)
-    i18n (0.6.11)
+    i18n (0.7.0)
     jdbc-sqlite3 (3.8.7)
     json (1.8.1)
     json (1.8.1-java)
@@ -77,7 +77,7 @@ GEM
     mime-types (2.4.3)
     minitest (5.5.0)
     multi_json (1.10.1)
-    netrc (0.10.1)
+    netrc (0.10.2)
     nio4r (1.0.1)
     nio4r (1.0.1-java)
     rack (1.5.2)
