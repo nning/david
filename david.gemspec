@@ -24,9 +24,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'coap',         '~> 0', '>= 0.0.17.dev'
   s.add_dependency 'rack',         '~> 1.5'
 
-  s.add_development_dependency 'rake', '~> 0'
+  s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec', '~> 3.1'
 
-  s.add_development_dependency 'rspec-rails'
-  s.add_development_dependency 'rails', '~> 4.1.7'
+  s.add_development_dependency 'rspec-rails', '~> 3.1'
+  s.add_development_dependency 'rails', '~> 4.2', '>= 4.2.0'
 end
