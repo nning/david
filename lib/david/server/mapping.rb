@@ -31,7 +31,16 @@ module David
 
       def etag_to_coap(headers, bytes = 8)
         etag = headers[HTTP_ETAG]
-        etag.delete('"').bytes.first(bytes * 2).pack('C*').hex if etag
+        etag = etag.split('"')
+        etag = etag[1] || etag[0]
+
+        if etag
+          etag
+            .bytes
+            .first(bytes * 2)
+            .pack('C*')
+            .hex
+        end
       end
 
       def location_to_coap(headers)

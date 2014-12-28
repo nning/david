@@ -14,6 +14,7 @@ describe Server::Mapping do
         expect(etag_to_coap({'ETag' => ([0]*15 + [1]*17).join})).to eq(1)
         expect(etag_to_coap({'ETag' => (['f']*16 + [0]*16).join})).to eq(2**64-1)
         expect(etag_to_coap({'ETag' => '2246fd11002a6bcad940fe5d76a48333'})).to eq(2469939695118347210)
+        expect(etag_to_coap({'ETag' => 'W/"2246fd11002a6bcad940fe5d76a48333"'})).to eq(2469939695118347210)
       end
     end
   end
