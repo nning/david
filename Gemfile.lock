@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/nning/coap.git
-  revision: d56fbf6aadc9d2400d8fd4fb9953ce12f5db49f7
+  revision: e2567061121e70bfce99b2796eb795ad88545f1e
   specs:
     coap (0.0.17.dev)
       celluloid-io (~> 0.16, >= 0.16.1)
@@ -88,7 +88,7 @@ GEM
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
     mime-types (2.4.3)
-    mini_portile (0.6.1)
+    mini_portile (0.6.2)
     minitest (5.5.0)
     multi_json (1.10.1)
     netrc (0.10.2)
