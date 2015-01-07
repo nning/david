@@ -53,7 +53,7 @@ More detailed CoAP implementation
 * "For a new Confirmable message, the initial timeout is set to a random
   duration (often not an integral number of seconds) between ACK_TIMEOUT and
   (ACK_TIMEOUT * ACK_RANDOM_FACTOR) (see Section 4.8)"
-* Validation of ETag
+* Validation of ETag (conditional requests)
 * Request validations and error responses
 * Follow redirects
 
