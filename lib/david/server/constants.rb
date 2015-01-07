@@ -36,6 +36,7 @@ module David
 
       # Freeze HTTP header strings.
       HTTP_CACHE_CONTROL  = 'Cache-Control'.freeze
+      HTTP_CONTENT_LENGTH = 'Content-Length'.freeze
       HTTP_CONTENT_TYPE   = 'Content-Type'.freeze
       HTTP_ETAG           = 'ETag'.freeze
       HTTP_LOCATION       = 'Location'.freeze

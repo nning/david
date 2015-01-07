@@ -47,6 +47,7 @@ module David
         loc   = location_to_coap(headers)
         ma    = max_age_to_coap(headers)
         mcode = code_to_coap(code)
+        size  = headers[HTTP_CONTENT_LENGTH].to_i
 
         # App returned cf different from accept
         return error(request, 4.06) if request.accept && request.accept != cf
@@ -58,7 +59,9 @@ module David
         response.options[:location_path] = loc unless loc.nil?
         response.options[:max_age] = ma.to_i unless ma.nil?
 
-        async.handle_observe(request, response, env, etag) if @observe
+        if @observe && handle_observe(request, env, etag)
+          response.options[:observe] = 0
+        end
 
         if block_enabled
           block = request.block.dup
@@ -66,6 +69,7 @@ module David
 
           response.payload = block.chunk(body)
           response.options[:block2] = block.encode
+#         response.options[:size2]  = size if size != 0
         else
           response.payload = body
         end
@@ -108,14 +112,15 @@ module David
         [initialize_response(request, mcode), retransmit: false]
       end
 
-      def handle_observe(request, response, env, etag)
+      def handle_observe(request, env, etag)
         return unless request.get? && request.observe?
 
         if request.message.options[:observe] == 0
           observe.add(request, env, etag)
-          response.options[:observe] = 0
+          true
         else
           observe.delete(request)
+          false
         end
       end
 
