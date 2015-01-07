@@ -55,6 +55,7 @@ More detailed CoAP implementation
   (ACK_TIMEOUT * ACK_RANDOM_FACTOR) (see Section 4.8)"
 * Validation of ETag
 * Request validations and error responses
+* Follow redirects
 
 
 Non-blocking I/O
