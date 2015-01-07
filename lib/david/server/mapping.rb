@@ -3,6 +3,23 @@ module David
     module Mapping
       include Constants
 
+      HTTP_TO_COAP_CODES = {
+        200 => 205,
+        202 => 201,
+        203 => 205,
+        204 => 205,
+        407 => 401,
+        408 => 400,
+        409 => 412,
+        410 => 404,
+        411 => 402,
+        414 => 402,
+        505 => 500,
+        506 => 500,
+        506 => 500,
+        511 => 500,
+      }.freeze
+
       protected
     
       def accept_to_http(request)
@@ -19,9 +36,7 @@ module David
 
       def code_to_coap(code)
         code = code.to_i
-
-        h = {200 => 205}
-        code = h[code] if h[code]
+        code = HTTP_TO_COAP_CODES[code] if HTTP_TO_COAP_CODES[code]
 
         a = code / 100
         b = code - (a * 100)
