@@ -106,6 +106,7 @@ module David
           COAP_VERSION      => 1,
           COAP_MULTICAST    => request.multicast?,
           COAP_DTLS         => COAP_DTLS_NOSEC,
+          COAP_DTLS_ID      => EMPTY_STRING,
         }
       end
 
