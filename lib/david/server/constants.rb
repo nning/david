@@ -25,8 +25,10 @@ module David
       RACK_LOGGER       = 'rack.logger'.freeze
 
       # Freeze CoAP specific env keys.
-      COAP_VERSION   = 'coap.version'.freeze
-      COAP_MULTICAST = 'coap.multicast'.freeze
+      COAP_VERSION    = 'coap.version'.freeze
+      COAP_MULTICAST  = 'coap.multicast'.freeze
+      COAP_DTLS       = 'coap.dtls'.freeze
+      COAP_DTLS_NOSEC = 'NoSec'.freeze
 
       # Freeze some Rack env values.
       EMPTY_STRING          = ''.freeze

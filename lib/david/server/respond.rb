@@ -105,6 +105,7 @@ module David
           RACK_LOGGER       => @logger,
           COAP_VERSION      => 1,
           COAP_MULTICAST    => request.multicast?,
+          COAP_DTLS         => COAP_DTLS_NOSEC,
         }
       end
 
