@@ -1,6 +1,6 @@
 module David
   class Observe < Hash
-    include Celluloid
+    include Actor
 
     alias_method :_delete, :delete
     alias_method :_include?, :include?
@@ -66,11 +66,6 @@ module David
       end
     end
 
-    def log
-      @log ||= Celluloid.logger 
-      @log ||= ::Logger.new(nil)
-    end
-
     def request(message, host, port, options)
       answer = nil
 
@@ -88,10 +83,6 @@ module David
 
     def run
       loop { tick; sleep @tick_interval }
-    end
-
-    def server
-      Celluloid::Actor[:server]
     end
 
     def tick

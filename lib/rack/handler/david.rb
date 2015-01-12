@@ -13,6 +13,7 @@ module Rack
 
         g.supervise_as(:server, ::David::Server, app, options)
         g.supervise_as(:observe, ::David::Observe) if options[:Observe] != false
+        g.supervise_as(:gc, ::David::GarbageCollector)
 
         begin
           sleep

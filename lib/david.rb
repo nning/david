@@ -29,6 +29,8 @@ require 'rack/handler/coap'
 
 require 'david/guerilla/rack/handler'
 
+require 'david/actor'
+require 'david/garbage_collector'
 require 'david/observe'
 require 'david/request'
 require 'david/server'
