@@ -11,10 +11,8 @@ module David
       log.debug 'GarbageCollector initialized'
     end
 
-    def clean_dedup_cache
-      now = Time.now.to_i
-
-      obsolete = server.dedup_cache.delete_if do |k, v|
+    def clean_dedup_cache(now = Time.now.to_i)
+      server.dedup_cache.delete_if do |k, v|
         now - v[1] >= @dedup_timeout
       end
     end
@@ -26,10 +24,12 @@ module David
     end
 
     def tick
-      log.debug 'GarbageCollector tick'
+      unless server.dedup_cache.empty?
+        log.debug 'GarbageCollector tick'
 
-      clean_dedup_cache
-      log.debug server.dedup_cache unless server.dedup_cache.empty?
+        clean_dedup_cache
+        log.debug server.dedup_cache 
+      end
     end
   end
 end
