@@ -62,7 +62,7 @@ module David
       logger.info "[#{host}]:#{port}: #{message}"
       logger.debug message.inspect
 
-      if duplicate?(request) && request.con? #&& !request.idempotent?
+      if request.con? && duplicate?(request) #&& !request.idempotent?
         response, options = cached_response(request)
         logger.debug "(mid:#{request.mid} duplicate, response cached)"
       else
