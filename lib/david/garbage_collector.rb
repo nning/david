@@ -29,7 +29,7 @@ module David
       log.debug 'GarbageCollector tick'
 
       clean_dedup_cache
-      log.debug server.dedup_cache
+      log.debug server.dedup_cache unless server.dedup_cache.empty?
     end
   end
 end
