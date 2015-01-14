@@ -19,7 +19,7 @@ module Rack
         ]
       when '/echo/accept'
         [200,
-          {'Content-Type' => env['HTTP_ACCEPT'], 'Content-Length' => 0},
+          {'Content-Type' => env['HTTP_ACCEPT'], 'Content-Length' => '0'},
           []
         ]
       when '/hello'
@@ -45,7 +45,7 @@ module Rack
       when '/block'
         n = 17
         [200,
-          {'Content-Type' => 'text/plain', 'Content-Length' => n},
+          {'Content-Type' => 'text/plain', 'Content-Length' => n.to_s},
           ['+'*n]
         ]
       else
