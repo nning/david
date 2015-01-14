@@ -7,7 +7,7 @@ describe Server do
     CoAP::Client.new(port: port, retransmit: false, recv_timeout: 0.1)
   end
 
-  let!(:server) { supervised_server(:Port => port, :Log => debug) }
+  let!(:server) { supervised_server(:Port => port) }
 
   context 'ordinary request' do
     subject { client.get('/hello', '::1') }
@@ -93,7 +93,7 @@ describe Server do
     # -A INPUT -m pkttype --pkt-type multicast -d 224.0.1.187 -j ACCEPT
     context 'ipv4', multicast: :ipv4 do
       let!(:server) do
-        supervised_server(:Host => '0.0.0.0', :Port => port, :Log => debug)
+        supervised_server(:Host => '0.0.0.0', :Port => port)
       end
 
       ['224.0.0.1', '224.0.1.187'].each do |address|
@@ -270,6 +270,21 @@ describe Server do
         expect(a[0].payload).not_to eq(a[1].payload)
         expect(a[1].payload).not_to eq(a[2].payload)
       end
+    end
+  end
+
+  context 'options' do
+    describe 'default_to_true' do
+      let(:method) do
+        ->(*args) { Server::Options.send(:default_to_true, *args) }
+      end
+
+      it { expect(method.call(:block, nil)).to eq(true) }
+      it { expect(method.call(:block, true)).to eq(true) }
+      it { expect(method.call(:block, 'true')).to eq(true) }
+
+      it { expect(method.call(:block, false)).to eq(false) }
+      it { expect(method.call(:block, 'false')).to eq(false) }
     end
   end
 

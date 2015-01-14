@@ -28,7 +28,7 @@ module David
       defaults = {
         :Host => '::1',
         :Port => CoAP::PORT,
-        :Log => 'none'
+        :Log => debug
       }
 
       app = options.delete(:app) || Rack::HelloWorld

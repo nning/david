@@ -68,8 +68,12 @@ module David
           value = Rails.application.config.coap.send(key)
         end
 
-        value.nil? ? true : !!value
+        return true if value.nil? || value.to_s == 'true'
+
+        false
       end
+
+      module_function :default_to_true
     end
   end
 end
