@@ -48,6 +48,11 @@ module Rack
           {'Content-Type' => 'text/plain', 'Content-Length' => n.to_s},
           ['+'*n]
         ]
+      when '/code'
+        [2.05,
+          {'Content-Type' => 'text/plain'},
+          []
+        ]
       else
         [404, {}, ['']]
       end

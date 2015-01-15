@@ -35,6 +35,10 @@ module David
       end
 
       def code_to_coap(code)
+        if code.is_a?(Float)
+          return [code.to_i, (code * 100 % 100).round]
+        end
+
         code = code.to_i
         code = HTTP_TO_COAP_CODES[code] if HTTP_TO_COAP_CODES[code]
 

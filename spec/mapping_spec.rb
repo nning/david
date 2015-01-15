@@ -27,4 +27,23 @@ describe Server::Mapping do
     it { expect(location_to_coap({'Location' => '/'})).to eq(nil) }
     it { expect(location_to_coap({'Location' => '///'})).to eq(nil) }
   end
+
+  context 'CoAP return code' do
+    let(:port) { random_port }
+    let(:client) do
+      CoAP::Client.new(port: port, retransmit: false, recv_timeout: 0.1)
+    end
+
+    let!(:server) { supervised_server(:Port => port) }
+
+    subject { client.get('/code', '::1') }
+
+    it 'should be 2.05' do
+      expect(subject).to be_a(CoAP::Message)
+      expect(subject.ver).to eq(1)
+      expect(subject.tt).to eq(:ack)
+      expect(subject.mcode).to eq([2, 5])
+      expect(subject.payload).to eq('')
+    end
+  end
 end
