@@ -288,6 +288,18 @@ describe Server do
     end
   end
 
+  context 'proxy' do
+    subject { client.get('/', '::1', nil, nil, proxy_uri: 'coap://[::1]/') }
+
+    it 'should return 5.05' do
+      expect(subject).to be_a(CoAP::Message)
+      expect(subject.ver).to eq(1)
+      expect(subject.tt).to eq(:ack)
+      expect(subject.mcode).to eq([5, 5])
+      expect(subject.payload).to eq('')
+    end
+  end
+
   after do
     server.terminate
   end

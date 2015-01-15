@@ -19,6 +19,8 @@ module David
           end
         end
 
+        return error(request, 5.05) if request.proxy?
+
         env ||= basic_env(request)
 
         code, headers, body = @app.call(env)

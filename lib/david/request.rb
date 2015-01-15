@@ -62,6 +62,10 @@ class Request < Struct.new(:host, :port, :message, :ancillary, :options)
     message.mcode == :post
   end
 
+  def proxy?
+    !(message.options[:proxy_uri].nil? && message.options[:proxy_scheme].nil?)
+  end
+
   def put?
     message.mcode == :put
   end
