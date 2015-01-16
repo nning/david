@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/nning/coap.git
-  revision: e2567061121e70bfce99b2796eb795ad88545f1e
+  revision: 9a38d0ef48a707194a3752c3809c48a793869974
   specs:
     coap (0.0.17.dev)
       celluloid-io (~> 0.16, >= 0.16.1)
@@ -81,24 +81,24 @@ GEM
     hitimes (1.2.2-java)
     i18n (0.7.0)
     jdbc-sqlite3 (3.8.7)
-    json (1.8.1)
-    json (1.8.1-java)
+    json (1.8.2)
+    json (1.8.2-java)
     loofah (2.0.1)
       nokogiri (>= 1.5.9)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
     mime-types (2.4.3)
     mini_portile (0.6.2)
-    minitest (5.5.0)
+    minitest (5.5.1)
     multi_json (1.10.1)
     netrc (0.10.2)
-    nio4r (1.0.1)
-    nio4r (1.0.1-java)
+    nio4r (1.1.0)
+    nio4r (1.1.0-java)
     nokogiri (1.6.5)
       mini_portile (~> 0.6.0)
     nokogiri (1.6.5-java)
     rack (1.6.0)
-    rack-test (0.6.2)
+    rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.2.0)
       actionmailer (= 4.2.0)

@@ -6,7 +6,7 @@ require 'david/server/respond'
 module David
   class Server
     include Celluloid::IO
-    include CoAP::Codification
+    include CoAP::Coding
 
     include Deduplication
     include Multicast
