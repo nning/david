@@ -53,6 +53,13 @@ module Rack
           {'Content-Type' => 'text/plain'},
           []
         ]
+      when '/time'
+        # Rack::ETag does not add an ETag header, if response code other than
+        # 200 or 201, so CoAP/Float return codes do not work, here.
+        [200,
+          {'Content-Type' => 'text/plain'},
+          [Time.now.to_s]
+        ]
       else
         [404, {}, ['']]
       end
