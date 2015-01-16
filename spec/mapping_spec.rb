@@ -3,7 +3,7 @@ require 'spec_helper'
 include Server::Mapping
 
 describe Server::Mapping do
-  context '#etag_to_coap' do
+  context 'etag_to_coap' do
     context '16 byte hex as string (from Rails for example)' do
       it '0 in first 8 byte' do
         expect(etag_to_coap({'ETag' => ([0]*32).join})).to eq(0)
@@ -28,22 +28,29 @@ describe Server::Mapping do
     it { expect(location_to_coap({'Location' => '///'})).to eq(nil) }
   end
 
-  context 'CoAP return code' do
-    let(:port) { random_port }
-    let(:client) do
-      CoAP::Client.new(port: port, retransmit: false, recv_timeout: 0.1)
-    end
+  context 'code_to_coap' do
+    it { expect(code_to_coap(nil)).to eq([0, 0]) }
+    it { expect(code_to_coap(200)).to eq([2, 5]) }
+    it { expect(code_to_coap(205)).to eq([2, 5]) }
+    it { expect(code_to_coap(2.05)).to eq([2, 5]) }
 
-    let!(:server) { supervised_server(:Port => port) }
+    context 'message' do
+      let(:port) { random_port }
+      let(:client) do
+        CoAP::Client.new(port: port, retransmit: false, recv_timeout: 0.1)
+      end
 
-    subject { client.get('/code', '::1') }
+      let!(:server) { supervised_server(:Port => port) }
 
-    it 'should be 2.05' do
-      expect(subject).to be_a(CoAP::Message)
-      expect(subject.ver).to eq(1)
-      expect(subject.tt).to eq(:ack)
-      expect(subject.mcode).to eq([2, 5])
-      expect(subject.payload).to eq('')
+      subject { client.get('/code', '::1') }
+
+      it 'should be 2.05' do
+        expect(subject).to be_a(CoAP::Message)
+        expect(subject.ver).to eq(1)
+        expect(subject.tt).to eq(:ack)
+        expect(subject.mcode).to eq([2, 5])
+        expect(subject.payload).to eq('')
+      end
     end
   end
 end
