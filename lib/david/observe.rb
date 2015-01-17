@@ -78,7 +78,7 @@ module David
 
       begin
         options.merge!(retransmit: false, socket: server.socket)
-        answer = CoAP::Ether.request(message, host, port, options).last
+        answer = CoAP::Transmission.request(message, host, port, options).last
         log.debug answer.inspect
       rescue Timeout::Error, RuntimeError
       end

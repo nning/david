@@ -72,7 +72,8 @@ module David
       unless response.nil?
         logger.debug response.inspect
 
-        CoAP::Ether.send(response, host, port, options.merge(socket: @socket))
+        CoAP::Transmission.send(response, host, port,
+          options.merge(socket: @socket))
 
         request.options = options
         cache_response(request, response)
