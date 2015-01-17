@@ -1,5 +1,5 @@
 class ActionController::Base
-  def self.discovery(options)
+  def self.discoverable(options)
     discovery_actor.register(self, options)
   end
 
