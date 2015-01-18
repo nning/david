@@ -1,7 +1,7 @@
 module David
   module Actor
     def self.included(base)
-      base.include Celluloid
+      base.send(:include, Celluloid)
     end
 
     protected

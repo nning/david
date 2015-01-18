@@ -31,6 +31,8 @@ module David
         :Log => debug
       }
 
+      defaults[:Multicast] = false if defined?(JRuby)
+
       app = options.delete(:app) || Rack::HelloWorld
 
       David::Server.supervise_as(:david, app, defaults.merge(options))

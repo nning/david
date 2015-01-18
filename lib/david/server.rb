@@ -50,7 +50,12 @@ module David
 
     def handle_input(*args)
       data, sender, _, anc = args
-      host, port = sender.ip_address, sender.ip_port
+
+      if defined?(JRuby)
+        port, _, host = sender[1..3]
+      else
+        host, port = sender.ip_address, sender.ip_port
+      end
 
       message = CoAP::Message.parse(data)
       request = Request.new(host, port, message, anc)
@@ -82,11 +87,15 @@ module David
 
     def run
       loop do
-        begin
-          async.handle_input(*@socket.to_io.recvmsg_nonblock)
-        rescue ::IO::WaitReadable
-          Celluloid::IO.wait_readable(@socket)
-          retry
+        if defined?(JRuby)
+          async.handle_input(*@socket.recvfrom(1024))
+        else
+          begin
+            async.handle_input(*@socket.to_io.recvmsg_nonblock)
+          rescue ::IO::WaitReadable
+            Celluloid::IO.wait_readable(@socket)
+            retry
+          end
         end
       end
     end
