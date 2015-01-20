@@ -88,7 +88,7 @@ module David
     def run
       loop do
         if defined?(JRuby)
-          async.handle_input(*@socket.recvfrom(1024))
+          async.handle_input(*@socket.recvfrom(1152))
         else
           begin
             async.handle_input(*@socket.to_io.recvmsg_nonblock)
