@@ -2,8 +2,6 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'coap', '~> 0.0.17.dev', github: 'nning/coap'
-
 group :cbor do
   gem 'cbor', platforms: :ruby
 end

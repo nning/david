@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
 
   s.add_dependency 'celluloid-io', '~> 0.16', '>= 0.16.1'
-  s.add_dependency 'coap',         '~> 0', '>= 0.0.17.dev'
+  s.add_dependency 'coap',         '~> 0.1'
   s.add_dependency 'rack',         '~> 1.5'
 
   s.add_development_dependency 'rake'
