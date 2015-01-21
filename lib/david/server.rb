@@ -6,14 +6,14 @@ require 'david/server/respond'
 module David
   class Server
     include Celluloid::IO
-    include CoAP::Coding
+    include Registry
 
     include Deduplication
     include Multicast
     include Options
     include Respond
 
-    attr_reader :logger, :socket
+    attr_reader :socket
 
     finalizer :shutdown
 
@@ -21,7 +21,7 @@ module David
       @block   = choose(:block,   options[:Block])
       @cbor    = choose(:cbor,    options[:CBOR])
       @host    = choose(:host,    options[:Host])
-      @logger  = choose(:logger,  options[:Log])
+      @log     = choose(:logger,  options[:Log])
       @mcast   = choose(:mcast,   options[:Multicast])
       @observe = choose(:observe, options[:Observe])
       @port    = options[:Port].to_i
@@ -32,15 +32,16 @@ module David
 
       @dedup_cache = {}
 
-      logger.info "David #{David::VERSION} on #{RUBY_DESCRIPTION}"
-      logger.info "Starting on [#{@host}]:#{@port}"
+      link(mid_cache)
 
-      @ipv6 = IPAddr.new(@host).ipv6?
-      af = @ipv6 ? ::Socket::AF_INET6 : ::Socket::AF_INET
+      log.info "David #{David::VERSION} on #{RUBY_DESCRIPTION}"
+      log.info "Starting on [#{@host}]:#{@port}"
+
+      af = ipv6? ? ::Socket::AF_INET6 : ::Socket::AF_INET
 
       # Actually Celluloid::IO::UDPSocket.
       @socket = UDPSocket.new(af)
-      multicast_initialize if @mcast
+      multicast_initialize! if @mcast
       @socket.bind(@host, @port)
 
       async.run
@@ -48,7 +49,7 @@ module David
 
     private
 
-    def handle_input(*args)
+    def dispatch(*args)
       data, sender, _, anc = args
 
       if defined?(JRuby)
@@ -57,41 +58,46 @@ module David
         host, port = sender.ip_address, sender.ip_port
       end
 
-      message = CoAP::Message.parse(data)
-      request = Request.new(host, port, message, anc)
+      message  = CoAP::Message.parse(data)
+      exchange = Exchange.new(host, port, message, anc)
 
-      return unless request.con? || request.non?
-      return unless request.valid_method?
-      return if !request.non? && request.multicast?
+      return if !exchange.non? && exchange.multicast?
 
-      logger.info request
-      logger.debug message.inspect
+      log.info('<- ' + exchange.to_s)
+      log.debug(message.inspect)
 
-      if request.con? && duplicate?(request) #&& !request.idempotent?
-        response, options = cached_response(request)
-        logger.debug "(mid:#{request.mid} duplicate, response cached)"
+      if exchange.response?
+        mid_cache.delete(exchange)
+      elsif exchange.request?
+        handle_request(exchange)
+      end
+    end
+
+    def handle_request(exchange)
+      if exchange.con? && exchange.duplicate? #&& !exchange.idempotent?
+        response = mid_cache.lookup(exchange)[0].message
+        log.debug("dedup cache hit #{exchange.mid}")
       else
-        response, options = respond(request)
+        response, _ = respond(exchange)
       end
 
       unless response.nil?
-        logger.debug response.inspect
-
-        CoAP::Transmission.send(response, host, port,
-          options.merge(socket: @socket))
-
-        request.options = options
-        cache_response(request, response)
+        exchange.message = response
+        Transmission.new(@socket).send(exchange)
       end
+    end
+
+    def ipv6?
+      IPAddr.new(@host).ipv6?
     end
 
     def run
       loop do
         if defined?(JRuby)
-          async.handle_input(*@socket.recvfrom(1152))
+          async.dispatch(*@socket.recvfrom(1152))
         else
           begin
-            async.handle_input(*@socket.to_io.recvmsg_nonblock)
+            async.dispatch(*@socket.to_io.recvmsg_nonblock)
           rescue ::IO::WaitReadable
             Celluloid::IO.wait_readable(@socket)
             retry

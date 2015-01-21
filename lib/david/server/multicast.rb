@@ -2,10 +2,10 @@ module David
   class Server
     # See https://tools.ietf.org/html/rfc7252#section-12.8
     module Multicast
-      def multicast_initialize
+      def multicast_initialize!
         @socket.to_io.setsockopt(:SOL_SOCKET, :SO_REUSEADDR, 1)
 
-        if @ipv6
+        if ipv6?
           maddrs = ['ff02::fd', 'ff05::fd']
           maddrs << 'ff02::1' if OS.osx? # OSX needs ff02::1 explicitly joined.
           maddrs.each { |maddr| multicast_listen_ipv6(maddr) }
@@ -18,11 +18,13 @@ module David
           setsockopts_ipv4
         end
 
-        logger.debug "Joined multicast groups: #{maddrs.join(', ')}"
+        log.debug "Joined multicast groups: #{maddrs.join(', ')}"
       rescue Errno::ENODEV, Errno::EADDRNOTAVAIL
-        logger.warn 'Multicast initialization failure: Device not found.'
+        log.warn 'Multicast initialization failure: Device not found.'
         @mcast = false
       end
+
+      private
 
       def multicast_listen_ipv4(address)
         mreq = IPAddr.new(address).hton + IPAddr.new('0.0.0.0').hton

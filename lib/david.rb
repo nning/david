@@ -30,11 +30,15 @@ require 'rack/handler/coap'
 require 'david/guerilla/rack/handler'
 
 require 'david/actor'
+require 'david/registry'
+require 'david/exchange'
+require 'david/mid_cache'
+require 'david/transmission'
+require 'david/version'
+
 require 'david/garbage_collector'
 require 'david/observe'
-require 'david/request'
 require 'david/server'
-require 'david/version'
 
 if defined? Rails
   require 'david/rails/action_controller/base'

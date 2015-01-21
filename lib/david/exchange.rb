@@ -1,5 +1,11 @@
 module David
-  class Request < Struct.new(:host, :port, :message, :ancillary, :options)
+  class Exchange < Struct.new(:host, :port, :message, :ancillary, :options)
+    include Registry
+
+    def ==(other)
+      mid == other.mid && token == other.token
+    end
+   
     def accept
       message.options[:accept]
     end
@@ -22,6 +28,10 @@ module David
 
     def delete?
       message.mcode == :delete
+    end
+
+    def duplicate?
+      mid_cache.present?(self)
     end
 
     def etag
@@ -73,6 +83,22 @@ module David
 
     def put?
       message.mcode == :put
+    end
+
+    def request?
+      con? || non?
+    end
+
+    def response?
+      mid_cache.present?(self) && (ack? || rst?)
+    end
+
+    def rst?
+      message.tt == :rst
+    end
+
+    def separate?
+      ack? && message.payload.empty? && message.mcode == [0, 0]
     end
 
     def to_s

@@ -7,19 +7,20 @@ describe Observe do
 
   # TODO Replace this with factory.
   before do
-    [:@request1, :@request2].each do |var|
+    [:@exchange1, :@exchange2].each do |var|
+      mid     = SecureRandom.random_number(0xffff)
       token   = SecureRandom.random_number(0xff)
       options = { uri_path: [], token: token }
 
-      message = CoAP::Message.new(:con, :get, nil, '', options)
-      request = Request.new('127.0.0.1', CoAP::PORT, message)
+      message  = CoAP::Message.new(:con, :get, mid, '', options)
+      exchange = Exchange.new('127.0.0.1', CoAP::PORT, message)
 
-      instance_variable_set(var, request)
+      instance_variable_set(var, exchange)
     end
   end
 
-  let(:dummy1) { [@request1, {'PATH_INFO' => '/'}, '1'] }
-  let(:dummy2) { [@request2, {'PATH_INFO' => '/'}, '1'] }
+  let(:dummy1) { [@exchange1, {'PATH_INFO' => '/'}, '1'] }
+  let(:dummy2) { [@exchange2, {'PATH_INFO' => '/'}, '1'] }
 
   subject { Celluloid::Actor[:observe] }
 
@@ -36,7 +37,7 @@ describe Observe do
       end
     end
 
-    # [n, request, env, etag, timestamp]
+    # [n, exchange, env, etag, timestamp]
     context 'value' do
       let!(:time) { Time.now.to_i }
 

@@ -12,21 +12,20 @@ module David
       log.debug 'Observe initialized'
     end
 
-    def add(request, env, etag)
-      request.message.mid = nil
-      request.message.options.delete(:observe)
+    def add(exchange, env, etag)
+      exchange.message.mid = nil
+      exchange.message.options.delete(:observe)
 
-      # TODO Check if Array or Struct is more efficient.
-      self[[request.host, request.token]] ||=
-        [0, request, env, etag, Time.now.to_i]
+      self[[exchange.host, exchange.token]] ||=
+        [0, exchange, env, etag, Time.now.to_i]
     end
 
-    def delete(request)
-      _delete([request.host, request.token])
+    def delete(exchange)
+      _delete([exchange.host, exchange.token])
     end
 
-    def include?(request)
-      _include?([request.host, request.token])
+    def include?(exchange)
+      _include?([exchange.host, exchange.token])
     end
 
     def to_s
@@ -44,46 +43,44 @@ module David
     # TODO If ETag did not change but max-age of last notification is expired,
     #      return empty 2.03.
     def handle_update(key)
-      n, request, env, etag = self[key]
+      n, exchange, env, etag = self[key]
       n += 1
 
-      response, options = server.respond(request, env)
+      response, options = server.respond(exchange, env)
 
       return if response.nil?
 
       if response.mcode[0] != 2
-        self.delete(request)
-        request(response, request.host, request.port, options)
+        self.delete(exchange)
+        transmit(exchange, response, options)
         return
       end
 
       if etag != response.options[:etag]
         response.options[:observe] = n
+        transmit(exchange, response, options)
 
-        answer = request(response, request.host, request.port, options)
-
-        if !answer.nil? && answer.tt == :rst
-          self.delete(request)
-          return
-        end
+        # TODO Implement removing of observe relationship on RST answer to
+        #      notification in main dispatcher
+        # if !answer.nil? && answer.tt == :rst
+        #   self.delete(exchange)
+        #   return
+        # end
 
         bump(key, n, response)
       end
     end
 
-    def request(message, host, port, options)
-      answer = nil
+    def transmit(exchange, message, options)
+      e = exchange.dup
 
       log.debug message.inspect
 
       begin
-        options.merge!(retransmit: false, socket: server.socket)
-        answer = CoAP::Transmission.request(message, host, port, options).last
-        log.debug answer.inspect
+        e.message = message
+        Transmission.new.send(e, retransmit: false)
       rescue Timeout::Error, RuntimeError
       end
-
-      answer
     end
 
     def run
