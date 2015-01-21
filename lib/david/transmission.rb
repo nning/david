@@ -31,12 +31,17 @@ module David
     end
 
     def normalize_host(host)
-      ip = IPAddr.new(Resolv.getaddress(host))
+      ip = IPAddr.new(host)
 
       if ipv6? && ip.ipv4?
         ip = ip.ipv4_mapped
       end
-    rescue Resolv::ResolvError
+    rescue ArgumentError
+      begin
+        host = Resolv.getaddress(host)
+        retry
+      rescue Resolv::ResolvError
+      end
     else 
       ip.to_s
     end
