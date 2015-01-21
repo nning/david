@@ -1,4 +1,3 @@
-require 'david/server/deduplication'
 require 'david/server/multicast'
 require 'david/server/options'
 require 'david/server/respond'
@@ -8,7 +7,6 @@ module David
     include Celluloid::IO
     include Registry
 
-    include Deduplication
     include Multicast
     include Options
     include Respond
@@ -29,8 +27,6 @@ module David
       @app     = app.respond_to?(:new) ? app.new : app
 
       @default_format = choose(:default_format, options[:DefaultFormat])
-
-      @dedup_cache = {}
 
       link(mid_cache)
 

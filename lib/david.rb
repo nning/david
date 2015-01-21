@@ -36,7 +36,6 @@ require 'david/mid_cache'
 require 'david/transmission'
 require 'david/version'
 
-require 'david/garbage_collector'
 require 'david/observe'
 require 'david/server'
 
