@@ -4,6 +4,10 @@ module David
       message.options[:accept]
     end
 
+    def ack?
+      message.tt == :ack
+    end
+
     def block
       @block ||= if message.options[:block2].nil?
         CoAP::Block.new(0, false, 1024)
