@@ -64,7 +64,7 @@ module David
       return unless request.valid_method?
       return if !request.non? && request.multicast?
 
-      logger.info "[#{host}]:#{port}: #{message} (block #{request.block.num})"
+      logger.info request
       logger.debug message.inspect
 
       if request.con? && duplicate?(request) #&& !request.idempotent?

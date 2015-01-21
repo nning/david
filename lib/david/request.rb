@@ -1,80 +1,86 @@
-class Request < Struct.new(:host, :port, :message, :ancillary, :options)
-  def accept
-    message.options[:accept]
-  end
-
-  def block
-    @block ||= if message.options[:block2].nil?
-      CoAP::Block.new(0, false, 1024)
-    else
-      CoAP::Block.new(message.options[:block2]).decode
+module David
+  class Request < Struct.new(:host, :port, :message, :ancillary, :options)
+    def accept
+      message.options[:accept]
     end
-  end
 
-  def con?
-    message.tt == :con
-  end
+    def block
+      @block ||= if message.options[:block2].nil?
+        CoAP::Block.new(0, false, 1024)
+      else
+        CoAP::Block.new(message.options[:block2]).decode
+      end
+    end
 
-  def delete?
-    message.mcode == :delete
-  end
+    def con?
+      message.tt == :con
+    end
 
-  def etag
-    message.options[:etag]
-  end
+    def delete?
+      message.mcode == :delete
+    end
 
-  def get_etag?
-    message.options[:etag].nil? && get?
-  end
+    def etag
+      message.options[:etag]
+    end
 
-  def get?
-    message.mcode == :get
-  end
+    def get_etag?
+      message.options[:etag].nil? && get?
+    end
 
-  def idempotent?
-    get? || put? || delete?
-  end
+    def get?
+      message.mcode == :get
+    end
 
-  def mid
-    message.mid
-  end
+    def idempotent?
+      get? || put? || delete?
+    end
 
-  def multicast?
-    a = ancillary
-    return false if a.nil?
+    def mid
+      message.mid
+    end
 
-    return @multicast unless @multicast.nil?
+    def multicast?
+      a = ancillary
+      return false if a.nil?
 
-    @multicast =
-      a.cmsg_is?(:IP, :PKTINFO) && a.ip_pktinfo[0].ipv4_multicast? ||
-      a.cmsg_is?(:IPV6, :PKTINFO) && a.ipv6_pktinfo[0].ipv6_multicast?
-  end
+      return @multicast unless @multicast.nil?
 
-  def non?
-    message.tt == :non
-  end
+      @multicast =
+        a.cmsg_is?(:IP, :PKTINFO) && a.ip_pktinfo[0].ipv4_multicast? ||
+        a.cmsg_is?(:IPV6, :PKTINFO) && a.ipv6_pktinfo[0].ipv6_multicast?
+    end
 
-  def observe?
-    !message.options[:observe].nil?
-  end
+    def non?
+      message.tt == :non
+    end
 
-  def post?
-    message.mcode == :post
-  end
+    def observe?
+      !message.options[:observe].nil?
+    end
 
-  def proxy?
-    !(message.options[:proxy_uri].nil? && message.options[:proxy_scheme].nil?)
-  end
+    def post?
+      message.mcode == :post
+    end
 
-  def put?
-    message.mcode == :put
-  end
+    def proxy?
+      !(message.options[:proxy_uri].nil? && message.options[:proxy_scheme].nil?)
+    end
 
-  def token
-    message.options[:token]
-  end
+    def put?
+      message.mcode == :put
+    end
 
-  def valid_method?
-    CoAP::METHODS.include?(message.mcode)
+    def to_s
+      "[#{host}]:#{port}: #{message} (block #{block.num})"
+    end
+
+    def token
+      message.options[:token]
+    end
+
+    def valid_method?
+      CoAP::METHODS.include?(message.mcode)
+    end
   end
 end

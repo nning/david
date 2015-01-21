@@ -128,7 +128,7 @@ module David
         end
       end
 
-      def initialize_response(request, mcode = 2.00)
+      def initialize_response(request, mcode = 2.05)
         type = request.con? ? :ack : :non
 
         CoAP::Message.new \
