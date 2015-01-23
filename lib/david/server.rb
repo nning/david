@@ -63,7 +63,7 @@ module David
       log.debug(message.inspect)
 
       if exchange.response?
-        mid_cache.delete(exchange)
+        mid_cache.async.delete(exchange)
       elsif exchange.request?
         handle_request(exchange)
       end
