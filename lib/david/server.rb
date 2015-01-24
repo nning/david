@@ -1,3 +1,4 @@
+require 'david/server/mid_cache'
 require 'david/server/multicast'
 require 'david/server/options'
 require 'david/server/respond'
@@ -7,6 +8,7 @@ module David
     include Celluloid::IO
     include Registry
 
+    include MidCache
     include Multicast
     include Options
     include Respond
@@ -28,7 +30,7 @@ module David
 
       @default_format = choose(:default_format, options[:DefaultFormat])
 
-      link(mid_cache)
+      @mid_cache = {}
 
       log.info "David #{David::VERSION} on #{RUBY_DESCRIPTION}"
       log.info "Starting on [#{@host}]:#{@port}"
@@ -39,6 +41,8 @@ module David
       @socket = UDPSocket.new(af)
       multicast_initialize! if @mcast
       @socket.bind(@host, @port)
+
+      @tx = Transmitter.new(@socket)
 
       async.run
     end
@@ -62,16 +66,20 @@ module David
       log.info('<- ' + exchange.to_s)
       log.debug(message.inspect)
 
-      if exchange.response?
-        mid_cache.async.delete(exchange)
+      key = exchange.key
+
+      if cached?(key) && exchange.response?
+        cache_delete(key)
       elsif exchange.request?
-        handle_request(exchange)
+        handle_request(exchange, key)
       end
     end
 
-    def handle_request(exchange)
-      if exchange.con? && exchange.duplicate? #&& !exchange.idempotent?
-        response = mid_cache.lookup(exchange)[0].message
+    def handle_request(exchange, key = nil)
+      key ||= exchange.key
+
+      if exchange.con? && cached?(key) #&& !exchange.idempotent?
+        response = cached_message(key)
         log.debug("dedup cache hit #{exchange.mid}")
       else
         response, _ = respond(exchange)
@@ -79,7 +87,8 @@ module David
 
       unless response.nil?
         exchange.message = response
-        Transmission.new(@socket).send(exchange)
+        @tx.send(exchange)
+        cache!(exchange)
       end
     end
 
@@ -90,10 +99,10 @@ module David
     def run
       loop do
         if defined?(JRuby)
-          async.dispatch(*@socket.recvfrom(1152))
+          dispatch(*@socket.recvfrom(1152))
         else
           begin
-            async.dispatch(*@socket.to_io.recvmsg_nonblock)
+            dispatch(*@socket.to_io.recvmsg_nonblock)
           rescue ::IO::WaitReadable
             Celluloid::IO.wait_readable(@socket)
             retry

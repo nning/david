@@ -1,5 +1,5 @@
 module David
-  class Transmission
+  class Transmitter
     include Registry
 
     AF_INET6 = 'AF_INET6'.freeze
@@ -14,7 +14,6 @@ module David
       host = normalize_host(exchange.host)
 
       @socket.send(exchange.message.to_wire, 0, host, exchange.port)
-      mid_cache.async.add(exchange)
 
       @log.info('-> ' + exchange.to_s)
       @log.debug(exchange.message.inspect)

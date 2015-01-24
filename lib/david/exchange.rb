@@ -30,10 +30,6 @@ module David
       message.mcode == :delete
     end
 
-    def duplicate?
-      mid_cache.present?(self)
-    end
-
     def etag
       message.options[:etag]
     end
@@ -48,6 +44,10 @@ module David
 
     def idempotent?
       get? || put? || delete?
+    end
+
+    def key
+      [host, mid]
     end
 
     def mid
@@ -90,7 +90,7 @@ module David
     end
 
     def response?
-      mid_cache.present?(self) && (ack? || rst?)
+      ack? || rst?
     end
 
     def rst?
