@@ -68,7 +68,7 @@ module David
 
       key = exchange.key
 
-      if cached?(key) && exchange.response?
+      if exchange.response? && cached?(key)
         cache_delete(key)
       elsif exchange.request?
         handle_request(exchange, key)
@@ -88,7 +88,7 @@ module David
       unless response.nil?
         exchange.message = response
         @tx.send(exchange)
-        cache!(exchange)
+        cache!(exchange) if exchange.reliable?
       end
     end
 

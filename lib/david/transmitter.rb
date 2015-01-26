@@ -25,10 +25,6 @@ module David
       @socket.addr[0] == AF_INET6
     end
 
-    def mid_cache
-      Celluloid::Actor[:mid_cache]
-    end
-
     def normalize_host(host)
       ip = IPAddr.new(host)
 

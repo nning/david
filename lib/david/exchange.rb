@@ -85,6 +85,10 @@ module David
       message.mcode == :put
     end
 
+    def reliable?
+      con? || ack?
+    end
+
     def request?
       con? || non?
     end
