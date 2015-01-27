@@ -144,6 +144,7 @@ GEM
       rspec-mocks (~> 3.1.0)
       rspec-support (~> 3.1.0)
     rspec-support (3.1.2)
+    ruby-prof (0.15.3)
     simplecov (0.9.1)
       docile (~> 1.1.0)
       multi_json (~> 1.0)
@@ -184,4 +185,5 @@ DEPENDENCIES
   rake
   rspec (~> 3.1)
   rspec-rails (~> 3.1)
+  ruby-prof
   sqlite3

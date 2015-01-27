@@ -7,6 +7,7 @@ require 'rack/hello_world'
 
 options = {}
 options[:Log] = 'debug' if ARGV.include?('-d')
+options[:Log] = 'none' if ARGV.include?('-q')
 options[:Multicast] = false if defined?(JRuby)
 
 klass = Rack::HelloWorld.new
