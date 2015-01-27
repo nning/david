@@ -9,7 +9,7 @@ end
 group :development do
   gem 'sqlite3', platforms: :ruby
   gem 'activerecord-jdbcsqlite3-adapter', platforms: :jruby
-  gem 'ruby-prof'
+  gem 'ruby-prof', platforms: :ruby
 end
 
 group :test do
