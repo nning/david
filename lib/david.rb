@@ -4,7 +4,7 @@ end
 require 'bundler/setup'
 Bundler.require(:default, :cbor)
 
-unless defined? JRuby
+unless defined?(JRuby)
   begin
     require 'cbor'
   rescue LoadError
@@ -39,7 +39,7 @@ require 'david/version'
 require 'david/observe'
 require 'david/server'
 
-if defined? Rails
+if defined?(Rails)
   require 'david/rails/action_controller/base'
 
   require 'david/railties/config'

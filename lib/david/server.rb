@@ -52,7 +52,7 @@ module David
     def dispatch(*args)
       data, sender, _, anc = args
 
-      if defined?(JRuby)
+      if defined?(JRuby) || defined?(Rubinius)
         port, _, host = sender[1..3]
       else
         host, port = sender.ip_address, sender.ip_port
@@ -98,7 +98,7 @@ module David
 
     def run
       loop do
-        if defined?(JRuby)
+        if defined?(JRuby) || defined?(Rubinius)
           dispatch(*@socket.recvfrom(1152))
         else
           begin
