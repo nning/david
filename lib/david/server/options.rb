@@ -42,6 +42,7 @@ module David
           level = ::Logger::DEBUG
         when 'none'
           fd = File.open('/dev/null', 'w')
+          level = ::Logger::FATAL
         end
 
         logger = ::Logger.new(fd)
