@@ -20,18 +20,20 @@ Benchmark.ips do |x|
 
   p = Stresser.pool(size: 1000)
 
-  range = 0..99999
+  def r
+    rand(0..9999)
+  end
 
   x.report('ThreadSafe::Hash') do
-    p.run { a[rand(range)] = rand(range) }
+    p.run { a[[r.to_s, r]] = [r] }
   end
 
   x.report('Hash') do
-    p.run { b[rand(range)] = rand(range) }
+    p.run { b[[r.to_s, r]] = [r] }
   end
 
   x.report('ThreadSafe::Cache') do
-    p.run { c[rand(range)] = rand(range) }
+    p.run { c[[r.to_s, r]] = [r] }
   end
 
   x.compare!

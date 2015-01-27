@@ -26,6 +26,15 @@ Benchmark.ips do |x|
     end
   end
 
+  x.report('Set key (insert)') do
+    max.times do |i|
+      key = Set.new
+      key << keys1[i]
+      key << keys2[i]
+      a[key] = values[i]
+    end
+  end
+
   x.compare!
 end
 
@@ -39,6 +48,15 @@ Benchmark.ips do |x|
   x.report('Nested Hash (lookup)') do
     max.times do |i|
       v = b[keys1[i]][keys2[i]]
+    end
+  end
+
+  x.report('Set key (lookup)') do
+    max.times do |i|
+      key = Set.new
+      key << keys1[i]
+      key << keys2[i]
+      v = a[key]
     end
   end
 
