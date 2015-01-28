@@ -13,6 +13,7 @@ module David
     end
 
     def add(exchange, env, etag)
+      exchange.message.tt = :non
       exchange.message.mid = nil
       exchange.message.options.delete(:observe)
 
