@@ -35,7 +35,10 @@ module David
 
       app = options.delete(:app) || Rack::HelloWorld
 
-      David::Server.supervise_as(:david, app, defaults.merge(options))
+      server = David::Server.new(app, defaults.merge(options))
+      server.async.run
+
+      server
     end
   end
 end

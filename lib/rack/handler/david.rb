@@ -16,7 +16,7 @@ module Rack
         g.supervise_as(:gc, ::David::GarbageCollector)
 
         begin
-          sleep
+          Celluloid::Actor[:server].run
         rescue Interrupt
           Celluloid.logger.info 'Terminated'
           Celluloid.logger = nil

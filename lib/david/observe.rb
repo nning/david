@@ -72,13 +72,10 @@ module David
     end
 
     def transmit(exchange, message, options)
-      e = exchange.dup
-
       log.debug message.inspect
 
       begin
-        e.message = message
-        Transmission.new.send(e, retransmit: false)
+        @socket.send(message.to_wire, 0, exchange.host, exchange.port)
       rescue Timeout::Error, RuntimeError
       end
     end

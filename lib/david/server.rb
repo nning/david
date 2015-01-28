@@ -41,10 +41,21 @@ module David
       @socket = UDPSocket.new(af)
       multicast_initialize! if @mcast
       @socket.bind(@host, @port)
+    end
 
-      @tx = Transmitter.new(@socket)
-
-      async.run
+    def run
+      loop do
+        if defined?(JRuby) || defined?(Rubinius)
+          dispatch(*@socket.recvfrom(1152))
+        else
+          begin
+            dispatch(*@socket.to_io.recvmsg_nonblock)
+          rescue ::IO::WaitReadable
+            Celluloid::IO.wait_readable(@socket)
+            retry
+          end
+        end
+      end
     end
 
     private
@@ -78,36 +89,21 @@ module David
 
     def handle_request(exchange, key, cached)
       if exchange.con? && !cached.nil? #&& !exchange.idempotent?
-        response = cached[0].message
+        response = cached[0]
         log.debug("dedup cache hit #{exchange.mid}")
       else
         response, _ = respond(exchange)
       end
 
       unless response.nil?
-        exchange.message = response
-        @tx.send(exchange)
-        cache_add(key, exchange) if exchange.reliable?
+        exchange.host
+        @socket.send(response.to_wire, 0, exchange.host, exchange.port)
+        cache_add(key, response) if response.tt == :ack
       end
     end
 
     def ipv6?
       IPAddr.new(@host).ipv6?
-    end
-
-    def run
-      loop do
-        if defined?(JRuby) || defined?(Rubinius)
-          dispatch(*@socket.recvfrom(1152))
-        else
-          begin
-            dispatch(*@socket.to_io.recvmsg_nonblock)
-          rescue ::IO::WaitReadable
-            Celluloid::IO.wait_readable(@socket)
-            retry
-          end
-        end
-      end
     end
 
     def shutdown

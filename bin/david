@@ -7,11 +7,17 @@ require 'rack/hello_world'
 
 options = {}
 options[:Log] = 'debug' if ARGV.include?('-d')
-options[:Log] = 'none' if ARGV.include?('-q')
 options[:Multicast] = false if defined?(JRuby)
 
+if ARGV.include?('-b')
+  options[:Log] = 'none'
+  options[:Block] = false
+  options[:Multicast] = false
+  options[:Observe] = false
+end
+
 klass = Rack::HelloWorld.new
-klass = Rack::ETag.new(klass)
+klass = Rack::ETag.new(klass) unless ARGV.include?('-b')
 klass = Rack::Lint.new(klass) if ARGV.include?('-l')
 
 Rack::Handler::David.run(klass, options)
