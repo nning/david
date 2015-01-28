@@ -8,8 +8,8 @@ module David
       @mid_cache
     end
 
-    def cache!(exchange)
-      @mid_cache[exchange.key] = [exchange, Time.now.to_i]
+    def cache_add(key, exchange)
+      @mid_cache[key] = [exchange, Time.now.to_i]
     end
 
     def cache_clean!(timeout)
@@ -22,12 +22,8 @@ module David
       @mid_cache.delete(key)
     end
 
-    def cached?(key)
-      @mid_cache.include?(key)
-    end
-
-    def cached_message(key)
-      @mid_cache[key][0].message
+    def cache_get(key)
+      @mid_cache[key]
     end
   end
 end

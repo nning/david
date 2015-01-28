@@ -67,19 +67,18 @@ module David
       log.debug(message.inspect)
 
       key = exchange.key
+      cached = cache_get(key)
 
-      if exchange.response? && cached?(key)
+      if exchange.response? && !cached.nil?
         cache_delete(key)
       elsif exchange.request?
-        handle_request(exchange, key)
+        handle_request(exchange, key, cached)
       end
     end
 
-    def handle_request(exchange, key = nil)
-      key ||= exchange.key
-
-      if exchange.con? && cached?(key) #&& !exchange.idempotent?
-        response = cached_message(key)
+    def handle_request(exchange, key, cached)
+      if exchange.con? && !cached.nil? #&& !exchange.idempotent?
+        response = cached[0].message
         log.debug("dedup cache hit #{exchange.mid}")
       else
         response, _ = respond(exchange)
@@ -88,7 +87,7 @@ module David
       unless response.nil?
         exchange.message = response
         @tx.send(exchange)
-        cache!(exchange) if exchange.reliable?
+        cache_add(key, exchange) if exchange.reliable?
       end
     end
 
