@@ -6,7 +6,6 @@ require 'david/server/respond'
 module David
   class Server
     include Celluloid::IO
-    include Registry
 
     include MidCache
     include Multicast

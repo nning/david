@@ -9,6 +9,7 @@ module David
 
       include Constants
       include Mapping
+      include Registry
       include Utility
 
       def respond(exchange, env = nil)
