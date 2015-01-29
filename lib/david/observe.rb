@@ -76,13 +76,13 @@ module David
       log.debug message.inspect
 
       begin
-        @socket.send(message.to_wire, 0, exchange.host, exchange.port)
+        server.socket.send(message.to_wire, 0, exchange.host, exchange.port)
       rescue Timeout::Error, RuntimeError
       end
     end
 
     def run
-      loop { tick; sleep @tick_interval }
+      every(@tick_interval) { tick }
     end
 
     def tick
