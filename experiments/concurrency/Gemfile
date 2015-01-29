@@ -1,2 +1,3 @@
 source 'https://rubygems.org'
-gem 'david', github: 'nning/david'
+
+gem 'david', path: '../..'
