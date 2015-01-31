@@ -18,6 +18,7 @@ GEM
     hitimes (1.2.2-java)
     nio4r (1.1.0)
     nio4r (1.1.0-java)
+    rack (1.6.0)
     resolv-ipv6favor (0.0.0)
     timers (4.0.1)
       hitimes
@@ -29,3 +30,4 @@ PLATFORMS
 DEPENDENCIES
   benchmark-ips
   coap!
+  rack

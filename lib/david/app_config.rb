@@ -79,13 +79,13 @@ module David
     end
 
     def default_to_false(key, value)
-      value = from_rails(key, value)
+      value ||= from_rails(key, value)
       return false if value.nil? || value.to_s == 'false'
       true
     end
   
     def default_to_true(key, value)
-      value = from_rails(key, value)
+      value ||= from_rails(key, value)
       return true if value.nil? || value.to_s == 'true'
       false
     end
