@@ -1,11 +1,13 @@
-class ActionController::Base
-  def self.discoverable(options)
-    discovery_actor.register(self, options)
-  end
+module ActionController
+  class Base
+    def self.discoverable(options)
+      discovery_actor.register(self, options)
+    end
 
-  protected
+    protected
 
-  def self.discovery_actor
-    Celluloid::Actor[:discovery]
+    def self.discovery_actor
+      Celluloid::Actor[:discovery]
+    end
   end
 end

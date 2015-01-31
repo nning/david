@@ -55,4 +55,6 @@ Rails.application.routes.draw do
   #   end
 
   resources :things
+
+  get 'hello' => 'benchmarks#show'
 end
