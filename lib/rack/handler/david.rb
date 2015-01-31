@@ -1,19 +1,15 @@
 module Rack
   module Handler
     class David
-      DEFAULT_OPTIONS = {
-        :Host => ENV['RACK_ENV'] == 'development' ? '::1' : '::',
-        :Port => ::CoAP::PORT
-      }
-
       def self.run(app, options={})
-        options = DEFAULT_OPTIONS.merge(options)
-
         g = Celluloid::SupervisionGroup.run!
 
         g.supervise_as(:server, ::David::Server, app, options)
-        g.supervise_as(:observe, ::David::Observe) if options[:Observe] != false
         g.supervise_as(:gc, ::David::GarbageCollector)
+
+        unless options[:Observe] == 'false'
+          g.supervise_as(:observe, ::David::Observe)
+        end
 
         begin
           Celluloid::Actor[:server].run
@@ -25,7 +21,7 @@ module Rack
       end
 
       def self.valid_options
-        host, port = DEFAULT_OPTIONS.values_at(:Host, :Port)
+        host, port = AppConfig::DEFAULT_OPTIONS.values_at(:Host, :Port)
 
         {
           'Block=BOOLEAN'     => 'Support for blockwise transfer (default: true)',

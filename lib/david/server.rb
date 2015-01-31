@@ -1,3 +1,4 @@
+require 'david/app_config'
 require 'david/server/mid_cache'
 require 'david/server/multicast'
 require 'david/server/options'
@@ -17,29 +18,21 @@ module David
     finalizer :shutdown
 
     def initialize(app, options)
-      @block   = choose(:block,   options[:Block])
-      @cbor    = choose(:cbor,    options[:CBOR])
-      @host    = choose(:host,    options[:Host])
-      @log     = choose(:logger,  options[:Log])
-      @mcast   = choose(:mcast,   options[:Multicast])
-      @observe = choose(:observe, options[:Observe])
-      @port    = options[:Port].to_i
+      @app        = app.respond_to?(:new) ? app.new : app
+      @mid_cache  = {}
+      @options    = AppConfig.new(options)
 
-      @app     = app.respond_to?(:new) ? app.new : app
-
-      @default_format = choose(:default_format, options[:DefaultFormat])
-
-      @mid_cache = {}
+      host, port  = @options.values_at(:Host, :Port)
 
       log.info "David #{David::VERSION} on #{RUBY_DESCRIPTION}"
-      log.info "Starting on [#{@host}]:#{@port}"
+      log.info "Starting on [#{host}]:#{port}"
 
       af = ipv6? ? ::Socket::AF_INET6 : ::Socket::AF_INET
 
       # Actually Celluloid::IO::UDPSocket.
       @socket = UDPSocket.new(af)
-      multicast_initialize! if @mcast
-      @socket.bind(@host, @port)
+      multicast_initialize! if @options[:Multicast]
+      @socket.bind(host, port)
     end
 
     def run
@@ -102,7 +95,7 @@ module David
     end
 
     def ipv6?
-      IPAddr.new(@host).ipv6?
+      IPAddr.new(@options[:Host]).ipv6?
     end
 
     def shutdown

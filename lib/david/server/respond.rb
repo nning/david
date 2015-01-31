@@ -13,7 +13,7 @@ module David
       include Utility
 
       def respond(exchange, env = nil)
-        block_enabled = @block && exchange.get?
+        block_enabled = @options[:Block] && exchange.get?
 
         if block_enabled
           # Fail if m set.
@@ -36,7 +36,7 @@ module David
 
         body.close if body.respond_to?(:close)
 
-        if @cbor && ct == 'application/json'
+        if @options[:CBOR] && ct == 'application/json'
           begin
             body = body_to_cbor(body)
             ct = CONTENT_TYPE_CBOR
@@ -64,7 +64,7 @@ module David
         response.options[:location_path] = loc unless loc.nil?
         response.options[:max_age] = ma.to_i unless ma.nil?
 
-        if @observe && handle_observe(exchange, env, etag)
+        if @options[:Observe] && handle_observe(exchange, env, etag)
           response.options[:observe] = 0
         end
 
@@ -95,8 +95,8 @@ module David
           PATH_INFO         => path_encode(m.options[:uri_path]),
           QUERY_STRING      => query_encode(m.options[:uri_query])
                                  .gsub(/^\?/, ''),
-          SERVER_NAME       => @host,
-          SERVER_PORT       => @port.to_s,
+          SERVER_NAME       => @options[:Host],
+          SERVER_PORT       => @options[:Port].to_s,
           CONTENT_LENGTH    => m.payload.bytesize.to_s,
           CONTENT_TYPE      => EMPTY_STRING,
           HTTP_ACCEPT       => accept_to_http(exchange),
@@ -107,7 +107,7 @@ module David
           RACK_MULTITHREAD  => true,
           RACK_MULTIPROCESS => true,
           RACK_RUN_ONCE     => false,
-          RACK_LOGGER       => @logger,
+          RACK_LOGGER       => @options[:Log],
           COAP_VERSION      => 1,
           COAP_MULTICAST    => exchange.multicast?,
           COAP_DTLS         => COAP_DTLS_NOSEC,

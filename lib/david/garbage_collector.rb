@@ -14,7 +14,7 @@ module David
     private
 
     def run
-      loop { sleep @tick_interval; tick }
+      every(@tick_interval) { tick }
     end
 
     def tick

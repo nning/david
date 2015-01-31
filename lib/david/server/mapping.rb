@@ -24,7 +24,7 @@ module David
     
       def accept_to_http(request)
         if request.accept.nil?
-          @default_format
+          @options[:DefaultFormat]
         else
           CoAP::Registry.convert_content_format(request.accept)
         end

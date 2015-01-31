@@ -21,7 +21,7 @@ module David
         log.debug "Joined multicast groups: #{maddrs.join(', ')}"
       rescue Errno::ENODEV, Errno::EADDRNOTAVAIL
         log.warn 'Multicast initialization failure: Device not found.'
-        @mcast = false
+        @options[:Multicast] = false
       end
 
       private
