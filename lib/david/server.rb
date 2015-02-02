@@ -1,7 +1,6 @@
 require 'david/app_config'
 require 'david/server/mid_cache'
 require 'david/server/multicast'
-require 'david/server/options'
 require 'david/server/respond'
 
 module David
@@ -10,7 +9,6 @@ module David
 
     include MidCache
     include Multicast
-    include Options
     include Respond
 
     attr_reader :socket

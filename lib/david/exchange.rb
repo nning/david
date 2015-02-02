@@ -22,6 +22,10 @@ module David
       end
     end
 
+    def cbor?
+      message.options[:content_format] == 60
+    end
+
     def con?
       message.tt == :con
     end

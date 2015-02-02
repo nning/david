@@ -30,8 +30,12 @@ module David
         end
       end
 
-      def body_to_cbor(body)
-        JSON.parse(body).to_cbor
+      def body_to_cbor(json)
+        JSON.parse(json).to_cbor
+      end
+
+      def body_to_json(cbor)
+        CBOR.load(cbor).to_json
       end
 
       def code_to_coap(code)

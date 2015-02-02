@@ -60,6 +60,30 @@ module Rack
           {'Content-Type' => 'text/plain'},
           [Time.now.to_s]
         ]
+      when '/cbor'
+        require 'json'
+
+        body = JSON.parse(env['rack.input'].read).to_s
+
+        [200,
+          {
+            'Content-Type' => 'text/plain',
+            'Content-Length' => body.bytesize.to_s
+          },
+          [body]
+        ]
+      when '/json'
+        require 'json'
+
+        body = {'Hello' => 'World!'}.to_json
+
+        [200,
+          {
+            'Content-Type' => 'application/json',
+            'Content-Length' => body.bytesize.to_s
+          },
+          [body]
+        ]
       else
         [404, {}, ['']]
       end

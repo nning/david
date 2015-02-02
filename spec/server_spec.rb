@@ -285,6 +285,51 @@ describe Server do
     end
   end
 
+  context 'transcoding' do
+    let!(:server) { supervised_server(:Port => port, :CBOR => true) }
+
+    subject { client.get('/cbor', '::1', nil, cbor, content_format: 60) }
+
+    context 'incoming' do
+      context 'string key' do
+        let(:cbor) { {'Hello' => 'World!'}.to_cbor }
+
+        it 'should return text' do
+          expect(subject).to be_a(CoAP::Message)
+          expect(subject.ver).to eq(1)
+          expect(subject.tt).to eq(:ack)
+          expect(subject.mcode).to eq([2, 5])
+          expect(subject.payload).to eq('{"Hello"=>"World!"}')
+        end
+      end
+
+      context 'int key' do
+        let(:cbor) { {1 => 2}.to_cbor }
+
+        it 'should return text' do
+          expect(subject).to be_a(CoAP::Message)
+          expect(subject.ver).to eq(1)
+          expect(subject.tt).to eq(:ack)
+          expect(subject.mcode).to eq([2, 5])
+          expect(subject.payload).to eq('{"1"=>2}')
+        end
+      end
+    end
+
+    context 'outgoing' do
+      subject { client.get('/json', '::1') }
+
+      it 'should return CBOR' do
+        expect(subject).to be_a(CoAP::Message)
+        expect(subject.ver).to eq(1)
+        expect(subject.tt).to eq(:ack)
+        expect(subject.mcode).to eq([2, 5])
+        expect(CBOR.load(subject.payload)).to eq({'Hello' => 'World!'})
+        expect(subject.options[:content_format]).to eq(60)
+      end
+    end
+  end
+
   after do
     server.terminate
   end

@@ -26,6 +26,14 @@ module David
 
         env ||= basic_env(exchange)
 
+        if @options[:CBOR] && exchange.cbor?
+          begin
+            env[RACK_INPUT] = StringIO.new(body_to_json(exchange.message.payload))
+            env[CONTENT_TYPE] = CONTENT_TYPE_JSON
+          rescue EOFError, CBOR::MalformedFormatError
+          end
+        end
+
         code, headers, body = @app.call(env)
 
         # No error responses on multicast exchanges.
@@ -36,7 +44,7 @@ module David
 
         body.close if body.respond_to?(:close)
 
-        if @options[:CBOR] && ct == 'application/json'
+        if @options[:CBOR] && ct == CONTENT_TYPE_JSON
           begin
             body = body_to_cbor(body)
             ct = CONTENT_TYPE_CBOR
