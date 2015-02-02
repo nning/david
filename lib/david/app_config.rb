@@ -31,7 +31,7 @@ module David
     end
 
     def choose_defaultformat(value)
-      value = from_rails(:default_format, value)
+      value = from_rails(:default_format)
       return nil if value.nil?
       value
     end
@@ -79,21 +79,25 @@ module David
     end
 
     def default_to_false(key, value)
-      value = from_rails(key, value) if value.nil?
-      return false if value.nil? || value.to_s == 'false'
-      true
+      return true if value.to_s == 'true'
+
+      r = from_rails(key)
+      return r unless r.nil? || value == 'false'
+
+      false
     end
   
     def default_to_true(key, value)
-      value = from_rails(key, value) if value.nil?
-      return true if value.nil? || value.to_s == 'true'
-      false
+      return false if value.to_s == 'false'
+
+      r = from_rails(key)
+      return r unless r.nil? || value == 'true'
+
+      true
     end
 
-    def from_rails(key, value)
-      if value.nil? && defined?(Rails)
-        Rails.application.config.coap.send(key)
-      end
+    def from_rails(key)
+      Rails.application.config.coap.send(key) if defined?(Rails)
     end
 
     def optionize!(key)
