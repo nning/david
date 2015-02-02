@@ -11,7 +11,7 @@ module David
       :Port => ::CoAP::PORT
     }
 
-    def initialize(hash)
+    def initialize(hash = {})
       self.merge!(DEFAULT_OPTIONS)
       self.merge!(hash)
 
@@ -79,13 +79,13 @@ module David
     end
 
     def default_to_false(key, value)
-      value ||= from_rails(key, value)
+      value = from_rails(key, value) if value.nil?
       return false if value.nil? || value.to_s == 'false'
       true
     end
   
     def default_to_true(key, value)
-      value ||= from_rails(key, value)
+      value = from_rails(key, value) if value.nil?
       return true if value.nil? || value.to_s == 'true'
       false
     end

@@ -273,21 +273,6 @@ describe Server do
     end
   end
 
-  context 'options' do
-    describe 'default_to_true' do
-      let(:method) do
-        ->(*args) { Server::Options.send(:default_to_true, *args) }
-      end
-
-      it { expect(method.call(:block, nil)).to eq(true) }
-      it { expect(method.call(:block, true)).to eq(true) }
-      it { expect(method.call(:block, 'true')).to eq(true) }
-
-      it { expect(method.call(:block, false)).to eq(false) }
-      it { expect(method.call(:block, 'false')).to eq(false) }
-    end
-  end
-
   context 'proxy' do
     subject { client.get('/', '::1', nil, nil, proxy_uri: 'coap://[::1]/') }
 
