@@ -27,6 +27,7 @@ module David
       # Freeze CoAP specific env keys.
       COAP_VERSION    = 'coap.version'.freeze
       COAP_MULTICAST  = 'coap.multicast'.freeze
+      COAP_CBOR       = 'coap.cbor'.freeze
       COAP_DTLS       = 'coap.dtls'.freeze
       COAP_DTLS_ID    = 'coap.dtls.id'.freeze
       COAP_DTLS_NOSEC = 'NoSec'.freeze

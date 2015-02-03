@@ -35,7 +35,11 @@ module David
       end
 
       def body_to_json(cbor)
-        CBOR.load(cbor).to_json
+        if cbor.is_a?(String)
+          CBOR.load(cbor).to_json
+        else
+          cbor.to_json
+        end
       end
 
       def code_to_coap(code)

@@ -63,7 +63,8 @@ module Rack
       when '/cbor'
         require 'json'
 
-        body = JSON.parse(env['rack.input'].read).to_s
+        body = JSON.parse(env['rack.input'].read).to_s +
+               env['coap.cbor'].to_s
 
         [200,
           {

@@ -28,11 +28,14 @@ module David
 
         if @options[:CBOR] && exchange.cbor?
           begin
-            body = body_to_json(exchange.message.payload)
+            cbor = CBOR.load(exchange.message.payload)
+
+            body = body_to_json(cbor)
             body = body.force_encoding('ASCII-8BIT') # Rack::Lint insisted...
 
-            env[RACK_INPUT]   = StringIO.new(body)
+            env[COAP_CBOR]    = cbor
             env[CONTENT_TYPE] = CONTENT_TYPE_JSON
+            env[RACK_INPUT]   = StringIO.new(body)
           rescue EOFError, CBOR::MalformedFormatError
           end
         end

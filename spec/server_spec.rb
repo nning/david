@@ -299,7 +299,7 @@ describe Server do
           expect(subject.ver).to eq(1)
           expect(subject.tt).to eq(:ack)
           expect(subject.mcode).to eq([2, 5])
-          expect(subject.payload).to eq('{"Hello"=>"World!"}')
+          expect(subject.payload).to eq('{"Hello"=>"World!"}{"Hello"=>"World!"}')
         end
       end
 
@@ -311,7 +311,7 @@ describe Server do
           expect(subject.ver).to eq(1)
           expect(subject.tt).to eq(:ack)
           expect(subject.mcode).to eq([2, 5])
-          expect(subject.payload).to eq('{"1"=>2}')
+          expect(subject.payload).to eq('{"1"=>2}{1=>2}')
         end
       end
 
