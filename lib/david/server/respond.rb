@@ -33,9 +33,10 @@ module David
             body = body_to_json(cbor)
             body = body.force_encoding('ASCII-8BIT') # Rack::Lint insisted...
 
-            env[COAP_CBOR]    = cbor
-            env[CONTENT_TYPE] = CONTENT_TYPE_JSON
-            env[RACK_INPUT]   = StringIO.new(body)
+            env[COAP_CBOR]      = cbor
+            env[CONTENT_LENGTH] = body.bytesize
+            env[CONTENT_TYPE]   = CONTENT_TYPE_JSON
+            env[RACK_INPUT]     = StringIO.new(body)
           rescue EOFError, CBOR::MalformedFormatError
           end
         end
@@ -47,8 +48,6 @@ module David
 
         ct = headers[HTTP_CONTENT_TYPE]
         body = body_to_string(body)
-
-        body.close if body.respond_to?(:close)
 
         if @options[:CBOR] && ct == CONTENT_TYPE_JSON
           begin
@@ -66,7 +65,6 @@ module David
         loc   = location_to_coap(headers)
         ma    = max_age_to_coap(headers)
         mcode = code_to_coap(code)
-        size  = headers[HTTP_CONTENT_LENGTH].to_i
 
         # App returned cf different from accept
         return error(exchange, 4.06) if exchange.accept && exchange.accept != cf
@@ -88,7 +86,6 @@ module David
 
           response.payload = block.chunk(body)
           response.options[:block2] = block.encode
-#         response.options[:size2]  = size if size != 0
         else
           response.payload = body
         end

@@ -288,12 +288,12 @@ describe Server do
   context 'transcoding' do
     let!(:server) { supervised_server(:Port => port, :CBOR => true) }
 
+    let(:cbor) { {'Hello' => 'World!'}.to_cbor }
+
     subject { client.get('/cbor', '::1', nil, cbor, content_format: 60) }
 
     context 'incoming' do
       context 'string key' do
-        let(:cbor) { {'Hello' => 'World!'}.to_cbor }
-
         it 'should return text' do
           expect(subject).to be_a(CoAP::Message)
           expect(subject.ver).to eq(1)
@@ -316,28 +316,22 @@ describe Server do
       end
 
       context 'rails' do
-        pending
+        let!(:server) do
+          supervised_server({
+            :Port => port,
+            :Log => debug,
+            :CBOR => true,
+            :app => Rails.application
+          })
+        end
 
-        # let!(:server) do
-        #   supervised_server({
-        #     :Port => port,
-        #     :Log => debug,
-        #     :CBOR => true,
-        #     :app => Dummy::Application
-        #   })
-        # end
-
-        # let(:cbor) { {'test' => {'Hello' => 'World!'}}.to_cbor }
-
-        # subject { client.post('/cbor', '::1', nil, cbor, content_format: 60) }
-
-        # it 'should return text' do
-        #   expect(subject).to be_a(CoAP::Message)
-        #   expect(subject.ver).to eq(1)
-        #   expect(subject.tt).to eq(:ack)
-        #   expect(subject.mcode).to eq([2, 5])
-        #   expect(subject.payload).to eq('{"Hello"=>"World!"}')
-        # end
+        it 'should return text' do
+          expect(subject).to be_a(CoAP::Message)
+          expect(subject.ver).to eq(1)
+          expect(subject.tt).to eq(:ack)
+          expect(subject.mcode).to eq([2, 5])
+          expect(subject.payload).to eq('{"Hello"=>"World!"}')
+        end
       end
     end
 

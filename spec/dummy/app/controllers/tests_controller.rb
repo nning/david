@@ -4,6 +4,6 @@ class TestsController < ActionController::Base
   end
 
   def cbor
-    render text: params.to_s
+    render text: params['test'].to_s
   end
 end
