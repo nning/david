@@ -22,18 +22,22 @@ module David
 
     private
 
-    def render_exception(exception)
+    def render_exception(e)
       body = {
-        error: exception.class.to_s,
-        message: exception.message
+        error:    e.class.to_s,
+        message:  e.message
       }
 
-      log(:info, [body[:error], body[:message]].join("\n"))
+      log.error([body[:error], body[:message]].join(': '))
       
       body = body.to_json
 
-      code = 500
-      code = 404 if exception.is_a?(ActiveRecord::RecordNotFound)
+      code = case e
+      when ActiveRecord::RecordNotFound, ActionController::RoutingError
+        404
+      else
+        500
+      end
 
       [code,
         {
@@ -44,9 +48,8 @@ module David
       ]
     end
 
-    def log(level, message)
+    def log
       @logger ||= @env['rack.logger']
-      @logger.send(level, message) if @logger
     end
   end
 end
