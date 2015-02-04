@@ -6,6 +6,7 @@ module David
       :DefaultFormat => 'application/json',
       :Host => ENV['RACK_ENV'] == 'development' ? '::1' : '::',
       :Log => nil,
+      :MinimalMapping => false,
       :Multicast => true,
       :Observe => true,
       :Port => ::CoAP::PORT
@@ -64,6 +65,10 @@ module David
       Celluloid.logger = log
 
       log
+    end
+
+    def choose_minimalmapping(value)
+      value
     end
 
     def choose_multicast(value)

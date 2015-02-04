@@ -13,6 +13,7 @@ require 'rspec/rails'
 $:.unshift(File.expand_path('../lib', File.dirname(__FILE__)))
 
 require 'david'
+require 'david/interop'
 
 module David
   module TestHelper
@@ -22,6 +23,14 @@ module David
 
     def random_port
       rand((2**10+1)..(2**16-1))
+    end
+
+    def req(method, path, options = {})
+      payload = options.delete(:payload)
+      options.merge!(mid: mid)
+
+      client = CoAP::Client.new(retransmit: false, recv_timeout: 0.1)
+      client.send(method, path, '::1', port, payload, options)
     end
 
     def supervised_server(options)

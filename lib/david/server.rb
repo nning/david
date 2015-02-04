@@ -86,8 +86,12 @@ module David
       end
 
       unless response.nil?
-        exchange.host
         @socket.send(response.to_wire, 0, exchange.host, exchange.port)
+
+        exchange.message = response if log.info?
+        log.info('-> ' + exchange.to_s)
+        log.debug(response.inspect)
+
         cache_add(key, response) if response.tt == :ack
       end
     end

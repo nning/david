@@ -20,6 +20,10 @@ module David
         511 => 500,
       }.freeze
 
+      HTTP_TO_COAP_CODES_MINIMAL = {
+        200 => 205,
+      }.freeze
+
       protected
     
       def accept_to_http(request)
@@ -43,17 +47,14 @@ module David
       end
 
       def code_to_coap(code)
-        if code.is_a?(Float)
-          return [code.to_i, (code * 100 % 100).round]
-        end
+        set_http_to_coap_codes!
+
+        return float_to_array(code) if code.is_a?(Float)
 
         code = code.to_i
-        code = HTTP_TO_COAP_CODES[code] if HTTP_TO_COAP_CODES[code]
+        code = @http_to_coap_codes[code] if @http_to_coap_codes[code]
 
-        a = code / 100
-        b = code - (a * 100)
-
-        [a, b]
+        int_to_array(code)
       end
 
       def etag_to_coap(headers, bytes = 8)
@@ -71,6 +72,19 @@ module David
         end
       end
 
+      def float_to_array(float)
+        [float.to_i, (float * 100 % 100).round]
+      end
+
+      def int_to_array(int)
+        int = int.to_i
+
+        a = int / 100
+        b = int - (a * 100)
+
+        [a, b]
+      end
+
       def location_to_coap(headers)
         l = headers[HTTP_LOCATION].split('/').reject(&:empty?)
         return l.empty? ? nil : l
@@ -86,6 +100,16 @@ module David
 
       def method_to_http(method)
         method.to_s.upcase
+      end
+
+      def set_http_to_coap_codes!
+        @http_to_coap_codes ||= begin
+          if @options && @options[:MinimalMapping]
+            HTTP_TO_COAP_CODES_MINIMAL
+          else
+            HTTP_TO_COAP_CODES
+          end
+        end
       end
     end
   end
