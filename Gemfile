@@ -7,8 +7,6 @@ group :cbor do
 end
 
 group :development do
-  gem 'sqlite3', platforms: :mri
-  gem 'activerecord-jdbcsqlite3-adapter', platforms: :jruby
   gem 'ruby-prof', platforms: :mri
 end
 

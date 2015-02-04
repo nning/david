@@ -8,7 +8,7 @@ describe David::ResourceDiscovery do
   end
 
   let!(:server) do
-    supervised_server(:Port => port, :Log => debug, :app => Dummy::Application)
+    supervised_server(:Port => port, :Log => debug, :app => Rails.application)
   end
 
   context 'ordinary request' do

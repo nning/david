@@ -317,12 +317,8 @@ describe Server do
 
       context 'rails' do
         let!(:server) do
-          supervised_server({
-            :Port => port,
-            :Log => debug,
-            :CBOR => true,
-            :app => Rails.application
-          })
+          supervised_server(:Port => port, :Log => debug, :CBOR => true,
+            :app => Rails.application)
         end
 
         it 'should return text' do
