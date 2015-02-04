@@ -5,15 +5,12 @@ require 'spec_helper'
   Interop::MandatoryETSI::Grape,
 ].each do |app|
   describe "ETSI Plugstests, Mandatory, #{app.to_s.split('::').last}" do
-    let(:port) { random_port }
-    let(:mid)  { rand(0xffff) }
-
-    let!(:server) { supervised_server(:Port => port, :MinimalMapping => true, app: app) }
+    let!(:server) { supervised_server(:MinimalMapping => true, app: app) }
 
     [:con, :non].each do |tt|
       context tt do
         it 'TD_COAP_CORE_0{1,5}' do
-          response = req(:get, '/test', tt: tt)
+          mid, response = req(:get, '/test', tt: tt)
 
           expect(response).to be_a(CoAP::Message)
           expect(response.mcode).to eq([2, 5])
@@ -22,7 +19,7 @@ require 'spec_helper'
         end
 
         it 'TD_COAP_CORE_0{2,6}' do
-          response = req(:post, '/test', tt: tt, payload: 'foo',
+          mid, response = req(:post, '/test', tt: tt, payload: 'foo',
             content_format: 0)
 
           expect(response).to be_a(CoAP::Message)
@@ -31,7 +28,7 @@ require 'spec_helper'
         end
 
         it 'TD_COAP_CORE_0{3,7}' do
-          response = req(:put, '/test', tt: tt, payload: 'foo',
+          mid, response = req(:put, '/test', tt: tt, payload: 'foo',
             content_format: 0)
 
           expect(response).to be_a(CoAP::Message)
@@ -40,7 +37,7 @@ require 'spec_helper'
         end
 
         it 'TD_COAP_CORE_0{4,8}' do
-          response = req(:delete, '/test', tt: tt)
+          mid, response = req(:delete, '/test', tt: tt)
 
           expect(response).to be_a(CoAP::Message)
           expect(response.mcode).to eq([2, 2])
@@ -51,6 +48,45 @@ require 'spec_helper'
 
     context 'TD_COAP_CORE_09' do
       pending
+    end
+
+    it 'TD_COAP_CORE_10' do
+      token = rand(0xffffffff)
+      mid, response = req(:get, '/test', token: token)
+
+      expect(response).to be_a(CoAP::Message)
+      expect(response.mcode).to eq([2, 5])
+      expect(response.mid).to eq(mid)
+      expect(response.options[:content_format]).to eq(0)
+      expect(response.options[:token]).to eq(token)
+    end
+
+    it 'TD_COAP_CORE_11' do
+      mid, response = req(:get, '/test')
+
+      expect(response).to be_a(CoAP::Message)
+      expect(response.mcode).to eq([2, 5])
+      expect(response.mid).to eq(mid)
+      expect(response.options[:content_format]).to eq(0)
+      expect(response.options[:token]).to eq(0)
+    end
+
+    it 'TD_COAP_CORE_12' do
+      mid, response = req(:get, '/seg1/seg2/seg3')
+
+      expect(response).to be_a(CoAP::Message)
+      expect(response.mcode).to eq([2, 5])
+      expect(response.mid).to eq(mid)
+      expect(response.options[:content_format]).to eq(0)
+    end
+
+    it 'TD_COAP_CORE_13' do
+      mid, response = req(:get, '/query', uri_query: ['foo=1', 'bar=2'])
+
+      expect(response).to be_a(CoAP::Message)
+      expect(response.mcode).to eq([2, 5])
+      expect(response.mid).to eq(mid)
+      expect(response.options[:content_format]).to eq(0)
     end
 
     after do

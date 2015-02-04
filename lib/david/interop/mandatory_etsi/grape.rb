@@ -23,5 +23,15 @@ module David::Interop::MandatoryETSI
       status 202
       nil
     end
+
+    get 'seg1/seg2/seg3' do
+      status 200
+      nil
+    end
+
+    get 'query' do
+      status 200
+      nil
+    end
   end
 end
