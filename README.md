@@ -34,6 +34,8 @@ config to `true`.
 ## Tested Rack Frameworks
 
 * [Grape](https://github.com/intridea/grape)
+* [Hobbit](https://github.com/patriciomacadden/hobbit)
+* [NYNY](https://github.com/alisnic/nyny)
 * Plain Rack
 * [Sinatra](https://github.com/sinatra/sinatra)
 * [Rails](https://github.com/rails/rails)
