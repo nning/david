@@ -47,12 +47,11 @@ module David
     end
 
     def choose_log(value)
-      return FakeLogger.new if value == 'none'
-
       log = ::Logger.new($stderr)
 
       log.level = ::Logger::INFO
       log.level = ::Logger::DEBUG if value == 'debug'
+      log.level = ::Logger::FATAL if value == 'none'
 
       log.formatter = proc do |sev, time, prog, msg|
         "#{time.strftime('[%Y-%m-%d %H:%M:%S]')} #{sev}  #{msg}\n"

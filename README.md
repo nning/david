@@ -92,7 +92,7 @@ further documentation.)
 
 ## Benchmarks
 
-David handles about 10.000 requests per second (tested in MRI 2.2.0 with up to
+David handles about 11.000 requests per second (tested in MRI 2.2.0 with up to
 10.000 concurrent clients on a single core of a Core i7-3520M CPU running Linux
 3.18.5).
 

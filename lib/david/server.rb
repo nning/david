@@ -11,7 +11,7 @@ module David
     include Multicast
     include Respond
 
-    attr_reader :socket
+    attr_reader :log, :socket
 
     finalizer :shutdown
 
@@ -19,6 +19,7 @@ module David
       @app        = app.respond_to?(:new) ? app.new : app
       @mid_cache  = {}
       @options    = AppConfig.new(options)
+      @log        = @options[:Log]
 
       host, port  = @options.values_at(:Host, :Port)
 
@@ -88,9 +89,11 @@ module David
       unless response.nil?
         @socket.send(response.to_wire, 0, exchange.host, exchange.port)
 
-        exchange.message = response if log.info?
-        log.info('-> ' + exchange.to_s)
-        log.debug(response.inspect)
+        if log.info?
+          exchange.message = response
+          log.info('-> ' + exchange.to_s)
+          log.debug(response.inspect)
+        end
 
         cache_add(key, response) if response.tt == :ack
       end

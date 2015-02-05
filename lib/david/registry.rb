@@ -3,8 +3,7 @@ module David
     protected
 
     def log
-      @log ||= Celluloid.logger 
-      @log ||= ::Logger.new(nil)
+      @log ||= server.log
     end
 
     def gc
