@@ -1,7 +1,5 @@
 module Rack
   class HelloWorld
-#   include Celluloid
-
     def call(env)
       dup._call(env)
     end
@@ -12,11 +10,6 @@ module Rack
       end
 
       return case env['PATH_INFO']
-      when '/.well-known/core'
-        [200,
-          {'Content-Type' => 'application/link-format'},
-          ['</hello>;rt="hello";ct=0']
-        ]
       when '/echo/accept'
         [200,
           {'Content-Type' => env['HTTP_ACCEPT'], 'Content-Length' => '0'},
@@ -27,12 +20,6 @@ module Rack
           # If Content-Length is not given, Rack assumes chunked transfer.
           {'Content-Type' => 'text/plain', 'Content-Length' => '12'},
           ['Hello World!']
-        ]
-      when '/wait'
-        sleep 10
-        [200,
-          {'Content-Type' => 'text/plain'},
-          ['You waited!']
         ]
       when '/value'
         @@value ||= 0

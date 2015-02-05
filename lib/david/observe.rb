@@ -73,11 +73,11 @@ module David
     end
 
     def transmit(exchange, message, options)
-      log.debug message.inspect
+      log.debug(message.inspect)
 
       begin
         server.socket.send(message.to_wire, 0, exchange.host, exchange.port)
-      rescue Timeout::Error, RuntimeError
+      rescue Timeout::Error, RuntimeError, Errno::ENETUNREACH
       end
     end
 
@@ -85,13 +85,19 @@ module David
       every(@tick_interval) { tick }
     end
 
-    def tick
+    def tick(fiber = true)
       unless self.empty?
         log.debug 'Observe tick'
         log.debug self
       end
 
-      self.each_key { |key| async.handle_update(key) }
+      self.each_key do |key|
+        if fiber
+          async.handle_update(key)
+        else
+          handle_update(key)
+        end
+      end
     end
   end
 end
