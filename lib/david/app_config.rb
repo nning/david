@@ -1,3 +1,5 @@
+require 'david/fake_logger'
+
 module David
   class AppConfig < Hash
     DEFAULT_OPTIONS = {
@@ -45,19 +47,13 @@ module David
     end
 
     def choose_log(value)
-      fd = $stderr
-      level = ::Logger::INFO
+      return FakeLogger.new if value == 'none'
 
-      case value
-      when 'debug'
-        level = ::Logger::DEBUG
-      when 'none'
-        fd = File.open('/dev/null', 'w')
-        level = ::Logger::FATAL
-      end
+      log = ::Logger.new($stderr)
 
-      log = ::Logger.new(fd)
-      log.level = level
+      log.level = ::Logger::INFO
+      log.level = ::Logger::DEBUG if value == 'debug'
+
       log.formatter = proc do |sev, time, prog, msg|
         "#{time.strftime('[%Y-%m-%d %H:%M:%S]')} #{sev}  #{msg}\n"
       end
