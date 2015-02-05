@@ -31,6 +31,9 @@ You can activate automatic transcoding between JSON and CBOR by setting the
 Rack environment option `CBOR` or `config.coap.cbor` in your Rails application
 config to `true`.
 
+[Copper](https://addons.mozilla.org/de/firefox/addon/copper-270430/) is a CoAP
+client for Firefox and can be used for development.
+
 ## Tested Rack Frameworks
 
 * [Grape](https://github.com/intridea/grape)
