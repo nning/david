@@ -31,6 +31,13 @@ You can activate automatic transcoding between JSON and CBOR by setting the
 Rack environment option `CBOR` or `config.coap.cbor` in your Rails application
 config to `true`.
 
+## Tested Rack Frameworks
+
+* [Grape](https://github.com/intridea/grape)
+* Plain Rack
+* [Sinatra](https://github.com/sinatra/sinatra)
+* [Rails](https://github.com/rails/rails)
+
 ## Configuration
 
 | Rack key			| Rails key					| Default	| Semantics							|
