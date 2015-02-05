@@ -1,7 +1,7 @@
 PATH
   remote: ../..
   specs:
-    david (0.4.0.pre)
+    david (0.4.1.pre)
       celluloid-io (~> 0.16, >= 0.16.1)
       coap (~> 0.1)
       rack (~> 1.5)
@@ -55,7 +55,7 @@ GEM
     celluloid-io (0.16.2)
       celluloid (>= 0.16.0)
       nio4r (>= 1.1.0)
-    coap (0.1.0)
+    coap (0.1.1)
       celluloid-io (~> 0.16, >= 0.16.1)
       resolv-ipv6favor (~> 0)
     coercible (1.0.0)
