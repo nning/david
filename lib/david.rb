@@ -28,6 +28,7 @@ require 'rack/handler/david'
 require 'rack/handler/coap'
 
 require 'david/guerilla/rack/handler'
+require 'david/guerilla/rack/utils'
 
 require 'david/actor'
 require 'david/registry'
