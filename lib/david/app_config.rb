@@ -102,7 +102,9 @@ module David
     end
 
     def from_rails(key)
-      Rails.application.config.coap.send(key) if defined?(Rails)
+      if defined?(Rails) && !Rails.application.nil?
+        Rails.application.config.coap.send(key)
+      end
     end
 
     def optionize!(key)

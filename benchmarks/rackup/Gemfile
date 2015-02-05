@@ -4,5 +4,7 @@ gem 'david', path: '../..'
 gem 'rack'
 
 # Rails
-gem 'sqlite3'
 gem 'rails', '~> 4.2.0'
+
+# Grape
+gem 'grape'
