@@ -1,4 +1,4 @@
-#\ -o ::1 -p 5683 -O Block=false -O Multicast=false -O Observe=false -O Log=none
+#\ -o ::1 -p 5683 -O Block=false -O Multicast=false -O Observe=false -O Log=none -E none
 
 require 'bundler/setup'
 Bundler.setup
