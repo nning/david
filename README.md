@@ -8,7 +8,7 @@
 
 David is a CoAP server with Rack interface to bring the illustrious family of
 Rack compatible web frameworks into the Internet of Things. **Currently, it is
-in a development state on not ready for use in production.**
+in a development state and probably not ready for use in production.**
 
 ## Usage
 
@@ -89,6 +89,12 @@ further documentation.)
 | coap.dtls			| String		| DTLS mode (as defined in [section 9 of RFC7252](https://tools.ietf.org/html/rfc7252#section-9)) |
 | coap.dtls.id		| String		| DTLS identity |
 | coap.cbor			| Object		| Ruby object deserialized from CBOR |
+
+## Benchmarks
+
+David handles about 10.000 requests per second (tested in MRI 2.2.0 with up to
+10.000 concurrent clients on a single core of a Core i7-3520M CPU running Linux
+3.18.5).
 
 ## Copyright
 
