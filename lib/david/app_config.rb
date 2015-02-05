@@ -1,5 +1,3 @@
-require 'david/fake_logger'
-
 module David
   class AppConfig < Hash
     DEFAULT_OPTIONS = {

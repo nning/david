@@ -51,7 +51,9 @@ module David
 
       app = options.delete(:app) || Rack::HelloWorld
 
-      server = David::Server.new(app, defaults.merge(options))
+      David::Server.supervise_as(:server, app, defaults.merge(options))
+
+      server = Celluloid::Actor[:server]
       server.async.run
 
       server
