@@ -1,8 +1,12 @@
 require 'spec_helper'
 
 [
-  Interop::MandatoryETSI::Rack,
   Interop::MandatoryETSI::Grape,
+  Interop::MandatoryETSI::Hobbit,
+  Interop::MandatoryETSI::NYNY,
+  Interop::MandatoryETSI::Rack,
+  Interop::MandatoryETSI::Sinatra,
+  Rails.application
 ].each do |app|
   describe "ETSI Plugstests, Mandatory, #{app.to_s.split('::').last}" do
     let!(:server) { supervised_server(:MinimalMapping => true, app: app) }

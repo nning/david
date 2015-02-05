@@ -32,8 +32,9 @@ module David
       
       body = body.to_json
 
-      code = case e
-      when ActiveRecord::RecordNotFound, ActionController::RoutingError
+      code = if defined?(ActiveRecord) && e.is_a?(ActiveRecord::RecordNotFound)
+        404
+      elsif e.is_a?(ActionController::RoutingError)
         404
       else
         500

@@ -19,7 +19,7 @@ module David
       config.coap.observe = nil
 
       # david as default Rack handler (`rails s` starts david)
-      config.coap.only = nil
+      config.coap.only = true
 
       # Resource Discovery
       config.coap.resource_discovery = true

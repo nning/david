@@ -50,6 +50,7 @@ config to `true`.
 | MinimalMapping	|							| false		| Minimal HTTP status codes mapping	|
 | Multicast			| coap.multicast			| true		| Multicast support					|
 | Observe			| coap.observe				| true		| Observe support					|
+|					| coap.only					| true		| Removes (HTTP) middleware			|
 | Port				|							| 5683		| Server listening port				|
 |					| coap.resource_discovery	| true		| Provision of `.well-known/core`	|
 

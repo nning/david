@@ -4,7 +4,7 @@ module David::Interop::MandatoryETSI
     default_format :txt
 
     get :test do
-      # Returning 205 here lets Grape clear headers.
+      # Grape calls #to_i on status and resets headers on 205.
       status 200
       nil
     end

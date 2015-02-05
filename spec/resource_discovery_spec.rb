@@ -25,11 +25,11 @@ describe David::ResourceDiscovery do
       end
 
       it 'CoRE::Link' do
-        expect(links.size).to eq(6)
+        expect(links.size).to eq(9)
         expect(links.map(&:uri).uniq.size).to eq(links.size)
 
         links.each do |link|
-          expect(link.uri).to match(/^\/(things|hello|cbor)/)
+          expect(link.uri).to match(/^\/(cbor|hello|query|seg.*|test|things)/)
         end
       end
     end
