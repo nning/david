@@ -1,10 +1,6 @@
 module David
   class Exchange < Struct.new(:host, :port, :message, :ancillary, :options)
     include Registry
-
-    def ==(other)
-      mid == other.mid && token == other.token
-    end
    
     def accept
       message.options[:accept]
