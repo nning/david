@@ -14,19 +14,20 @@ module Rack
       elsif ENV.include?("RACK_HANDLER")
         self.get(ENV["RACK_HANDLER"])
       else
-        # Change original Rack handler order.
-        handlers = ['david', 'thin', 'puma', 'webrick']
+        # Return David as handler unless Rails is loaded and config.coap.only
+        # is set to false.
+        return Rack::Handler::David unless rails_coap_only
 
-        if defined?(Rails)
-          # If Rails is loaded, remove david as first handler if
-          # config.coap.only is set to false.
-          if Rails.application && !Rails.application.config.coap.only
-            handlers = handlers[1..-1]
-          end
-        end
-
-        pick handlers
+        # Original Rack handler order.
+        pick ['thin', 'puma', 'webrick']
       end
+    end
+
+    private
+
+    def self.rails_coap_only
+      defined?(Rails) && Rails.application &&
+        !Rails.application.config.coap.only
     end
   end
 end
