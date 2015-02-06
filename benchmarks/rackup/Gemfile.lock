@@ -3,8 +3,8 @@ PATH
   specs:
     david (0.4.1.pre)
       celluloid-io (~> 0.16, >= 0.16.1)
-      coap (~> 0.1)
-      rack (~> 1.5)
+      coap (>= 0.1)
+      rack (~> 1.6)
 
 GEM
   remote: https://rubygems.org/
