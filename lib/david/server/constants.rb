@@ -44,6 +44,8 @@ module David
       HTTP_CONTENT_TYPE   = 'Content-Type'.freeze
       HTTP_ETAG           = 'ETag'.freeze
       HTTP_LOCATION       = 'Location'.freeze
+
+      ASCII_8BIT = 'ASCII-8BIT'.freeze
     end
   end
 end

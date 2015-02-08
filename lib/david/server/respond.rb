@@ -31,7 +31,7 @@ module David
             cbor = CBOR.load(exchange.message.payload)
 
             body = body_to_json(cbor)
-            body = body.force_encoding('ASCII-8BIT') # Rack::Lint insisted...
+            body = body.force_encoding(ASCII_8BIT) # Rack::Lint insisted...
 
             env[COAP_CBOR]      = cbor
             env[CONTENT_LENGTH] = body.bytesize
@@ -46,7 +46,7 @@ module David
         # No error responses on multicast exchanges.
         return if exchange.multicast? && !(200..299).include?(code)
 
-        ct = headers[HTTP_CONTENT_TYPE]
+        ct = media_type_strip(headers[HTTP_CONTENT_TYPE])
         body = body_to_string(body)
 
         if @options[:CBOR] && ct == CONTENT_TYPE_JSON

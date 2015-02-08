@@ -98,6 +98,11 @@ module David
         nil
       end
 
+      def media_type_strip(media_type)
+        return nil if media_type.nil?
+        media_type.split(';')[0]
+      end
+
       def method_to_http(method)
         method.to_s.upcase
       end
