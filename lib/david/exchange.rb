@@ -73,6 +73,10 @@ module David
       !message.options[:observe].nil?
     end
 
+    def ping?
+      con? && message.mcode == [0, 0]
+    end
+
     def post?
       message.mcode == :post
     end

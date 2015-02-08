@@ -51,6 +51,18 @@ module David
 
     private
 
+    def answer(exchange, key = nil)
+      @socket.send(exchange.message.to_wire, 0, exchange.host, exchange.port)
+
+      if log.info?
+        log.info('-> ' + exchange.to_s)
+        log.debug(exchange.message.inspect)
+      end
+
+      key ||= exchange.key
+      cache_add(key, exchange.message) if exchange.ack?
+    end
+
     def dispatch(*args)
       data, sender, _, anc = args
 
@@ -67,6 +79,8 @@ module David
 
       log.info('<- ' + exchange.to_s)
       log.debug(message.inspect)
+
+      pong(exchange) and return if exchange.ping?
 
       key = exchange.key
       cached = cache_get(key)
@@ -87,20 +101,18 @@ module David
       end
 
       unless response.nil?
-        @socket.send(response.to_wire, 0, exchange.host, exchange.port)
-
-        if log.info?
-          exchange.message = response
-          log.info('-> ' + exchange.to_s)
-          log.debug(response.inspect)
-        end
-
-        cache_add(key, response) if response.tt == :ack
+        exchange.message = response
+        answer(exchange, key) 
       end
     end
 
     def ipv6?
       IPAddr.new(@options[:Host]).ipv6?
+    end
+
+    def pong(exchange)
+      exchange.message.tt = :ack
+      answer(exchange)
     end
 
     def shutdown
