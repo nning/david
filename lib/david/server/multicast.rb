@@ -18,18 +18,17 @@ module David
           setsockopts_ipv4
         end
 
-        log.debug "Joined multicast groups: #{maddrs.join(', ')}"
+        log.debug("Joined multicast groups: #{maddrs.join(', ')}")
       rescue Errno::ENODEV, Errno::EADDRNOTAVAIL
-        log.warn 'Multicast initialization failure: Device not found.'
+        log.warn('Multicast initialization failure: Device not found.')
         @options[:Multicast] = false
       end
 
       private
 
       def multicast_listen_ipv4(address)
-        mreq = IPAddr.new(address).hton + IPAddr.new('0.0.0.0').hton
         @socket.to_io.setsockopt(Socket::IPPROTO_IP, Socket::IP_ADD_MEMBERSHIP,
-          mreq)
+          IPAddr.new(address).hton + IPAddr.new('0.0.0.0').hton)
       end
 
       def multicast_listen_ipv6(address)
@@ -41,9 +40,8 @@ module David
           ifindex = Socket.if_nametoindex(ifname)
         end
 
-        mreq = IPAddr.new(address).hton + [ifindex].pack('i_')
         @socket.to_io.setsockopt(Socket::IPPROTO_IPV6, Socket::IPV6_JOIN_GROUP,
-          mreq)
+          IPAddr.new(address).hton + [ifindex].pack('i_'))
       end
 
       def setsockopts_ipv4
