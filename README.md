@@ -8,7 +8,8 @@
 
 David is a CoAP server with Rack interface to bring the illustrious family of
 Rack compatible web frameworks into the Internet of Things. **Currently, it is
-in a development state and probably not ready for use in production.**
+in a development state and probably not ready for use in production.** It is
+tested with MRI >= 1.9, JRuby, and Rubinius.
 
 ## Usage
 
@@ -32,10 +33,11 @@ be used for development.
 As [CoAP](https://tools.ietf.org/html/rfc7252) is a protocol for constrained
 environments and machine to machine communications, returning HTML from your
 controllers will not be of much use. JSON for example is more suitable in that
-context. David works well with the default ways to handle JSON responses from
-controllers such as `render json:`. You can also utilize [Jbuilder
-templates](https://github.com/rails/jbuilder) for easy generation of more
-complex JSON structures.
+context. The Accept header is set to "application/json" by default, so that
+Rails responds with the JSON resource representation. David works well with the
+default ways to handle JSON responses from controllers such as `render json:`.
+You can also utilize [Jbuilder templates](https://github.com/rails/jbuilder)
+for easy generation of more complex JSON structures.
 
 [CBOR](https://tools.ietf.org/html/rfc7049) can be used to compress your JSON.
 Automatic transcoding between JSON and CBOR is activated by setting the Rack
@@ -43,6 +45,9 @@ environment option `CBOR` or `config.coap.cbor` in your Rails application
 config to `true`.
 
 ## Tested Rack Frameworks
+
+By providing a Rack interface, David does not only work with Rails but also
+with the following Rack compatible web frameworks.
 
 * [Grape](https://github.com/intridea/grape)
 * [Hobbit](https://github.com/patriciomacadden/hobbit)
@@ -53,19 +58,44 @@ config to `true`.
 
 ## Configuration
 
+The following table lists available configuration options for the CoAP server.
+Rack keys can be specified with the `-O` option of `rackup`. The listed Rails
+keys can be accessed for example from the `config/application.rb` file of your
+Rails application.
+
 | Rack key			| Rails key					| Default	| Semantics							|
 |---				|---						|---		|---								|
-| Block				| coap.block				| true		| Blockwise transfers				|
+| Block				| coap.block				| true		| [Blockwise transfers](https://tools.ietf.org/html/draft-ietf-core-block-16) |
 | CBOR				| coap.cbor					| false		| JSON/CBOR transcoding				|
 | DefaultFormat		| coap.default_format		|			| Default Content-Type				|
 | Host				|							| ::1 / ::	| Server listening host				|
 | Log				|							| info		| Log level (none or debug)			|
 | MinimalMapping	|							| false		| Minimal HTTP status codes mapping	|
 | Multicast			| coap.multicast			| true		| Multicast support					|
-| Observe			| coap.observe				| true		| Observe support					|
+| Observe			| coap.observe				| true		| [Observe support](https://tools.ietf.org/html/draft-ietf-core-observe-16) |
 |					| coap.only					| true		| Removes (HTTP) middleware			|
 | Port				|							| 5683		| Server listening port				|
 |					| coap.resource_discovery	| true		| Provision of `.well-known/core`	|
+
+The server can be started with debug log level for example with the following
+command provided that a rackup config file (`config.ru`) exists like in a Rails
+application.
+
+    rackup -O Log=debug
+
+In a Rails application, CBOR transcoding is activated for any controller and
+action by inserting the third line of the following code into
+`config/application.rb`.
+
+    module Example
+	  class Application < Rails::Application
+	    config.coap.cbor = true
+	  end
+	end
+
+In Copper for example the default block size for Blockwise Transfers is set to
+64 bytes. That's even small for most exception messages. It is recommended to
+set the block size to the maximum (1024B) during development.
 
 ## Discovery
 
