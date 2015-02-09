@@ -20,19 +20,27 @@ It will hook into Rack and make itself the default handler, so running `rails
 s` starts David. If you want to start WEBrick for example, you can do so by
 executing `rails s webrick`.
 
+After the server is started, the Rails application is available at
+`coap://[::1]:3000/` by default.
+
+[Copper](https://addons.mozilla.org/de/firefox/addon/copper-270430/) is a CoAP
+client for Firefox and can be used for development. The [Ruby coap
+gem](https://github.com/nning/coap) is used by David for example for message
+parsing and also includes a command line utility (named `coap`) that can also
+be used for development.
+
 As [CoAP](https://tools.ietf.org/html/rfc7252) is a protocol for constrained
 environments and machine to machine communications, returning HTML from your
 controllers will not be of much use. JSON for example is more suitable in that
-context. You can also utilize [JBuilder
-templates](https://github.com/rails/jbuilder) for easy JSON generation.
+context. David works well with the default ways to handle JSON responses from
+controllers such as `render json:`. You can also utilize [Jbuilder
+templates](https://github.com/rails/jbuilder) for easy generation of more
+complex JSON structures.
 
 [CBOR](https://tools.ietf.org/html/rfc7049) can be used to compress your JSON.
-You can activate automatic transcoding between JSON and CBOR by setting the
-Rack environment option `CBOR` or `config.coap.cbor` in your Rails application
+Automatic transcoding between JSON and CBOR is activated by setting the Rack
+environment option `CBOR` or `config.coap.cbor` in your Rails application
 config to `true`.
-
-[Copper](https://addons.mozilla.org/de/firefox/addon/copper-270430/) is a CoAP
-client for Firefox and can be used for development.
 
 ## Tested Rack Frameworks
 
