@@ -67,7 +67,7 @@ module Rack
 
         [200,
           {
-            'Content-Type' => 'application/json',
+            'Content-Type' => 'application/json; charset=utf8',
             'Content-Length' => body.bytesize.to_s
           },
           [body]
