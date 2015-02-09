@@ -123,6 +123,9 @@ further documentation.)
 
 ## Rack environment
 
+David sets the following server (and protocol) specific Rack environment
+entries that can be read from your Rack application if necessary.
+
 | Key				| Value class	| Semantics |
 |---				|---			|--- |
 | coap.version		| Integer		| Protocol version of CoAP request |
