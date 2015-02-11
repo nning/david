@@ -14,7 +14,7 @@ def avg(*args)
 end
 
 CSV.open(ARGV[0] + '.csv', 'wb') do |csv|
-  csv << %w[concurrent total loss throughput]
+  csv << %w[concurrent loss throughput]
   File.readlines(ARGV[0]).each_slice(3) do |lines|
     conc, _, total, loss, throughput = process_lines(lines)
     csv << [conc, (loss/total)*100, throughput].map { |x| x.round(5) }
