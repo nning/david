@@ -1,6 +1,8 @@
 #!/bin/bash
 # (60+(28*3*(30+15)))/60=64
 
+ulimit -n 10240
+
 uri="coap://[::1]:5683/hello"
 
 ./coapbench.sh -c 1000 -t 60 $uri > /dev/null 2>&1
