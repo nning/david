@@ -10,6 +10,14 @@ module David
         body.close if body.respond_to?(:close)
         s.chomp
       end
+
+      def ipv6?
+        @ipv6 ||= IPAddr.new(@options[:Host]).ipv6?
+      end
+
+      def jruby_or_rbx?
+        @jruby_or_rbx ||= !!(defined?(JRuby) || defined?(Rubinius))
+      end
     end
   end
 end

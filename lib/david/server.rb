@@ -1,7 +1,9 @@
 require 'david/app_config'
+
 require 'david/server/mid_cache'
 require 'david/server/multicast'
 require 'david/server/respond'
+require 'david/server/utility'
 
 module David
   class Server
@@ -10,6 +12,7 @@ module David
     include MidCache
     include Multicast
     include Respond
+    include Utility
 
     attr_reader :log, :socket
 
@@ -36,7 +39,7 @@ module David
 
     def run
       loop do
-        if defined?(JRuby) || defined?(Rubinius)
+        if jruby_or_rbx?
           dispatch(*@socket.recvfrom(1152))
         else
           begin
@@ -66,7 +69,7 @@ module David
     def dispatch(*args)
       data, sender, _, anc = args
 
-      if defined?(JRuby) || defined?(Rubinius)
+      if jruby_or_rbx?
         port, _, host = sender[1..3]
       else
         host, port = sender.ip_address, sender.ip_port
@@ -104,10 +107,6 @@ module David
         exchange.message = response
         answer(exchange, key) 
       end
-    end
-
-    def ipv6?
-      IPAddr.new(@options[:Host]).ipv6?
     end
 
     def pong(exchange)
