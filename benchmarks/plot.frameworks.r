@@ -25,6 +25,6 @@ g = ggplot(df.long, aes(Concurrent, value, shape=variable)) +
 	geom_point() +
 	theme_bw()
 
-path = paste(args[1], 'rack-vs-rails', 'pdf', sep='.')
+path = paste(args[1], 'frameworks', 'pdf', sep='.')
 print(path)
 ggsave(g, file=path)
