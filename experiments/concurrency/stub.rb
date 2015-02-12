@@ -10,13 +10,12 @@ class Listener
     @socket = socket
     @cache = cache
     @app = Rack::HelloWorld.new
-    @block = true
-    @observe = true
+    @options = David::AppConfig.new
   end
 
   def run
     loop do
-      if defined?(JRuby) || @mode == :prefork || @mode == :threaded
+      if defined?(JRuby) || defined?(Rubinius) || @mode == :prefork || @mode == :threaded
         data, sender = @socket.recvfrom(1152)
         port, _, host = sender[1..3]
       else
@@ -73,15 +72,16 @@ case ARGV[0]
     socket.bind('::', 5683)
     4.times { fork { Listener.new(:prefork, socket, cache).run } }
   when 'threaded'
-    # ~16000
+    # ~17500
     socket = UDPSocket.new(Socket::AF_INET6)
     socket.bind('::', 5683)
     Listener.send(:include, Celluloid)
     Listener.pool(size: 8, args: [:threaded, socket, cache]).run
   else
-    # ~14000
+    # ~17000
     socket = Celluloid::IO::UDPSocket.new(Socket::AF_INET6)
     socket.bind('::', 5683)
+    Listener.send(:include, Celluloid::IO)
     Listener.new(:sped, socket, cache).run
 end
 
