@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'david', path: '../..'
+gem 'david', '= 0.4.1'
 gem 'rack'
 
 # Rails
