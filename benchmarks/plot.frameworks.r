@@ -17,7 +17,7 @@ df.long = melt(df, id.vars='Concurrent')
 
 g = ggplot(df.long, aes(Concurrent, value, shape=variable)) +
 	scale_x_log10(breaks=c(10, 50, 100, 500, 1000, 5000, 10000)) +
-	scale_y_continuous(breaks=round(seq(5000, 12000, by=1000), 1)) +
+	scale_y_continuous(breaks=round(seq(1000, 15000, by=1000), 1)) +
     scale_shape(name='Framework') +
     ylab('Requests per second') +
 	xlab('Concurrent clients (log.)') +
