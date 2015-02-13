@@ -1,9 +1,9 @@
-module David::Interop::MandatoryETSI
-  class Sinatra < ::Sinatra::Base
-    before { content_type 'text/plain' }
+module David::ETSI::Mandatory
+  class NYNY < ::NYNY::App
+    before { headers['Content-Type'] = 'text/plain' }
 
     get '/test' do
-      # Sinatra calls #to_i on status and resets headers on 205.
+      # NYNY calls #to_i on status and resets headers on 205.
       status 200
       nil
     end

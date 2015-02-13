@@ -1,4 +1,4 @@
-module David::Interop::MandatoryETSI
+module David::ETSI::Mandatory
   class Grape < ::Grape::API
     content_type :txt, 'text/plain'
     default_format :txt

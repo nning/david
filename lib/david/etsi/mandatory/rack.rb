@@ -1,6 +1,6 @@
-module David::Interop::MandatoryETSI
+module David::ETSI::Mandatory
   class Rack
-    EMPTY_CONTENT = [2.05, {'Content-Type' => 'text/plain'}, []]
+    EMPTY_CONTENT = [2.05, {'Content-Type' => 'text/plain'}, ['foo']]
 
     def call(env)
       return case request(env)

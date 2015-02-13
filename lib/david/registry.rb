@@ -15,9 +15,11 @@ module David
     #   Celluloid::Actor[:gc]
     # end
 
-    # def observe
-    #   Celluloid::Actor[:observe]
-    # end
+    def observe
+      # Supervision is only initialized from here in tests.
+      Observe.supervise_as(:observe) if Celluloid::Actor[:observe].nil?
+      Celluloid::Actor[:observe]
+    end
 
     def server
       Celluloid::Actor[:server]

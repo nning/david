@@ -1,11 +1,11 @@
 require 'spec_helper'
 
 [
-  Interop::MandatoryETSI::Grape,
-  Interop::MandatoryETSI::Hobbit,
-  Interop::MandatoryETSI::NYNY,
-  Interop::MandatoryETSI::Rack,
-  Interop::MandatoryETSI::Sinatra,
+  ETSI::Mandatory::Grape,
+  ETSI::Mandatory::Hobbit,
+  ETSI::Mandatory::NYNY,
+  ETSI::Mandatory::Rack,
+  ETSI::Mandatory::Sinatra,
   Rails.application
 ].each do |app|
   describe "ETSI Plugstests, Mandatory, #{app.to_s.split('::').last}" do
@@ -48,10 +48,6 @@ require 'spec_helper'
           expect(response.mid).to eq(mid)
         end
       end
-    end
-
-    context 'TD_COAP_CORE_09' do
-      pending
     end
 
     it 'TD_COAP_CORE_10' do

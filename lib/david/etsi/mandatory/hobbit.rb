@@ -1,4 +1,4 @@
-module David::Interop::MandatoryETSI
+module David::ETSI::Mandatory
   class Hobbit < ::Hobbit::Base
     get '/test' do
       response.status = 2.05

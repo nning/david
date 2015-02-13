@@ -1,11 +1,11 @@
 #\ -o ::1 -p 5683 -O Block=false -O Multicast=false -O Observe=false -O Log=debug -E none
 
-module David; module Interop; end; end
+module David; module ETSI; end; end
 
 require 'bundler/setup'
 Bundler.setup
 
 require 'david'
-require 'david/interop/mandatory_etsi/rack'
+require 'david/etsi/mandatory/rack'
 
-run David::Interop::MandatoryETSI::Rack.new
+run David::ETSI::Mandatory::Rack.new

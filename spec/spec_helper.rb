@@ -13,7 +13,7 @@ require 'rspec/rails'
 $:.unshift(File.expand_path('../lib', File.dirname(__FILE__)))
 
 require 'david'
-require 'david/interop'
+require 'david/etsi'
 
 module David
   module TestHelper
