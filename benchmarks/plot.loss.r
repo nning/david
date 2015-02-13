@@ -23,10 +23,9 @@ df = data.frame(x, mri22, mri23, jruby17, jruby9) #, rbx25)
 df.long = melt(df, id.vars='x')
 
 g = ggplot(df.long, aes(x, value, shape=variable)) +
-	scale_x_log10(breaks=c(10, 50, 100, 500, 1000, 5000, 10000)) +
     scale_shape(name='Ruby VM') +
     ylab('Percentage of lost messages') +
-	xlab('Concurrent clients (log.)') +
+	xlab('Concurrent clients') +
 	geom_line() +
 	geom_point() +
 	theme_bw()
