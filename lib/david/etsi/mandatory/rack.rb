@@ -13,7 +13,7 @@ module David::ETSI::Mandatory
       when 'DELETE /test'
         [2.02, {}, []]
       else
-        [4.04, {}, []]
+        [404, {}, []]
       end
     end
 

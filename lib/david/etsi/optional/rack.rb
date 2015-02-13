@@ -13,7 +13,7 @@ module David::ETSI::Optional
           [Time.now.to_s]
         ]
       else
-        [4.04, {}, []]
+        [404, {}, []]
       end
     end
 
