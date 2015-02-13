@@ -1,3 +1,11 @@
+PATH
+  remote: ../..
+  specs:
+    david (0.4.2.pre)
+      celluloid-io (~> 0.16, >= 0.16.1)
+      coap (>= 0.1)
+      rack (~> 1.6)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -52,10 +60,6 @@ GEM
       resolv-ipv6favor (~> 0)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
-    david (0.4.1)
-      celluloid-io (~> 0.16, >= 0.16.1)
-      coap (>= 0.1)
-      rack (~> 1.6)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     equalizer (0.0.9)
@@ -155,7 +159,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  david (= 0.4.1)
+  david!
   grape
   rack
   rails (~> 4.2.0)
