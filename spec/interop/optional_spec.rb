@@ -9,7 +9,7 @@ require 'spec_helper'
 
     context 'TD_COAP_BLOCK_01' do
       it 'block 0' do
-        mid, response = req(:get, '/large', block2: 0) # 0, false, 16
+        mid, response = req(:get, '/large', port: port, block2: 0) # 0, false, 16
         block = CoAP::Block.new(response.options[:block2]).decode
 
         expect(response).to be_a(CoAP::Message)
@@ -22,7 +22,7 @@ require 'spec_helper'
       end
 
       it 'block 1' do
-        mid, response = req(:get, '/large', block2: 16) # 1, false, 16
+        mid, response = req(:get, '/large', port: port, block2: 16) # 1, false, 16
         block = CoAP::Block.new(response.options[:block2]).decode
 
         expect(response).to be_a(CoAP::Message)
@@ -35,7 +35,7 @@ require 'spec_helper'
       end
 
       it 'block 64' do
-        mid, response = req(:get, '/large', block2: 1024) # 65, false, 16
+        mid, response = req(:get, '/large', port: port, block2: 1024) # 65, false, 16
         block = CoAP::Block.new(response.options[:block2]).decode
 
         expect(response).to be_a(CoAP::Message)
@@ -51,7 +51,7 @@ require 'spec_helper'
 
     context 'TD_COAP_BLOCK_02' do
       it 'block 0' do
-        mid, response = req(:get, '/large')
+        mid, response = req(:get, '/large', port: port)
         block = CoAP::Block.new(response.options[:block2]).decode
 
         expect(response).to be_a(CoAP::Message)
@@ -64,7 +64,7 @@ require 'spec_helper'
       end
 
       it 'block 1' do
-        mid, response = req(:get, '/large', block2: 22) # 1, false, 1024
+        mid, response = req(:get, '/large', port: port, block2: 22) # 1, false, 1024
         block = CoAP::Block.new(response.options[:block2]).decode
 
         expect(response).to be_a(CoAP::Message)
@@ -83,7 +83,7 @@ require 'spec_helper'
 
         @t1 = Thread.start do
           CoAP::Client.new.observe \
-            '/obs', '::1', nil,
+            '/obs', '::1', port,
             ->(s, m) { @answers << m }
         end
 

@@ -27,15 +27,16 @@ module David
 
     def req(method, path, options = {})
       mid = rand(0xffff) unless respond_to?(:mid)
-      port = random_port unless respond_to?(:port)
 
       payload = options.delete(:payload)
+      port    = options.delete(:port) || random_port
+
       options.merge!(mid: mid)
 
       client = CoAP::Client.new(retransmit: false, recv_timeout: 0.1,
         token: false)
 
-      response = client.send(method, path, '::1', nil, payload, options)
+      response = client.send(method, path, '::1', port, payload, options)
 
       [mid, response]
     end

@@ -9,13 +9,13 @@ require 'spec_helper'
   Rails.application
 ].each do |app|
   describe "ETSI Plugstests, Mandatory, #{app.to_s.split('::').last}" do
-    let(:port) { random_port }
+    let!(:port) { random_port }
     let!(:server) { supervised_server(:Port => port, :MinimalMapping => true, app: app) }
 
     [:con, :non].each do |tt|
       context tt do
         it 'TD_COAP_CORE_0{1,5}' do
-          mid, response = req(:get, '/test', tt: tt)
+          mid, response = req(:get, '/test', port: port, tt: tt)
 
           expect(response).to be_a(CoAP::Message)
           expect(response.mcode).to eq([2, 5])
@@ -24,8 +24,8 @@ require 'spec_helper'
         end
 
         it 'TD_COAP_CORE_0{2,6}' do
-          mid, response = req(:post, '/test', tt: tt, payload: 'foo',
-            content_format: 0)
+          mid, response = req(:post, '/test', port: port, tt: tt, payload:
+            'foo', content_format: 0)
 
           expect(response).to be_a(CoAP::Message)
           expect(response.mcode).to eq([2, 1])
@@ -33,8 +33,8 @@ require 'spec_helper'
         end
 
         it 'TD_COAP_CORE_0{3,7}' do
-          mid, response = req(:put, '/test', tt: tt, payload: 'foo',
-            content_format: 0)
+          mid, response = req(:put, '/test', port: port, tt: tt, payload:
+            'foo', content_format: 0)
 
           expect(response).to be_a(CoAP::Message)
           expect(response.mcode).to eq([2, 4])
@@ -42,7 +42,7 @@ require 'spec_helper'
         end
 
         it 'TD_COAP_CORE_0{4,8}' do
-          mid, response = req(:delete, '/test', tt: tt)
+          mid, response = req(:delete, '/test', port: port, tt: tt)
 
           expect(response).to be_a(CoAP::Message)
           expect(response.mcode).to eq([2, 2])
@@ -53,7 +53,7 @@ require 'spec_helper'
 
     it 'TD_COAP_CORE_10' do
       token = rand(0xffffffff)
-      mid, response = req(:get, '/test', token: token)
+      mid, response = req(:get, '/test', port: port, token: token)
 
       expect(response).to be_a(CoAP::Message)
       expect(response.mcode).to eq([2, 5])
@@ -63,7 +63,7 @@ require 'spec_helper'
     end
 
     it 'TD_COAP_CORE_11' do
-      mid, response = req(:get, '/test')
+      mid, response = req(:get, '/test', port: port)
 
       expect(response).to be_a(CoAP::Message)
       expect(response.mcode).to eq([2, 5])
@@ -73,7 +73,7 @@ require 'spec_helper'
     end
 
     it 'TD_COAP_CORE_12' do
-      mid, response = req(:get, '/seg1/seg2/seg3')
+      mid, response = req(:get, '/seg1/seg2/seg3', port: port)
 
       expect(response).to be_a(CoAP::Message)
       expect(response.mcode).to eq([2, 5])
@@ -82,7 +82,7 @@ require 'spec_helper'
     end
 
     it 'TD_COAP_CORE_13' do
-      mid, response = req(:get, '/query', uri_query: ['foo=1', 'bar=2'])
+      mid, response = req(:get, '/query', port: port, uri_query: ['foo=1', 'bar=2'])
 
       expect(response).to be_a(CoAP::Message)
       expect(response.mcode).to eq([2, 5])
