@@ -9,7 +9,7 @@ module David
       @tick_interval = tick_interval
       async.run
 
-      log.debug 'Observe initialized'
+      log.debug('Observe initialized')
     end
 
     def add(exchange, env, etag)
@@ -58,7 +58,9 @@ module David
       end
 
       if etag != response.options[:etag]
+        response.mid = SecureRandom.random_number(0xffff)
         response.options[:observe] = n
+
         transmit(exchange, response, options)
 
         # TODO Implement removing of observe relationship on RST answer to
@@ -73,10 +75,9 @@ module David
     end
 
     def transmit(exchange, message, options)
-      log.debug(message.inspect)
-
       begin
         server.socket.send(message.to_wire, 0, exchange.host, exchange.port)
+        log.debug(message.inspect)
       rescue Timeout::Error, RuntimeError, Errno::ENETUNREACH
       end
     end
@@ -87,8 +88,8 @@ module David
 
     def tick(fiber = true)
       unless self.empty?
-        log.debug 'Observe tick'
-        log.debug self
+        log.debug('Observe tick')
+        log.debug(self)
       end
 
       self.each_key do |key|

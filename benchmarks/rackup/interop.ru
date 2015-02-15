@@ -1,4 +1,4 @@
-#\ -o ::1 -p 5683 -O Block=true -O Multicast=false -O Observe=false -O Log=debug -E none
+#\ -o ::1 -p 5683 -O Multicast=false -O Log=debug -E none
 
 module David; module ETSI; end; end
 
@@ -10,8 +10,8 @@ require 'david/etsi/mandatory/rack'
 require 'david/etsi/optional/rack'
 
 apps = [
-  David::ETSI::Optional::Rack.new,
   David::ETSI::Mandatory::Rack.new,
+  David::ETSI::Optional::Rack.new,
 ]
 
 run Rack::Cascade.new(apps)

@@ -194,4 +194,37 @@ describe Observe do
       end
     end
   end
+
+  describe 'integration' do
+    let(:port) { random_port }
+
+    let!(:server) { supervised_server(:Port => port) }
+    let!(:client) do
+      CoAP::Client.new(port: port, retransmit: false, recv_timeout: 0.1)
+    end
+
+    before do
+      @answers = []
+
+      @t1 = Thread.start do
+        client.observe \
+          '/value', '::1', nil,
+          ->(s, m) { @answers << m }
+      end
+
+      Timeout.timeout(12) do
+        sleep 0.25 while !(@answers.size > 2)
+      end
+    end
+    
+    it 'should receive updates' do
+      expect(@answers.size).to be > 2
+      expect(@answers.map(&:mid).uniq.size).to eq(3)
+    end
+
+    after do
+      @t1.kill
+      server.terminate
+    end
+  end
 end

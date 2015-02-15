@@ -62,8 +62,7 @@ module David
         log.debug(exchange.message.inspect)
       end
 
-      key ||= exchange.key
-      cache_add(key, exchange.message) if exchange.ack?
+      cache_add(exchange.key, exchange.message) if exchange.ack?
     end
 
     def dispatch(*args)

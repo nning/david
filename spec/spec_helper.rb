@@ -51,12 +51,18 @@ module David
 
       app = options.delete(:app) || Rack::HelloWorld
 
-      David::Server.supervise_as(:server, app, defaults.merge(options))
+      g = Celluloid::SupervisionGroup.run!
 
-      server = Celluloid::Actor[:server]
-      server.async.run
+      g.supervise_as(:server, ::David::Server, app, defaults.merge(options))
+      g.supervise_as(:gc, ::David::GarbageCollector)
 
-      server
+      unless options[:Observe] == 'false'
+        g.supervise_as(:observe, ::David::Observe)
+      end
+
+      Celluloid::Actor[:server].async.run
+
+      g 
     end
   end
 end

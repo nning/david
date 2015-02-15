@@ -36,6 +36,6 @@ module Rack
       end
     end
 
-    register :david, David
+    register(:david, David)
   end
 end

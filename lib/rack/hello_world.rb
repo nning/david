@@ -26,7 +26,7 @@ module Rack
         @@value  += 1
 
         [200,
-          {'Content-Type' => 'text/plain'},
+          {'Content-Type' => 'text/plain', 'ETag' => rand(0xffff).to_s},
           ["#{@@value}"]
         ]
       when '/block'

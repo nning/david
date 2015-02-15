@@ -9,7 +9,8 @@ require 'spec_helper'
   Rails.application
 ].each do |app|
   describe "ETSI Plugstests, Mandatory, #{app.to_s.split('::').last}" do
-    let!(:server) { supervised_server(:MinimalMapping => true, app: app) }
+    let(:port) { random_port }
+    let!(:server) { supervised_server(:Port => port, :MinimalMapping => true, app: app) }
 
     [:con, :non].each do |tt|
       context tt do

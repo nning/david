@@ -4,7 +4,8 @@ require 'spec_helper'
   ETSI::Optional::Rack,
 ].each do |app|
   describe "ETSI Plugstests, Optional, #{app.to_s.split('::').last}" do
-    let!(:server) { supervised_server(:MinimalMapping => true, app: app) }
+    let(:port) { random_port }
+    let!(:server) { supervised_server(:Port => port, :MinimalMapping => true, app: app) }
 
     context 'TD_COAP_BLOCK_01' do
       it 'block 0' do
