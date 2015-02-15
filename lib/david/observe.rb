@@ -13,8 +13,6 @@ module David
     end
 
     def add(exchange, env, etag)
-      exchange.message.tt = :non
-      exchange.message.mid = nil
       exchange.message.options.delete(:observe)
 
       self[[exchange.host, exchange.token]] ||=
@@ -58,6 +56,7 @@ module David
       end
 
       if etag != response.options[:etag]
+        response.tt = :con
         response.mid = SecureRandom.random_number(0xffff)
         response.options[:observe] = n
 

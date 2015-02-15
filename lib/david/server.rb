@@ -52,8 +52,6 @@ module David
       end
     end
 
-    private
-
     def answer(exchange, key = nil)
       @socket.send(exchange.message.to_wire, 0, exchange.host, exchange.port)
 
@@ -64,6 +62,8 @@ module David
 
       cache_add(exchange.key, exchange.message) if exchange.ack?
     end
+
+    private
 
     def dispatch(*args)
       data, sender, _, anc = args
