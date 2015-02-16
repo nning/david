@@ -136,9 +136,9 @@ entries that can be read from your Rack application if necessary.
 
 ## Benchmarks
 
-David handles about 11.000 requests per second (tested in MRI 2.2.0 with up to
-10.000 concurrent clients on a single core of a Core i7-3520M CPU running Linux
-3.18.5).
+David handles about 12,500 requests per second in MRI and 14,000 in JRuby
+(tested in MRI 2.3.0 and JRuby 1.7.19 with up to 10,000 concurrent clients on a
+single core of a Core i7-3520M CPU running Linux 3.18.6).
 
 ## Copyright
 

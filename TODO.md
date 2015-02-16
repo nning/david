@@ -46,16 +46,9 @@ More detailed CoAP implementation
 
 ### Examples for missing or unsufficient features:
 
-* Message Deduplication (4.5.)
 * Transmission Parameters (4.8.)
-* Request/Response Matching (5.3.2.) (became transparent in connection to
-  observe transmissions)
-* "For a new Confirmable message, the initial timeout is set to a random
-  duration (often not an integral number of seconds) between ACK_TIMEOUT and
-  (ACK_TIMEOUT * ACK_RANDOM_FACTOR) (see Section 4.8)"
 * Validation of ETag (conditional requests)
 * Request validations and error responses
-* Follow redirects
 
 
 Non-blocking I/O
