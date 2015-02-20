@@ -4,7 +4,7 @@ gem 'david', path: '../..'
 gem 'rack'
 
 # Rails
-gem 'rails', '~> 4.2.0'
+gem 'rails', '~> 4.2.0', group: :rails
 
 # Grape
-gem 'grape'
+gem 'grape', group: :grape
