@@ -27,7 +27,7 @@ module David
       host, port  = @options.values_at(:Host, :Port)
 
       log.info "David #{David::VERSION} on #{RUBY_DESCRIPTION}"
-      log.info "Starting on [#{host}]:#{port}"
+      log.info "Starting on coap://[#{host}]:#{port}"
 
       af = ipv6? ? ::Socket::AF_INET6 : ::Socket::AF_INET
 
