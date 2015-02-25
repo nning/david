@@ -1,7 +1,7 @@
 require 'benchmark/ips'
 
 Benchmark.ips do |x|
-  a = [0..99999]
+  a = [*0..99999]
 
   x.report('map') do
     a.map { |e| e.to_s }
