@@ -142,7 +142,7 @@ single core of a Core i7-3520M CPU running Linux 3.18.6).
 
 ## Copyright
 
-The code is published under the GPLv3 license (see the LICENSE file).
+The code is published under the MIT license (see the LICENSE file).
 
 ### Authors
 

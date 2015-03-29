@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
     Things."
 
   s.homepage = 'https://github.com/nning/david'
-  s.license  = 'GPL-3.0'
+  s.license  = 'MIT'
   s.author   = 'henning mueller'
   s.email    = 'henning@orgizm.net'
 
