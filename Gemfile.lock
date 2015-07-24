@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    david (0.4.5.pre)
+    david (0.4.6.pre)
       celluloid (>= 0.16.0, < 0.17)
       celluloid-io (>= 0.16.1, < 0.17)
       coap (>= 0.1)
