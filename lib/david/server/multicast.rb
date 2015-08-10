@@ -36,7 +36,7 @@ module David
 
         # http://lists.apple.com/archives/darwin-kernel/2014/Mar/msg00012.html
         if OS.osx?
-          ifname  = Socket.if_up?('en1') ? 'en1' : 'en0'
+          ifname  = `route get default`.match(/interface: ([a-z0-9]*)$/)[1]
           ifindex = Socket.if_nametoindex(ifname)
         end
 
