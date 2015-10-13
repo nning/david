@@ -21,6 +21,9 @@ It will hook into Rack and make itself the default handler, so running `rails
 s` starts David. If you want to start WEBrick for example, you can do so by
 executing `rails s webrick`.
 
+**For now, you have to remove the `web-console` gem from the Gemfile (which is
+HTTP specific anyway) if you use Rails/David in CoAP only mode.**
+
 After the server is started, the Rails application is available at
 `coap://[::1]:3000/` by default.
 
