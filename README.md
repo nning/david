@@ -11,7 +11,7 @@ Rack compatible web frameworks into the Internet of Things. **Currently, it is
 in a development state and probably not ready for use in production.** It is
 tested with MRI >= 1.9, JRuby, and Rubinius.
 
-## Usage
+## Quick Start
 
 Just include David in your Gemfile!
 
@@ -22,10 +22,20 @@ s` starts David. If you want to start WEBrick for example, you can do so by
 executing `rails s webrick`.
 
 **For now, you have to remove the `web-console` gem from the Gemfile (which is
-HTTP specific anyway) if you use Rails/David in CoAP only mode.**
+HTTP specific anyway) if you use Rails/David in CoAP only mode.** You probably
+also want to disable [CSRF
+protection](http://api.rubyonrails.org/classes/ActionController/RequestForgeryProtection/ClassMethods.html)
+by removing the `protect_from_forgery` line from
+`app/controllers/application_controller.rb` (or use `:null_session` if you know
+what you are doing).
+
+The [`coap-rails-dummy`](https://github.com/nning/coap-rails-dummy) repository
+documents [changes to a newly generated Ruby on Rails application for a quick
+start](https://github.com/nning/coap-rails-dummy/compare/initial...master).
 
 After the server is started, the Rails application is available at
-`coap://[::1]:3000/` by default.
+`coap://[::1]:3000/` by default. (Although you have to set a route for `/` in
+`config/routes.rb`, of course.)
 
 [Copper](https://addons.mozilla.org/de/firefox/addon/copper-270430/) is a CoAP
 client for Firefox and can be used for development. The [Ruby coap
