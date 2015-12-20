@@ -13,7 +13,7 @@ end
 group :test do
   gem 'coveralls', require: false
 
-  gem 'grape'
+  gem 'grape', '~> 0.13.0'
   gem 'hobbit'
   gem 'nyny'
   gem 'rails', '~> 4.2.0'
