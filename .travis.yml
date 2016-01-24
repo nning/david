@@ -5,16 +5,15 @@ os:
   - osx
 
 rvm:
-  - 2.2
-  - jruby
-  - rbx
+  - 2.3.0
+  - 2.2.4
+  - jruby-9.0.4.0
 
 matrix:
   fast_finish: true
   allow_failures:
     - os: osx
-    - rvm: jruby
-    - rvm: rbx
+    - rvm: jruby-9.0.4.0
 
 notifications:
   email: false
