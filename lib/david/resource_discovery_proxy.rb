@@ -3,7 +3,7 @@ require 'david/resource_discovery'
 module David
   class ResourceDiscoveryProxy
     def initialize(app)
-      ResourceDiscovery.supervise_as(:discovery, app)
+      ResourceDiscovery.supervise(as: :discovery, args: [app])
     end
 
     def call(env)

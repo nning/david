@@ -2,13 +2,13 @@ module Rack
   module Handler
     class David
       def self.run(app, options={})
-        g = Celluloid::SupervisionGroup.run!
+        g = Celluloid::Supervision::Container.run!
 
-        g.supervise_as(:server, ::David::Server, app, options)
-        g.supervise_as(:gc, ::David::GarbageCollector)
+        g.supervise(as: :server, type: ::David::Server, args: [app, options])
+        g.supervise(as: :gc, type: ::David::GarbageCollector)
 
         unless options[:Observe] == 'false'
-          g.supervise_as(:observe, ::David::Observe)
+          g.supervise(as: :observe, type: ::David::Observe)
         end
 
         begin

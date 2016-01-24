@@ -3,7 +3,7 @@ require 'spec_helper'
 Celluloid.logger = ENV['DEBUG'].nil? ? nil : Logger.new($stdout)
 
 describe Observe do
-  let!(:observe) { Observe.supervise_as(:observe) }
+  let!(:observe) { Observe.supervise(as: :observe) }
 
   # TODO Replace this with factory.
   before do
@@ -33,7 +33,7 @@ describe Observe do
     let!(:add) { subject.add(*dummy1) }
 
     let!(:key) { [dummy1[0].host, dummy1[0].token] }
-    let!(:value) { subject[key] }
+    let!(:value) { subject.get(key) }
 
     it '#to_s' do
       s = '["127.0.0.1", ' + dummy1[0].token.to_s + ', "/", 0]'
@@ -131,9 +131,9 @@ describe Observe do
     it 'shall change entry' do
       subject.send(:bump, key, n, response)
 
-      expect(subject[key][0]).to eq(n)
-      expect(subject[key][3]).to eq(response.options[:etag])
-      expect(subject[key][4]).to be <= Time.now.to_i
+      expect(subject.get(key)[0]).to eq(n)
+      expect(subject.get(key)[3]).to eq(response.options[:etag])
+      expect(subject.get(key)[4]).to be <= Time.now.to_i
     end
   end
 
@@ -152,7 +152,7 @@ describe Observe do
       end
 
       it 'delete' do
-        expect(subject[key]).to eq(nil)
+        expect(subject.get(key)).to eq(nil)
       end
     end
 
@@ -166,9 +166,9 @@ describe Observe do
       end
 
       it 'bumped' do
-        expect(subject[key][0]).to eq(1)
-        expect(subject[key][3]).to eq(dummy2[0].message.options[:etag])
-        expect(subject[key][4]).to be <= Time.now.to_i
+        expect(subject.get(key)[0]).to eq(1)
+        expect(subject.get(key)[3]).to eq(dummy2[0].message.options[:etag])
+        expect(subject.get(key)[4]).to be <= Time.now.to_i
       end
     end
   end
@@ -188,9 +188,9 @@ describe Observe do
       end
 
       it 'bumped' do
-        expect(subject[key][0]).to eq(1)
-        expect(subject[key][3]).to eq(dummy2[0].message.options[:etag])
-        expect(subject[key][4]).to be <= Time.now.to_i
+        expect(subject.get(key)[0]).to eq(1)
+        expect(subject.get(key)[3]).to eq(dummy2[0].message.options[:etag])
+        expect(subject.get(key)[4]).to be <= Time.now.to_i
       end
     end
   end

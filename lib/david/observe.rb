@@ -1,12 +1,15 @@
 module David
-  class Observe < Hash
+  class Observe
+    extend Forwardable
+
     include Actor
 
-    alias_method :_delete, :delete
-    alias_method :_include?, :include?
+    def_delegators :@store, :first, :keys, :size
 
     def initialize(tick_interval = 3)
       @tick_interval = tick_interval
+      @store = {}
+
       async.run
 
       log.debug('Observe initialized')
@@ -15,34 +18,38 @@ module David
     def add(exchange, env, etag)
       exchange.message.options.delete(:observe)
 
-      self[[exchange.host, exchange.token]] ||=
+      @store[[exchange.host, exchange.token]] ||=
         [0, exchange, env, etag, Time.now.to_i]
     end
 
     def delete(exchange)
-      _delete([exchange.host, exchange.token])
+      @store.delete([exchange.host, exchange.token])
+    end
+
+    def get(key)
+      @store[key]
     end
 
     def include?(exchange)
-      _include?([exchange.host, exchange.token])
+      @store.include?([exchange.host, exchange.token])
     end
 
     def to_s
-      self.map { |k, v| [*k, v[2]['PATH_INFO'], v[0]].inspect }.join(', ')
+      @store.map { |k, v| [*k, v[2]['PATH_INFO'], v[0]].inspect }.join(', ')
     end
 
     private
 
     def bump(key, n, response)
-      self[key][0] = n
-      self[key][3] = response.options[:etag]
-      self[key][4] = Time.now.to_i
+      @store[key][0] = n
+      @store[key][3] = response.options[:etag]
+      @store[key][4] = Time.now.to_i
     end
 
     # TODO If ETag did not change but max-age of last notification is expired,
     #      return empty 2.03.
     def handle_update(key)
-      n, exchange, env, etag = self[key]
+      n, exchange, env, etag = @store[key]
       n += 1
 
       response, options = server.respond(exchange, env)
@@ -86,12 +93,12 @@ module David
     end
 
     def tick(fiber = true)
-      unless self.empty?
+      unless @store.empty?
         log.debug('Observe tick')
-        log.debug(self)
+        log.debug(@store)
       end
 
-      self.each_key do |key|
+      @store.each_key do |key|
         if fiber
           async.handle_update(key)
         else

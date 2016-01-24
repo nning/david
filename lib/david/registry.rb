@@ -17,7 +17,7 @@ module David
 
     def observe
       # Supervision is only initialized from here in tests.
-      Observe.supervise_as(:observe) if Celluloid::Actor[:observe].nil?
+      Observe.supervise(as: :observe) if Celluloid::Actor[:observe].nil?
       Celluloid::Actor[:observe]
     end
 

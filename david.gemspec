@@ -20,8 +20,8 @@ Gem::Specification.new do |s|
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ['lib']
 
-  s.add_runtime_dependency 'celluloid',    '>= 0.16.0', '< 0.17'
-  s.add_runtime_dependency 'celluloid-io', '>= 0.16.1', '< 0.17'
+  s.add_runtime_dependency 'celluloid',    '~> 0.17.3'
+  s.add_runtime_dependency 'celluloid-io', '~> 0.17.3'
   s.add_runtime_dependency 'coap',         '~> 0.1'
   s.add_runtime_dependency 'rack',         '~> 1.6',    '>= 1.6.4'
 

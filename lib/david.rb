@@ -13,9 +13,10 @@ unless defined?(JRuby)
   end
 end
 
-require 'celluloid'
+require 'celluloid/current'
 require 'celluloid/io'
 require 'coap'
+require 'forwardable'
 require 'ipaddr'
 require 'rack'
 
