@@ -140,7 +140,7 @@ describe Observe do
   describe '#handle_update' do
     let(:port) { random_port }
 
-    let!(:server) { supervised_server(:Port => port) }
+    let!(:server) { supervised_server(:Host => '0.0.0.0', :Port => port) }
 
     context 'error (4.04)' do
       let!(:key) { [dummy1[0].host, dummy1[0].token] }
@@ -176,7 +176,7 @@ describe Observe do
   describe '#tick' do
     let(:port) { random_port }
 
-    let!(:server) { supervised_server(:Port => port) }
+    let!(:server) { supervised_server(:Host => '0.0.0.0', :Port => port) }
 
     context 'update (2.05)' do
       let!(:key) { [dummy2[0].host, dummy2[0].token] }
