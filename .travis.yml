@@ -4,6 +4,8 @@ os:
   - linux
   - osx
 
+sudo: required
+
 rvm:
   - 2.3.0
   - 2.2.4
