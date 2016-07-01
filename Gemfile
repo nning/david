@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gemspec
 
 group :cbor do
-  gem 'cbor', platforms: :ruby
+  gem 'cbor', '0.5.9.0', platforms: :ruby
 end
 
 group :development do
