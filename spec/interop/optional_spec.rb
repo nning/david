@@ -83,7 +83,7 @@ require 'spec_helper'
 
         @t1 = Thread.start do
           CoAP::Client.new.observe \
-            '/obs', '::1', port,
+            '/obs', localhost, port,
             ->(s, m) { @answers << m }
         end
 

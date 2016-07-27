@@ -10,7 +10,7 @@ describe Server do
   let!(:server) { supervised_server(:Port => port) }
 
   context 'ordinary request' do
-    subject { client.get('/hello', '::1') }
+    subject { client.get('/hello', localhost) }
 
     it 'should be plausible' do
       expect(subject).to be_a(CoAP::Message)
@@ -22,7 +22,7 @@ describe Server do
   end
 
   context 'missing resource' do
-    subject { client.get('/404', '::1') }
+    subject { client.get('/404', localhost) }
 
     it 'should be 4.04' do
       expect(subject).to be_a(CoAP::Message)
@@ -34,7 +34,7 @@ describe Server do
   end
 
   context 'unsupported method' do
-    subject { client.delete('/hello', '::1') }
+    subject { client.delete('/hello', localhost) }
 
     it 'should be 4.05' do
       expect(subject).to be_a(CoAP::Message)
@@ -135,7 +135,7 @@ describe Server do
 
   context 'block' do
     context 'block2.more set' do
-      subject { client.get('/', '::1', nil, nil, block2: 14) }
+      subject { client.get('/', localhost, nil, nil, block2: 14) }
 
       it 'should be an error' do
         expect(subject).to be_a(CoAP::Message)
@@ -154,7 +154,7 @@ describe Server do
           recv_timeout: 0.1
       end
 
-      subject { client.get('/hello', '::1', nil, nil, block2: 16) }
+      subject { client.get('/hello', localhost, nil, nil, block2: 16) }
 
       it 'should be an error' do
         expect { subject }.to raise_error(Timeout::Error)
@@ -164,7 +164,7 @@ describe Server do
     context 'transfer' do
       subject do
         [0, 16].map do |x|
-          client.get('/block', '::1', nil, nil, block2: x)
+          client.get('/block', localhost, nil, nil, block2: x)
         end
       end
 
@@ -178,7 +178,7 @@ describe Server do
 
   context 'accept' do
     context 'unset' do
-      subject { client.get('/hello', '::1') }
+      subject { client.get('/hello', localhost) }
 
       it 'should return resource' do
         expect(subject).to be_a(CoAP::Message)
@@ -191,7 +191,7 @@ describe Server do
     end
 
     context 'default' do
-      subject { client.get('/echo/accept', '::1') }
+      subject { client.get('/echo/accept', localhost) }
 
       it 'should return default' do
         expect(subject).to be_a(CoAP::Message)
@@ -204,7 +204,7 @@ describe Server do
     end
 
     context 'right' do
-      subject { client.get('/echo/accept', '::1', nil, nil, accept: 40) }
+      subject { client.get('/echo/accept', localhost, nil, nil, accept: 40) }
 
       it 'should echo' do
         expect(subject).to be_a(CoAP::Message)
@@ -217,7 +217,7 @@ describe Server do
     end
 
     context 'wrong' do
-      subject { client.get('/hello', '::1', nil, nil, accept: 40) }
+      subject { client.get('/hello', localhost, nil, nil, accept: 40) }
 
       it 'should be an error' do
         expect(subject).to be_a(CoAP::Message)
@@ -232,7 +232,7 @@ describe Server do
   context 'deduplication' do
     context 'duplicates' do
       let(:a) do
-        ([0]*3).map { client.get('/value', '::1', nil, nil, mid: 1, token: 1) }
+        ([0]*3).map { client.get('/value', localhost, nil, nil, mid: 1, token: 1) }
       end
 
       it 'matching mid' do
@@ -253,7 +253,7 @@ describe Server do
 
     context 'different' do
       let(:a) do
-        ([0]*3).map { client.get('/value', '::1') }
+        ([0]*3).map { client.get('/value', localhost) }
       end
 
       it 'matching mid' do
@@ -274,7 +274,7 @@ describe Server do
   end
 
   context 'proxy' do
-    subject { client.get('/', '::1', nil, nil, proxy_uri: 'coap://[::1]/') }
+    subject { client.get('/', localhost, nil, nil, proxy_uri: 'coap://[::1]/') }
 
     it 'should return 5.05' do
       expect(subject).to be_a(CoAP::Message)
@@ -290,7 +290,7 @@ describe Server do
 
     let(:cbor) { {'Hello' => 'World!'}.to_cbor }
 
-    subject { client.get('/cbor', '::1', nil, cbor, content_format: 60) }
+    subject { client.get('/cbor', localhost, nil, cbor, content_format: 60) }
 
     context 'incoming' do
       context 'string key' do
@@ -332,7 +332,7 @@ describe Server do
     end
 
     context 'outgoing' do
-      subject { client.get('/json', '::1') }
+      subject { client.get('/json', localhost) }
 
       it 'should return CBOR' do
         expect(subject).to be_a(CoAP::Message)

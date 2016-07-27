@@ -15,7 +15,8 @@ describe AppConfig do
     it { expect(method.call(nil)).to eq(nil) }
     it { expect(method.call('::')).to eq('::') }
     it { expect(method.call('::1')).to eq('::1') }
-    it { expect(method.call('localhost')).to eq('::1') }
+    it { expect(method.call('127.0.0.1')).to eq('127.0.0.1') }
+    it { expect(%w[::1 127.0.0.1]).to include(method.call('localhost')) }
   end
 
   describe '#choose_port' do

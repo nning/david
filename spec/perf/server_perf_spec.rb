@@ -16,7 +16,7 @@ describe Server, 'performance', performance: true do
 
   # Stolen from thin.
   it "should handle GET request in less than #{max1 = 0.0045} seconds" do
-    expect(Benchmark.realtime { client.get('/', '::1') }).to be < max1
+    expect(Benchmark.realtime { client.get('/', localhost) }).to be < max1
   end
 
   after do

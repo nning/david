@@ -42,7 +42,7 @@ describe Server::Mapping do
 
       let!(:server) { supervised_server(:Port => port) }
 
-      subject { client.get('/code', '::1') }
+      subject { client.get('/code', localhost) }
 
       it 'should be 2.05' do
         expect(subject).to be_a(CoAP::Message)

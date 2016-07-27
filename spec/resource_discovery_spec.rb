@@ -12,7 +12,7 @@ describe David::ResourceDiscovery do
   end
 
   context 'ordinary request' do
-    subject { client.get('/.well-known/core', '::1') }
+    subject { client.get('/.well-known/core', localhost) }
 
     context 'response' do
       let(:links) { CoRE::Link.parse_multiple(subject.payload) }
@@ -37,7 +37,7 @@ describe David::ResourceDiscovery do
   
   context 'filtered request' do
     context 'match' do
-      subject { client.get('/.well-known/core?href=new', '::1') }
+      subject { client.get('/.well-known/core?href=new', localhost) }
 
       context 'response' do
         let(:links) { CoRE::Link.parse_multiple(subject.payload) }
@@ -50,7 +50,7 @@ describe David::ResourceDiscovery do
     end
 
     context 'no match' do
-      subject { client.get('/.well-known/core?href=foo', '::1') }
+      subject { client.get('/.well-known/core?href=foo', localhost) }
 
       context 'response' do
         let(:links) { CoRE::Link.parse_multiple(subject.payload) }

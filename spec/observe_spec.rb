@@ -208,7 +208,7 @@ describe Observe do
 
       @t1 = Thread.start do
         client.observe \
-          '/value', '::1', nil,
+          '/value', localhost, nil,
           ->(s, m) { @answers << m }
       end
 

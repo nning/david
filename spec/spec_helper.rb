@@ -21,6 +21,14 @@ module David
       @debug ||= ENV['DEBUG'].nil? ? 'none' : 'debug'
     end
 
+    def ipv4?
+      @ipv4 ||= !ENV['IPV4'].nil?
+    end
+
+    def localhost
+      ipv4? ? '127.0.0.1' : '::1'
+    end
+
     def random_port
       rand((2**10+1)..(2**16-1))
     end
@@ -30,20 +38,21 @@ module David
 
       payload = options.delete(:payload)
       port    = options.delete(:port) || random_port
+      host    = ipv4? ? '127.0.0.1' : '::1'
 
       options.merge!(mid: mid)
 
       client = CoAP::Client.new(retransmit: false, recv_timeout: 0.1,
         token: false)
 
-      response = client.send(method, path, '::1', port, payload, options)
+      response = client.send(method, path, host, port, payload, options)
 
       [mid, response]
     end
 
     def supervised_server(options)
       defaults = {
-        :Host => '::1',
+        :Host => localhost,
         :Port => CoAP::PORT,
         :Log => debug
       }
