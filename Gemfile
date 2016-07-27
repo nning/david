@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gemspec
 
 group :cbor do
-  gem 'cbor', '0.5.9.0', platforms: :ruby
+  gem 'cbor', platforms: :ruby
 end
 
 group :development do
@@ -13,10 +13,10 @@ end
 group :test do
   gem 'coveralls', require: false
 
-  gem 'grape', '~> 0.13.0'
+  gem 'grape'
   gem 'hobbit'
   gem 'nyny'
   gem 'rails', '~> 4.2.0'
-  gem 'rspec-rails', '~> 3.4.0'
+  gem 'rspec-rails', '~> 3.5.0'
   gem 'sinatra'
 end

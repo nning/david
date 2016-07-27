@@ -7,9 +7,8 @@
 [![Code Climate](https://img.shields.io/codeclimate/github/nning/david.svg)](https://codeclimate.com/github/nning/david)
 
 David is a CoAP server with Rack interface to bring the illustrious family of
-Rack compatible web frameworks into the Internet of Things. **Currently, it is
-in a development state and probably not ready for use in production.** It is
-tested with MRI >= 1.9, JRuby, and Rubinius.
+Rack compatible web frameworks into the Internet of Things. It is tested with
+MRI >= 1.9, JRuby, and Rubinius.
 
 ## Quick Start
 
