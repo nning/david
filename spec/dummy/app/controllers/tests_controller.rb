@@ -1,9 +1,9 @@
 class TestsController < ActionController::Base
   def benchmark
-    render text: 'Hello World!'
+    render plain: 'Hello World!'
   end
 
   def cbor
-    render text: params['test'].to_s
+    render plain: params['test'].to_json
   end
 end

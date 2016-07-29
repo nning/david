@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'celluloid',    '~> 0.17.3'
   s.add_runtime_dependency 'celluloid-io', '~> 0.17.3'
   s.add_runtime_dependency 'coap',         '~> 0.1'
-  s.add_runtime_dependency 'rack',         '~> 1.6',    '>= 1.6.4'
+  s.add_runtime_dependency 'rack',         '~> 2.0'
 
   s.add_development_dependency 'rake',  '~> 0'
   s.add_development_dependency 'rspec', '~> 3.2'

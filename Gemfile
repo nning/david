@@ -16,7 +16,9 @@ group :test do
   gem 'grape'
   gem 'hobbit'
   gem 'nyny'
-  gem 'rails', '~> 4.2.0'
+  gem 'rails', '~> 5.0.0'
   gem 'rspec-rails', '~> 3.5.0'
-  gem 'sinatra'
+
+  gem 'sinatra', github: 'sinatra'
+  gem 'rack-protection', github: 'sinatra/rack-protection'
 end

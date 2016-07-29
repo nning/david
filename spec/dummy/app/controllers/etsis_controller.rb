@@ -1,7 +1,6 @@
 class EtsisController < ActionController::Base
   def show
-    headers['Content-Type'] = 'text/plain'
-    head 2.05
+    head 2.05, content_type: :text
   end
 
   def update

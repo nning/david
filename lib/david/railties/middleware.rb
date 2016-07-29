@@ -7,6 +7,7 @@ module David
       UNWANTED = [
         ActionDispatch::Cookies,
         ActionDispatch::DebugExceptions,
+        ActionDispatch::Executor,
         ActionDispatch::Flash,
         ActionDispatch::RemoteIp,
         ActionDispatch::RequestId,
