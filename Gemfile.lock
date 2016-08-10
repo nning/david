@@ -1,13 +1,13 @@
 GIT
   remote: git://github.com/sinatra/rack-protection.git
-  revision: 8d4f9d488d0591ac7b360d9137b94f8d68901f16
+  revision: 7e723a74763bb83989d1249cdceb9cceb2ee6f01
   specs:
     rack-protection (2.0.0)
       rack
 
 GIT
   remote: git://github.com/sinatra/sinatra.git
-  revision: 3e2379d7175ea7f5896f7a6f9c010c56e587ff03
+  revision: a7483f48b0a18ba792e642a356e3b25cf30a354b
   specs:
     sinatra (2.0.0.pre.alpha)
       mustermann (~> 0.4)
@@ -114,7 +114,7 @@ GEM
     erubis (2.7.0)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
-    grape (0.16.2)
+    grape (0.17.0)
       activesupport
       builder
       hashie (>= 2.1.0)
@@ -230,7 +230,7 @@ GEM
     tilt (2.0.5)
     timers (4.1.1)
       hitimes
-    tins (1.11.0)
+    tins (1.12.0)
     tool (0.2.3)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
