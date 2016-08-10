@@ -5,6 +5,7 @@ require 'spec_helper'
   ETSI::Mandatory::Hobbit,
   ETSI::Mandatory::NYNY,
   ETSI::Mandatory::Rack,
+  ETSI::Mandatory::Roda.freeze.app,
   ETSI::Mandatory::Sinatra,
   Rails.application
 ].each do |app|

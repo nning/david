@@ -16,6 +16,8 @@ group :test do
   gem 'grape'
   gem 'hobbit'
   gem 'nyny'
+  gem 'roda'
+
   gem 'rails', '~> 5.0.0'
   gem 'rspec-rails', '~> 3.5.0'
 

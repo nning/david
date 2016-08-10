@@ -188,6 +188,8 @@ GEM
       thor (>= 0.18.1, < 2.0)
     rake (0.9.6)
     resolv-ipv6favor (0.0.0)
+    roda (2.16.0)
+      rack
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
@@ -259,6 +261,7 @@ DEPENDENCIES
   rack-protection!
   rails (~> 5.0.0)
   rake (~> 0)
+  roda
   rspec (~> 3.2)
   rspec-rails (~> 3.5.0)
   ruby-prof
