@@ -22,5 +22,5 @@ group :test do
   gem 'rspec-rails', '~> 3.5.0'
 
   gem 'sinatra', github: 'sinatra'
-  gem 'rack-protection', github: 'sinatra/rack-protection'
+  gem 'rack-protection', github: 'sinatra'
 end
