@@ -23,7 +23,7 @@ group :test do
   gem 'nyny'
   gem 'roda'
 
-  gem 'rails', '~> 5.0.0'
+  gem 'rails', '~> 5.1.0'
   gem 'rspec-rails', '~> 3.5.0'
 
   gem 'sinatra', github: 'sinatra'
