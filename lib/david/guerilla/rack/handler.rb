@@ -1,15 +1,12 @@
 # Monkey-patch Rack to first try David.
-# https://github.com/rack/rack/blob/master/lib/rack/handler.rb#L46-L61
+# https://github.com/rack/rack/blob/master/lib/rack/handler.rb#L46
 module Rack
   module Handler
     def self.default(options = {})
       # Guess.
       if ENV.include?("PHP_FCGI_CHILDREN")
-        # We already speak FastCGI
-        options.delete :File
-        options.delete :Port
         Rack::Handler::FastCGI
-      elsif ENV.include?("REQUEST_METHOD")
+      elsif ENV.include?(REQUEST_METHOD)
         Rack::Handler::CGI
       elsif ENV.include?("RACK_HANDLER")
         self.get(ENV["RACK_HANDLER"])
@@ -19,7 +16,7 @@ module Rack
         return Rack::Handler::David unless rails_coap_only
 
         # Original Rack handler order.
-        pick ['thin', 'puma', 'webrick']
+        pick ['puma', 'thin', 'webrick']
       end
     end
 

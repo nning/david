@@ -7,7 +7,7 @@ module Rack
         g.supervise(as: :server, type: ::David::Server, args: [app, options])
         g.supervise(as: :gc, type: ::David::GarbageCollector)
 
-        unless options[:Observe] == 'false'
+        if options[:Observe] != 'false'
           g.supervise(as: :observe, type: ::David::Observe)
         end
 
