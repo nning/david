@@ -104,7 +104,7 @@ module David
 
       unless response.nil?
         exchange.message = response
-        answer(exchange, key) 
+        answer(exchange, key)
       end
     end
 

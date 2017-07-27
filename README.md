@@ -154,6 +154,11 @@ David handles about 12,500 requests per second in MRI and 14,000 in JRuby
 (tested in MRI 2.3.0 and JRuby 1.7.19 with up to 10,000 concurrent clients on a
 single core of a Core i7-3520M CPU running Linux 3.18.6).
 
+## Caveats
+
+* Incoming block-wise transfer is not supported.
+* Automatically generating `.well-known/core` is only supported in Rails.
+
 ## Copyright
 
 The code is published under the MIT license (see the LICENSE file).
