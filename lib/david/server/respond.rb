@@ -34,7 +34,7 @@ module David
             body = body.force_encoding(ASCII_8BIT) # Rack::Lint insisted...
 
             env[COAP_CBOR]      = cbor
-            env[CONTENT_LENGTH] = body.bytesize
+            env[CONTENT_LENGTH] = body.bytesize.to_s
             env[CONTENT_TYPE]   = CONTENT_TYPE_JSON
             env[RACK_INPUT]     = StringIO.new(body)
           rescue EOFError, CBOR::MalformedFormatError
