@@ -21,7 +21,7 @@ group :test do
   gem 'grape'
   gem 'hobbit'
   gem 'nyny'
-  gem 'roda'
+  gem 'roda', '~> 2'
 
   gem 'rails', '~> 5.1.0'
   gem 'rspec-rails', '~> 3.5.0'
