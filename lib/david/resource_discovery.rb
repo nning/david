@@ -1,6 +1,9 @@
+require 'david/server/constants'
+
 module David
   class ResourceDiscovery
     include Celluloid
+    include David::Server::Constants
 
     def initialize(app)
       @app = app
