@@ -57,6 +57,10 @@ module David
         .each   { |r| delete_format!(r) }
     end
 
+    def resource_links
+      Hash[routes.collect { |r| [r[3], r[4]] }]
+    end
+
     def delete_format!(route)
       route[0].gsub!(/\(\.:format\)\z/, '')
     end
@@ -81,7 +85,9 @@ module David
         [
           route.path.spec.to_s,
           route.defaults[:controller],
-          route.defaults[:action]
+          route.defaults[:action],
+          route.defaults[:rt],
+          route.defaults[:short]
         ]
       end
     end
