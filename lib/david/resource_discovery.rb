@@ -73,7 +73,7 @@ module David
     end
 
     def include_route?(route)
-      !(route[0] =~ /\A\/(assets|rails)/)
+      !(route[0] =~ /\A\/(assets|rails|cable)/)
     end
 
     def routes
