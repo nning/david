@@ -81,7 +81,9 @@ module David
     end
 
     def routes
-      Rails.application.routes.routes.map do |route|
+      Rails.application.routes.routes.select { |route|
+        route.defaults[:coap]
+      }.map do |route|
         [
           route.path.spec.to_s,
           route.defaults[:controller],
