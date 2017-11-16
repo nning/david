@@ -19,11 +19,37 @@ module David
 
       @env = env
 
-      filtered = routes_hash.select { |link| filter(link) }
-      body     = filtered.keys.map(&:to_s).join(',')
+      queries = @env[QUERY_STRING].split('&')
+      body_links = []
+
+      if queries.length > 0
+        queries.each {|q|
+          # XXX do these need to %-unescaped now?
+          (item, value) = q.split('=')
+
+          case item
+          when 'href'
+            # TODO If query end in '*', match on prefix.
+            #      Otherwise match on whole string.
+            #      https://tools.ietf.org/html/rfc6690#section-4.1
+            filtered = routes_hash.select { |link| filter(link) }
+            body_links = filtered.keys
+
+          when 'rt'
+            byebug
+            unless resource_links[value].blank?
+              body_links << sprintf("<%s>", ERB::Util.html_escape(resource_links[value]))
+            end
+
+          else
+            false
+          end
+        }
+      end
+
+      body     = body_links.map(&:to_s).join(',')
 
       # TODO On multicast, do not respond if result set empty.
-
       [
         200,
         {
@@ -58,7 +84,7 @@ module David
     end
 
     def resource_links
-      Hash[routes.collect { |r| [r[3], r[4]] }]
+      @resource_links ||= Hash[routes.collect { |r| [r[3], r[4]] }]
     end
 
     def delete_format!(route)
