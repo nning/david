@@ -8,6 +8,7 @@ module David
       :Log => nil,
       :MinimalMapping => false,
       :Multicast => true,
+      :MulticastAddrs => ['ff02::fd', 'ff05::fd'],
       :Observe => true,
       :Port => ::CoAP::PORT
     }
@@ -67,7 +68,11 @@ module David
     def choose_multicast(value)
       default_to_true(:multicast, value)
     end
-    
+
+    def choose_multicastaddrs(value)
+      value
+    end
+
     def choose_observe(value)
       default_to_true(:observe, value)
     end
