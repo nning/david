@@ -8,7 +8,7 @@
 
 David is a CoAP server with Rack interface to bring the illustrious family of
 Rack compatible web frameworks into the Internet of Things. It is tested with
-MRI >= 2.2, and JRuby >= 9.1. David version ~> 0.5.0 aims for Rack 2 (and Rails
+MRI >= 2.3, and JRuby >= 9.1. David version ~> 0.5.0 aims for Rack 2 (and Rails
 5). Compatibility to Rails 4 is available in version ~> 0.4.5.
 
 ## Quick Start
