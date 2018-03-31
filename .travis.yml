@@ -16,7 +16,8 @@ matrix:
   fast_finish: true
   allow_failures:
     - os: osx
-    - rvm: jruby-9.1.16.0
+    - rvm: 2.5
+    - rvm: jruby-9.1
 
 notifications:
   email: false
