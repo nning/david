@@ -21,17 +21,19 @@ module Rack
       end
 
       def self.valid_options
-        host, port = AppConfig::DEFAULT_OPTIONS.values_at(:Host, :Port)
+        host, port, maddrs =
+          AppConfig::DEFAULT_OPTIONS.values_at(:Host, :Port, :MulticastGroups)
 
         {
-          'Block=BOOLEAN'     => 'Support for blockwise transfer (default: true)',
-          'CBOR=BOOLEAN'      => 'Transparent JSON/CBOR conversion (default: false)',
-          'DefaultFormat=F'   => 'Content-Type if CoAP accept option on request is undefined',
-          'Host=HOST'         => "Hostname to listen on (default: #{host})",
-          'Log=LOG'           => 'Change logging (debug|none)',
-          'Multicast=BOOLEAN' => 'Multicast support (default: true)',
-          'Observe=BOOLEAN'   => 'Observe support (default: true)',
-          'Port=PORT'         => "Port to listen on (default: #{port})"
+          'Block=BOOLEAN'         => 'Support for blockwise transfer (default: true)',
+          'CBOR=BOOLEAN'          => 'Transparent JSON/CBOR conversion (default: false)',
+          'DefaultFormat=F'       => 'Content-Type if CoAP accept option on request is undefined',
+          'Host=HOST'             => "Hostname to listen on (default: #{host})",
+          'Log=LOG'               => 'Change logging (debug|none)',
+          'Multicast=BOOLEAN'     => 'Multicast support (default: true)',
+          'MulticastGroups=ARRAY' => "Multicast groups (default: #{maddrs.join(', ')})",
+          'Observe=BOOLEAN'       => 'Observe support (default: true)',
+          'Port=PORT'             => "Port to listen on (default: #{port})"
         }
       end
     end

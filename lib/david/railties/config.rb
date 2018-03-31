@@ -15,6 +15,9 @@ module David
       # Multicast
       config.coap.multicast = nil
 
+      # Multicast group configuration
+      config.coap.multicast_groups = nil
+
       # Observe
       config.coap.observe = nil
 

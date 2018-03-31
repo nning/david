@@ -6,7 +6,7 @@ module David
         @socket.to_io.setsockopt(Socket::SOL_SOCKET, Socket::SO_REUSEADDR, 1)
 
         if ipv6?
-          maddrs = @options[:MulticastAddrs]
+          maddrs = @options[:MulticastGroups]
           maddrs << 'ff02::1' if OS.osx? # OSX needs ff02::1 explicitly joined.
           maddrs.each { |maddr| multicast_listen_ipv6(maddr) }
 

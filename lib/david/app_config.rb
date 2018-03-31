@@ -8,7 +8,7 @@ module David
       :Log => nil,
       :MinimalMapping => false,
       :Multicast => true,
-      :MulticastAddrs => ['ff02::fd', 'ff05::fd'],
+      :MulticastGroups => ['ff02::fd', 'ff05::fd'],
       :Observe => true,
       :Port => ::CoAP::PORT
     }
@@ -47,6 +47,7 @@ module David
 
     def choose_log(value)
       log = ::Logger.new($stderr)
+      value = value.to_s
 
       log.level = ::Logger::INFO
       log.level = ::Logger::DEBUG if value == 'debug'
@@ -69,8 +70,8 @@ module David
       default_to_true(:multicast, value)
     end
 
-    def choose_multicastaddrs(value)
-      value
+    def choose_multicastgroups(value)
+      from_rails(:multicast_groups) || value
     end
 
     def choose_observe(value)
@@ -89,7 +90,7 @@ module David
 
       false
     end
-  
+
     def default_to_true(key, value)
       return false if value.to_s == 'false'
 

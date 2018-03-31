@@ -77,19 +77,20 @@ Rack keys can be specified with the `-O` option of `rackup`. The listed Rails
 keys can be accessed for example from the `config/application.rb` file of your
 Rails application.
 
-| Rack key			| Rails key					| Default	| Semantics							|
-|---				|---						|---		|---								|
-| Block				| coap.block				| true		| [Blockwise transfers](https://tools.ietf.org/html/draft-ietf-core-block-16) |
-| CBOR				| coap.cbor					| false		| JSON/CBOR transcoding				|
-| DefaultFormat		| coap.default_format		|			| Default Content-Type				|
-| Host				|							| ::1 / ::	| Server listening host				|
-| Log				|							| info		| Log level (none or debug)			|
-| MinimalMapping	|							| false		| Minimal HTTP status codes mapping	|
-| Multicast			| coap.multicast			| true		| Multicast support					|
-| Observe			| coap.observe				| true		| [Observe support](https://tools.ietf.org/html/draft-ietf-core-observe-16) |
-|					| coap.only					| true		| Removes (HTTP) middleware			|
-| Port				|							| 5683		| Server listening port				|
-|					| coap.resource_discovery	| true		| Provision of `.well-known/core`	|
+| Rack key			| Rails key					| Default				| Semantics							|
+|---				|---						|---					|---								|
+| Block				| coap.block				| true					| [Blockwise transfers](https://tools.ietf.org/html/draft-ietf-core-block-16) |
+| CBOR				| coap.cbor					| false					| JSON/CBOR transcoding				|
+| DefaultFormat		| coap.default_format		|						| Default Content-Type				|
+| Host				|							| ::1 / ::				| Server listening host				|
+| Log				|							| info					| Log level (none or debug)			|
+| MinimalMapping	|							| false					| Minimal HTTP status codes mapping	|
+| Multicast			| coap.multicast			| true					| Multicast support					|
+| MulticastGroups	| coap.multicast_groups		| ff02::fd, ff05::fd	| Multicast group configuration		|
+| Observe			| coap.observe				| true					| [Observe support](https://tools.ietf.org/html/draft-ietf-core-observe-16) |
+|					| coap.only					| true					| Removes (HTTP) middleware			|
+| Port				|							| 5683					| Server listening port				|
+|					| coap.resource_discovery	| true					| Provision of `.well-known/core`	|
 
 The server can be started with debug log level for example with the following
 command provided that a rackup config file (`config.ru`) exists like in a Rails
