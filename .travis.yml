@@ -24,6 +24,10 @@ notifications:
 env:
   - DEBUG=1 IPV4=1
 
+before_install:
+  # work around https://github.com/travis-ci/travis-ci/issues/8969
+  - travis_retry gem update --system
+
 script:
   - bundle exec rake build
   - bundle exec rspec -t ~multicast:ipv6 -t ~performance
