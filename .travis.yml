@@ -7,16 +7,16 @@ os:
 sudo: required
 
 rvm:
-  - 2.4.1
-  - 2.3.3
-  - 2.2.6
-  - jruby-9.1.8.0
+  - 2.5.1
+  - 2.4.4
+  - 2.3.7
+  - jruby-9.1.16.0
 
 matrix:
   fast_finish: true
   allow_failures:
     - os: osx
-    - rvm: jruby-9.1.8.0
+    - rvm: jruby-9.1.16.0
 
 notifications:
   email: false
