@@ -7,10 +7,10 @@ os:
 sudo: required
 
 rvm:
-  - 2.5.1
-  - 2.4.4
-  - 2.3.7
-  - jruby-9.1.16.0
+  - 2.5
+  - 2.4
+  - 2.3
+  - jruby-9.1
 
 matrix:
   fast_finish: true
