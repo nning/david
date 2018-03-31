@@ -1,26 +1,42 @@
 PATH
   remote: ../../coap
   specs:
-    coap (0.1.1)
-      celluloid-io (~> 0.16, >= 0.16.1)
+    coap (0.1.5.pre)
+      celluloid-io (~> 0.17.3)
       resolv-ipv6favor (~> 0)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    benchmark-ips (2.1.1)
-    celluloid (0.16.0)
-      timers (~> 4.0.0)
-    celluloid-io (0.16.2)
-      celluloid (>= 0.16.0)
-      nio4r (>= 1.1.0)
-    hitimes (1.2.2)
-    hitimes (1.2.2-java)
-    nio4r (1.1.0)
-    nio4r (1.1.0-java)
-    rack (1.6.0)
+    benchmark-ips (2.7.2)
+    celluloid (0.17.3)
+      celluloid-essentials
+      celluloid-extras
+      celluloid-fsm
+      celluloid-pool
+      celluloid-supervision
+      timers (>= 4.1.1)
+    celluloid-essentials (0.20.5)
+      timers (>= 4.1.1)
+    celluloid-extras (0.20.5)
+      timers (>= 4.1.1)
+    celluloid-fsm (0.20.5)
+      timers (>= 4.1.1)
+    celluloid-io (0.17.3)
+      celluloid (>= 0.17.2)
+      nio4r (>= 1.1)
+      timers (>= 4.1.1)
+    celluloid-pool (0.20.5)
+      timers (>= 4.1.1)
+    celluloid-supervision (0.20.6)
+      timers (>= 4.1.1)
+    hitimes (1.2.6)
+    hitimes (1.2.6-java)
+    nio4r (2.3.0)
+    nio4r (2.3.0-java)
+    rack (2.0.4)
     resolv-ipv6favor (0.0.0)
-    timers (4.0.1)
+    timers (4.1.2)
       hitimes
 
 PLATFORMS
@@ -31,3 +47,6 @@ DEPENDENCIES
   benchmark-ips
   coap!
   rack
+
+BUNDLED WITH
+   1.16.1
