@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/sinatra/sinatra.git
-  revision: b18f325a152d87170f63945ad2df75a7ff63c738
+  revision: 3742bddcee8eb5afd69cf51327c1716c506e1adc
   specs:
     rack-protection (2.0.1)
       rack
@@ -100,7 +100,7 @@ GEM
       term-ansicolor (~> 1.3)
       thor (~> 0.19.4)
       tins (~> 1.6)
-    crass (1.0.3)
+    crass (1.0.4)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.3)
@@ -109,7 +109,7 @@ GEM
     erubi (1.7.1)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
-    grape (1.0.2)
+    grape (1.0.3)
       activesupport
       builder
       mustermann-grape (~> 1.0.0)
@@ -120,7 +120,7 @@ GEM
     hitimes (1.2.6-java)
     hobbit (0.6.1)
       rack
-    i18n (1.0.0)
+    i18n (1.0.1)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
     json (2.1.0)
@@ -137,15 +137,15 @@ GEM
     mustermann (1.0.2)
     mustermann-grape (1.0.0)
       mustermann (~> 1.0.0)
-    nio4r (2.3.0)
-    nio4r (2.3.0-java)
+    nio4r (2.3.1)
+    nio4r (2.3.1-java)
     nokogiri (1.8.2)
       mini_portile2 (~> 2.3.0)
     nokogiri (1.8.2-java)
     nyny (2.2.1)
       rack
       tilt
-    rack (2.0.4)
+    rack (2.0.5)
     rack-accept (0.4.5)
       rack (>= 0.4)
     rack-test (1.0.0)
@@ -254,4 +254,4 @@ DEPENDENCIES
   sinatra!
 
 BUNDLED WITH
-   1.16.1
+   1.16.2
