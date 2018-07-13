@@ -30,7 +30,7 @@ module David
         if request.accept.nil?
           @options[:DefaultFormat]
         else
-          CoAP::Registry.convert_content_format(request.accept)
+          ::CoAP::Registry.convert_content_format(request.accept)
         end
       end
 

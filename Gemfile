@@ -7,6 +7,10 @@ end
 
 gemspec
 
+group :dtls do
+  gem 'tinydtls', platforms: :ruby
+end
+
 group :cbor do
   gem 'cbor', platforms: :ruby
 end

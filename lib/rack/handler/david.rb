@@ -4,9 +4,15 @@ module Rack
       def self.run(app, options={})
         g = Celluloid::Supervision::Container.run!
 
-        g.supervise(as: :server, type: ::David::Server, args: [app, options])
-        g.supervise(as: :gc, type: ::David::GarbageCollector)
+        if options[:DTLS] == 'true'
+          g.supervise(as: :server, type: ::David::Server::CoAPs,
+                      args: [app, options.merge!(Port: "5684")])
+        else
+          g.supervise(as: :server, type: ::David::Server::CoAP,
+                      args: [app, options])
+        end
 
+        g.supervise(as: :gc, type: ::David::GarbageCollector)
         if options[:Observe] != 'false'
           g.supervise(as: :observe, type: ::David::Observe)
         end
@@ -27,6 +33,7 @@ module Rack
         {
           'Block=BOOLEAN'         => 'Support for blockwise transfer (default: true)',
           'CBOR=BOOLEAN'          => 'Transparent JSON/CBOR conversion (default: false)',
+          'DTLS=BOOLEAN'          => 'DTLS support (default: false)',
           'DefaultFormat=F'       => 'Content-Type if CoAP accept option on request is undefined',
           'Host=HOST'             => "Hostname to listen on (default: #{host})",
           'Log=LOG'               => 'Change logging (debug|none)',

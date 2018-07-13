@@ -3,6 +3,7 @@ module David
     DEFAULT_OPTIONS = {
       :Block => true,
       :CBOR => false,
+      :DTLS => false,
       :DefaultFormat => 'application/json',
       :Host => ENV['RACK_ENV'] == 'development' ? '::1' : '::',
       :Log => nil,
@@ -30,6 +31,10 @@ module David
 
     def choose_cbor(value)
       default_to_false(:cbor, value)
+    end
+
+    def choose_dtls(value)
+      default_to_false(:dtls, value)
     end
 
     def choose_defaultformat(value)

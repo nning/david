@@ -16,6 +16,11 @@ module David
         @ipv6 ||= IPAddr.new(@options[:Host]).ipv6?
       end
 
+      def dtls?
+        @dtls ||= defined? TinyDTLS::UDPSocket and
+          @socket.is_a? TinyDTLS::UDPSocket
+      end
+
       def jruby_or_rbx?
         @jruby_or_rbx ||= !!(defined?(JRuby) || defined?(Rubinius))
       end
