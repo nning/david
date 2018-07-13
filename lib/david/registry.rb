@@ -5,7 +5,7 @@ module David
     protected
 
     def log
-      @log ||= server.log
+      @log ||= Celluloid.logger
     # In some tests no server actor is present
     rescue NoMethodError
       @log ||= FakeLogger.new
@@ -21,8 +21,19 @@ module David
       Celluloid::Actor[:observe]
     end
 
-    def server
-      Celluloid::Actor[:server]
+    def servers
+      server_udp  = Celluloid::Actor[:server_udp]
+      server_dtls = Celluloid::Actor[:server_dtls]
+
+      servers = []
+      [:server_udp, :server_dtls].each do |key|
+        server = Celluloid::Actor[key]
+        unless server.nil?
+          servers << server
+        end
+      end
+
+      servers
     end
   end
 end

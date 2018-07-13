@@ -1,5 +1,5 @@
 module David
-  class Exchange < Struct.new(:host, :port, :message, :ancillary, :options)
+  class Exchange < Struct.new(:server, :host, :port, :message, :ancillary, :options)
     include Registry
    
     def accept

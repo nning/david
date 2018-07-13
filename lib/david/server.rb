@@ -16,7 +16,7 @@ module David
     include Respond
     include Utility
 
-    attr_reader :log, :socket
+    attr_reader :socket
 
     finalizer :shutdown
 
@@ -24,7 +24,6 @@ module David
       @app        = app.respond_to?(:new) ? app.new : app
       @mid_cache  = {}
       @options    = AppConfig.new(options)
-      @log        = @options[:Log]
 
       host, port  = @options.values_at(:Host, port_key)
 
@@ -78,7 +77,7 @@ module David
       end
 
       message  = ::CoAP::Message.parse(data)
-      exchange = Exchange.new(host, port, message, anc)
+      exchange = Exchange.new(self, host, port, message, anc)
 
       return if !exchange.non? && exchange.multicast?
 

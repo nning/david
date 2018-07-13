@@ -63,7 +63,7 @@ module David
 
       g = Celluloid::Supervision::Container.run!
 
-      g.supervise(as: :server, type: ::David::Server,
+      g.supervise(as: :server_udp, type: ::David::Server::CoAP,
         args: [app, defaults.merge(options)])
 
       g.supervise(as: :gc, type: ::David::GarbageCollector)
@@ -72,7 +72,7 @@ module David
         g.supervise(as: :observe, type: ::David::Observe)
       end
 
-      Celluloid::Actor[:server].async.run
+      Celluloid::Actor[:server_udp].async.run
 
       g 
     end

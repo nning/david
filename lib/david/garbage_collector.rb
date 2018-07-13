@@ -18,9 +18,11 @@ module David
     end
 
     def tick
-      unless server.cache.empty?
-        log.debug('GarbageCollector tick')
-        server.cache_clean!(@timeout)
+      servers.each do |server|
+        unless server.cache.empty?
+          log.debug("GarbageCollector tick for #{server.class.name}")
+          server.cache_clean!(@timeout)
+        end
       end
     end
   end

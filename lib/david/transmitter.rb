@@ -6,7 +6,7 @@ module David
 
     def initialize(socket)
       @log = Celluloid.logger
-      @socket = socket || server.socket
+      @socket = socket
     end
 
     # TODO Retransmissions

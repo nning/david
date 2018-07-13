@@ -15,10 +15,11 @@ module Rack
         end
 
         begin
-          Celluloid::Actor[:server_udp].run
           if options[:DTLS] == 'true'
-            Celluloid::Actor[:server_dtls].run
+            Celluloid::Actor[:server_dtls].async.run
           end
+
+          Celluloid::Actor[:server_udp].run
         rescue Interrupt
           Celluloid.logger.info 'Terminated'
           Celluloid.logger = nil
