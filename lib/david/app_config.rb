@@ -11,7 +11,8 @@ module David
       :Multicast => true,
       :MulticastGroups => ['ff02::fd', 'ff05::fd'],
       :Observe => true,
-      :Port => ::CoAP::PORT
+      :Port => ::CoAP::PORT,
+      :PortDTLS => 5684 # TODO
     }
 
     def initialize(hash = {})
@@ -85,6 +86,10 @@ module David
 
     def choose_port(value)
       value.nil? ? nil : value.to_i
+    end
+
+    def choose_portdtls(value)
+      value.nil? ? nil: value.to_i
     end
 
     def default_to_false(key, value)
