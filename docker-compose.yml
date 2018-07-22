@@ -1,0 +1,7 @@
+version: '3'
+
+services:
+  coap:
+    build: .
+    ports:
+      - 5683:5683/udp

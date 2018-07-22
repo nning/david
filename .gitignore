@@ -3,3 +3,4 @@ spec/dummy/db/*.sqlite3
 coverage
 benchmarks/coapbench
 benchmarks/coapbench\(*
+david-*.gem
