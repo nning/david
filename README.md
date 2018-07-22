@@ -4,6 +4,7 @@
 [![Build Status](https://img.shields.io/travis/nning/david.svg)](https://travis-ci.org/nning/david)
 [![Coverage Status](https://img.shields.io/coveralls/nning/david.svg)](https://coveralls.io/r/nning/david)
 [![Code Climate](https://codeclimate.com/github/nning/david/badges/gpa.svg)](https://codeclimate.com/github/nning/david)
+[![Docker Hub Build Status](https://img.shields.io/docker/build/nning2/david.svg)](https://hub.docker.com/r/nning2/david/)
 
 David is a CoAP server with Rack interface to bring the illustrious family of
 Rack compatible web frameworks into the Internet of Things. It is tested with
