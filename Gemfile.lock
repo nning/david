@@ -221,7 +221,7 @@ GEM
     timers (4.1.2)
       hitimes
     tins (1.16.3)
-    tinydtls (0.1.0)
+    tinydtls (0.2.0)
       ffi (~> 1.9)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
