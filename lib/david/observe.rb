@@ -52,7 +52,7 @@ module David
       n, exchange, env, etag = @store[key]
       n += 1
 
-      response, options = server.respond(exchange, env)
+      response, options = exchange.server.respond(exchange, env)
 
       return if response.nil?
 
@@ -82,7 +82,7 @@ module David
 
     def transmit(exchange, message, options)
       begin
-        server.socket.send(message.to_wire, 0, exchange.host, exchange.port)
+        exchange.server.socket.send(message.to_wire, 0, exchange.host, exchange.port)
         log.debug(message.inspect)
       rescue Timeout::Error, RuntimeError, Errno::ENETUNREACH
       end

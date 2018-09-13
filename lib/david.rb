@@ -11,6 +11,12 @@ unless defined?(JRuby)
     $stderr << "`gem install cbor` for transparent JSON/CBOR conversion "
     $stderr << "support.\n"
   end
+
+  begin
+    require 'tinydtls'
+  rescue LoadError
+    $stderr << "`gem install tinydtls` for DTLs support.\n"
+  end
 end
 
 require 'celluloid/current'

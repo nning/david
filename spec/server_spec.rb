@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'benchmark'
 
-describe Server do
+describe Server::CoAP do
   let(:port) { random_port }
   let(:client) do
     CoAP::Client.new(port: port, retransmit: false, recv_timeout: 0.1)

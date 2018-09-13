@@ -5,6 +5,9 @@ Celluloid.logger = ENV['DEBUG'].nil? ? nil : Logger.new($stdout)
 describe Observe do
   let!(:observe) { Observe.supervise(as: :observe) }
 
+  let(:port) { random_port }
+  let!(:server) { supervised_server(:Host => '0.0.0.0', :Port => port) }
+
   # TODO Replace this with factory.
   before do
     [:@exchange1, :@exchange2].each do |var|
@@ -13,7 +16,7 @@ describe Observe do
       options = { uri_path: [], token: token }
 
       message  = CoAP::Message.new(:con, :get, mid, '', options)
-      exchange = Exchange.new('127.0.0.1', CoAP::PORT, message)
+      exchange = Exchange.new(Celluloid::Actor[:server_udp], '127.0.0.1', CoAP::PORT, message)
 
       instance_variable_set(var, exchange)
     end
@@ -138,10 +141,6 @@ describe Observe do
   end
 
   describe '#handle_update' do
-    let(:port) { random_port }
-
-    let!(:server) { supervised_server(:Host => '0.0.0.0', :Port => port) }
-
     context 'error (4.04)' do
       let!(:key) { [dummy1[0].host, dummy1[0].token] }
 
@@ -174,10 +173,6 @@ describe Observe do
   end
 
   describe '#tick' do
-    let(:port) { random_port }
-
-    let!(:server) { supervised_server(:Host => '0.0.0.0', :Port => port) }
-
     context 'update (2.05)' do
       let!(:key) { [dummy2[0].host, dummy2[0].token] }
 
@@ -196,9 +191,6 @@ describe Observe do
   end
 
   describe 'integration' do
-    let(:port) { random_port }
-
-    let!(:server) { supervised_server(:Port => port) }
     let!(:client) do
       CoAP::Client.new(port: port, retransmit: false, recv_timeout: 0.1)
     end
@@ -208,7 +200,7 @@ describe Observe do
 
       @t1 = Thread.start do
         client.observe \
-          '/value', localhost, nil,
+          '/value', '0.0.0.0', nil,
           ->(s, m) { @answers << m }
       end
 

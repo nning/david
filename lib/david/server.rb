@@ -4,6 +4,8 @@ require 'david/server/mid_cache'
 require 'david/server/multicast'
 require 'david/server/respond'
 require 'david/server/utility'
+require 'david/server/coap'
+require 'david/server/coaps'
 
 module David
   class Server
@@ -14,7 +16,7 @@ module David
     include Respond
     include Utility
 
-    attr_reader :log, :socket
+    attr_reader :socket
 
     finalizer :shutdown
 
@@ -22,17 +24,15 @@ module David
       @app        = app.respond_to?(:new) ? app.new : app
       @mid_cache  = {}
       @options    = AppConfig.new(options)
-      @log        = @options[:Log]
 
-      host, port  = @options.values_at(:Host, :Port)
+      host, port  = @options.values_at(:Host, port_key)
 
       log.info "David #{David::VERSION} on #{RUBY_DESCRIPTION}"
-      log.info "Starting on coap://[#{host}]:#{port}"
+      log.info "Starting on #{protocol_scheme}://[#{host}]:#{port}"
 
       af = ipv6? ? ::Socket::AF_INET6 : ::Socket::AF_INET
 
-      # Actually Celluloid::IO::UDPSocket.
-      @socket = UDPSocket.new(af)
+      @socket = create_socket(af)
       multicast_initialize! if @options[:Multicast]
       @socket.bind(host, port)
     end
@@ -41,6 +41,8 @@ module David
       loop do
         if jruby_or_rbx?
           dispatch(*@socket.recvfrom(1152))
+        elsif dtls?
+          defer { dispatch(*@socket.recvfrom) }
         else
           begin
             dispatch(*@socket.to_io.recvmsg_nonblock)
@@ -68,14 +70,14 @@ module David
     def dispatch(*args)
       data, sender, _, anc = args
 
-      if jruby_or_rbx?
+      if jruby_or_rbx? or dtls?
         port, _, host = sender[1..3]
       else
         host, port = sender.ip_address, sender.ip_port
       end
 
-      message  = CoAP::Message.parse(data)
-      exchange = Exchange.new(host, port, message, anc)
+      message  = ::CoAP::Message.parse(data)
+      exchange = Exchange.new(self, host, port, message, anc)
 
       return if !exchange.non? && exchange.multicast?
 

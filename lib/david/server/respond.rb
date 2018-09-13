@@ -60,7 +60,7 @@ module David
         # No response on exchange for non-existent block.
         return if block_enabled && !exchange.block.included_by?(body)
 
-        cf    = CoAP::Registry.convert_content_format(ct)
+        cf    = ::CoAP::Registry.convert_content_format(ct)
         etag  = etag_to_coap(headers, 4)
         loc   = location_to_coap(headers)
         ma    = max_age_to_coap(headers)
@@ -145,7 +145,7 @@ module David
       def initialize_response(exchange, mcode = 2.05)
         type = exchange.con? ? :ack : :non
 
-        CoAP::Message.new \
+        ::CoAP::Message.new \
           tt: type,
           mcode: mcode,
           mid: exchange.message.mid || SecureRandom.random_number(0xffff),
