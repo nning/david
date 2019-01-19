@@ -1,6 +1,9 @@
+require 'david/server/constants'
+
 module David
   class ResourceDiscovery
     include Celluloid
+    include David::Server::Constants
 
     def initialize(app)
       @app = app
@@ -16,11 +19,37 @@ module David
 
       @env = env
 
-      filtered = routes_hash.select { |link| filter(link) }
-      body     = filtered.keys.map(&:to_s).join(',')
+      queries = @env[QUERY_STRING].split('&')
+      body_links = []
+
+      if queries.length > 0
+        queries.each {|q|
+          # XXX do these need to %-unescaped now?
+          (item, value) = q.split('=')
+
+          case item
+          when 'href'
+            # TODO If query end in '*', match on prefix.
+            #      Otherwise match on whole string.
+            #      https://tools.ietf.org/html/rfc6690#section-4.1
+            filtered = routes_hash.select { |link| filter(link) }
+            body_links = filtered.keys
+
+          when 'rt'
+            byebug
+            unless resource_links[value].blank?
+              body_links << sprintf("<%s>", ERB::Util.html_escape(resource_links[value]))
+            end
+
+          else
+            false
+          end
+        }
+      end
+
+      body     = body_links.map(&:to_s).join(',')
 
       # TODO On multicast, do not respond if result set empty.
-
       [
         200,
         {
@@ -54,6 +83,10 @@ module David
         .each   { |r| delete_format!(r) }
     end
 
+    def resource_links
+      @resource_links ||= Hash[routes.collect { |r| [r[3], r[4]] }]
+    end
+
     def delete_format!(route)
       route[0].gsub!(/\(\.:format\)\z/, '')
     end
@@ -70,15 +103,19 @@ module David
     end
 
     def include_route?(route)
-      !(route[0] =~ /\A\/(assets|rails)/)
+      !(route[0] =~ /\A\/(assets|rails|cable)/)
     end
 
     def routes
-      Rails.application.routes.routes.map do |route|
+      Rails.application.routes.routes.select { |route|
+        route.defaults[:coap]
+      }.map do |route|
         [
           route.path.spec.to_s,
           route.defaults[:controller],
-          route.defaults[:action]
+          route.defaults[:action],
+          route.defaults[:rt],
+          route.defaults[:short]
         ]
       end
     end
