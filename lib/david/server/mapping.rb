@@ -30,7 +30,8 @@ module David
         if request.accept.nil?
           @options[:DefaultFormat]
         else
-          CoAP::Registry.convert_content_format(request.accept)
+          cf = CoAP::Registry.convert_content_format(request.accept)
+          return cf.nil? ? EMPTY_STRING : cf
         end
       end
 
