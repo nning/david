@@ -16,15 +16,15 @@ group :development do
 end
 
 group :test do
-  gem 'coveralls', require: false
+  gem 'coveralls', '>= 0.8.22', require: false
 
   gem 'grape'
   gem 'hobbit'
   gem 'nyny'
   gem 'roda', '~> 2'
 
-  gem 'rails', '~> 5.1.0'
-  gem 'rspec-rails', '~> 3.5.0'
+  gem 'rails', '~> 5.2.4', '>= 5.2.4.2'
+  gem 'rspec-rails', '~> 3.5.2'
 
   gem 'sinatra', github: 'sinatra'
   gem 'rack-protection', github: 'sinatra'
