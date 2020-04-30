@@ -16,7 +16,7 @@ group :development do
 end
 
 group :test do
-  gem 'coveralls', require: false
+  gem 'coveralls', '>= 0.8.22', require: false
 
   gem 'grape'
   gem 'hobbit'
