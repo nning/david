@@ -18,13 +18,13 @@ end
 group :test do
   gem 'coveralls', require: false
 
-  gem 'grape'
-  gem 'hobbit'
-  gem 'nyny'
-  gem 'roda', '~> 2'
+  gem 'grape', '>= 1.1.0'
+  gem 'hobbit', '>= 0.6.1'
+  gem 'nyny', '>= 2.2.1'
+  gem 'roda', '~> 2', '>= 2.29.0'
 
-  gem 'rails', '~> 5.1.0'
-  gem 'rspec-rails', '~> 3.5.0'
+  gem 'rails', '~> 5.1.6'
+  gem 'rspec-rails', '~> 3.5.2'
 
   gem 'sinatra', github: 'sinatra'
   gem 'rack-protection', github: 'sinatra'
